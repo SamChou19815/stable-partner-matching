@@ -40,7 +40,7 @@ allprojects {
 
     dependencies {
         // Kotlin
-        implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+        implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.71'
         // Test
         testImplementation 'junit:junit:4.12'
         // Kinetics
