@@ -1,0 +1,129 @@
+// Auto Generated
+
+/*
+ * --------------------------------------------------------------------------------
+ * Part 0: General Info Declaration
+ * --------------------------------------------------------------------------------
+ */
+
+plugins {
+    // 3rd-parties
+    id 'org.jetbrains.kotlin.jvm' version '1.2.71'
+    id 'com.github.johnrengelman.shadow' version '2.0.4'
+}
+
+group = 'com.developersam'
+version = '0.0.1'
+
+/*
+ * --------------------------------------------------------------------------------
+ * Part 1: Common Declaration for all Projects
+ * --------------------------------------------------------------------------------
+ */
+
+allprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'kotlin'
+
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            url 'https://jitpack.io'
+        }
+    }
+
+    configurations {
+        // Suppress Old Guava
+        all*.exclude group: 'com.google.guava', module:'guava-jdk5'
+    }
+
+    dependencies {
+        // Kotlin
+        implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+        // Test
+        testImplementation 'junit:junit:4.12'
+        // Kinetics
+        api 'com.github.SamChou19815:kinetics:0.4.1'
+        // Cornell API Client Library
+        api 'com.github.SamChou19815:cornell-api-libs:0.2.0'
+    }
+
+    compileKotlin {
+        kotlinOptions {
+            jvmTarget = '1.8'
+            freeCompilerArgs = ['-Xjvm-default=enable']
+        }
+    }
+
+    compileTestKotlin {
+        kotlinOptions {
+            jvmTarget = '1.8'
+            freeCompilerArgs = ['-Xjvm-default=enable']
+        }
+    }
+}
+
+subprojects {
+    apply plugin: 'com.github.johnrengelman.shadow'
+    shadowJar {
+        classifier = null
+    }
+}
+
+/*
+ * --------------------------------------------------------------------------------
+ * Part 2: Dependencies for Main
+ * --------------------------------------------------------------------------------
+ */
+
+dependencies {
+    // Spark
+    implementation 'com.sparkjava:spark-core:2.8.0'
+    implementation 'com.sparkjava:spark-kotlin:1.0.0-alpha'
+    // Add your dependencies here
+}
+
+/*
+ * --------------------------------------------------------------------------------
+ * Part 3: Config for Building JVM Project
+ * --------------------------------------------------------------------------------
+ */
+
+shadowJar {
+    baseName = 'website'
+    version = 0.1
+    manifest {
+        attributes 'Main-Class': 'TODO' // TODO specify your main class here
+    }
+    zip64 true
+    artifacts {
+        shadow(tasks.shadowJar.archivePath) {
+            builtBy shadowJar
+        }
+    }
+}
+
+test {
+    testLogging {
+        showStandardStreams = true
+        events = ['passed', 'skipped', 'failed']
+    }
+}
+
+project.tasks.assemble.dependsOn(shadowJar)
+
+/*
+ * --------------------------------------------------------------------------------
+ * Part 4: Tasks to Build and Deploy Other Parts
+ * --------------------------------------------------------------------------------
+ */
+
+task updateDatastoreIndices {
+    String indexFile = '~/.config/gcloud/emulators/datastore/WEB-INF/index.yaml'
+    doLast {
+        exec {
+            commandLine 'sh', '-c', gcloud datastore create-indexes 
+        }
+    }
+}

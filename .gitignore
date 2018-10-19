@@ -1,0 +1,21 @@
+# Exclude Build Files
+**/out/*
+**/build/*
+**/.gradle/*
+**/libs/*
+**/dist/*
+*.class
+
+# Exclude node_modules
+**/node_modules
+
+# Lock
+**/package-lock.json
+
+# Exclude IDEA files
+**/.idea/*
+*.iml
+
+# Exclude System Files
+.DS_Store
+
