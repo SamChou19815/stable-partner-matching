@@ -1,0 +1,8 @@
+<a class="nav-item"
+   [class.as-child]="isChild"
+   [routerLink]="[item.link]"
+   routerLinkActive="selected"
+   [routerLinkActiveOptions]="{ exact: true }">
+  <app-icon [icon]="item.icon"></app-icon>
+  <span class="nav-item-text">{{item.name}}</span>
+</a>

@@ -1,0 +1,19 @@
+<!--suppress HtmlUnknownAttribute -->
+<mat-card>
+  <img [src]="data.logo" [alt]="data.name" mat-card-image/>
+  <mat-card-content>{{data.intro}}</mat-card-content>
+  <span class="project-name">{{data.name}}</span>
+  <mat-card-actions>
+    <a mat-button color="primary" *ngIf="!signInEnabled && data.routerLink" [routerLink]="[data.routerLink]">
+      <mat-icon>call_made</mat-icon>
+      Try
+    </a>
+    <a mat-button color="primary" *ngIf="!signInEnabled && data.externalResource"
+       [href]="data.externalResource?.link" target="_blank">
+      <mat-icon>open_in_new</mat-icon>
+      {{data.externalResource?.prompt}}</a>
+    <button mat-button color="primary" *ngIf="signInEnabled" (click)="signIn()">
+      Sign in with Your Google Account
+    </button>
+  </mat-card-actions>
+</mat-card>

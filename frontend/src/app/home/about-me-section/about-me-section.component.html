@@ -1,0 +1,46 @@
+<!--suppress HtmlUnknownAttribute -->
+<app-home-about-me-row class="hello-world-row">
+  I am Sam Zhou.
+</app-home-about-me-row>
+<app-home-about-me-row class="has-icon">
+  <mat-icon>school</mat-icon>
+  <span class="separator"></span>
+  <span>Cornell University</span>
+</app-home-about-me-row>
+<app-home-about-me-row class="has-icon">
+  <mat-icon>domain</mat-icon>
+  <span class="separator"></span>
+  <span>Computer Science</span>
+</app-home-about-me-row>
+<app-home-about-me-row class="has-icon">
+  <mat-icon>bar_chart</mat-icon>
+  <span class="separator"></span>
+  <span>GPA: 4.15/4.3</span>
+</app-home-about-me-row>
+<div style="flex: 1 1;"></div>
+<app-home-about-me-row>
+  <nav>
+    <a mat-stroked-button href="https://github.com/SamChou19815" target=_blank>
+      <fa name="github"></fa>
+      <span class="separator"></span>
+      <span class="separator"></span>
+      <span>GitHub</span>
+    </a>
+    <a mat-stroked-button href="https://blog.developersam.com" target=_blank>
+      <mat-icon>language</mat-icon>
+      <span class="separator"></span>
+      <span>Blog</span>
+    </a>
+    <a mat-stroked-button href="../../../assets/docs/tianyi-zhou-resume.pdf" target=_blank>
+      <mat-icon>account_box</mat-icon>
+      <span class="separator"></span>
+      <span>Resume</span>
+    </a>
+  </nav>
+</app-home-about-me-row>
+<app-home-about-me-row>
+  <!--suppress HtmlUnknownAnchorTarget -->
+  <a (click)="scrollToProjects()" style="cursor: pointer;">
+    <mat-icon>expand_more</mat-icon>
+  </a>
+</app-home-about-me-row>

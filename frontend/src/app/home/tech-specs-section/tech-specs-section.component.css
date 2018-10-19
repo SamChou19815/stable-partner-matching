@@ -1,0 +1,55 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-content: center;
+  justify-content: center;
+  color: white;
+}
+
+.tech-specs-list-container {
+  display: grid;
+  margin: 1em auto;
+  grid-gap: 1em;
+  grid-template-columns: 100%;
+}
+
+@media (min-width: 700px) and (max-width: 960px) {
+  .tech-specs-list-container {
+    display: grid;
+    grid-gap: 1em;
+    grid-template-columns: 300px 300px;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 960px) {
+  .tech-specs-list-container {
+    display: grid;
+    grid-gap: 1em;
+    grid-template-columns: 300px 300px 300px;
+    justify-content: center;
+  }
+}
+
+.tech-spec-title {
+  display: inline-flex;
+  font-size: 1.3em;
+  font-weight: 300;
+  margin: 1em auto;
+}
+
+.tech-spec-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5em;
+  font-size: 1.25em;
+  font-weight: 100;
+}
+
+mat-icon {
+  margin-right: 5px;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}

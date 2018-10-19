@@ -1,0 +1,84 @@
+:host {
+  display: flex;
+  height: calc(100% - 64px);
+  flex-direction: column;
+  text-align: center;
+  color: white;
+  font-size: 2em;
+  font-weight: 100;
+}
+
+.hello-world-row {
+  font-size: 2.5em;
+  font-family: 'Roboto Mono', 'Source Code Pro', 'Courier New', Courier, monospace;
+  font-weight: 100;
+}
+
+@media (max-width: 600px) {
+  :host {
+    height: calc(100% - 56px);
+  }
+}
+
+@media (max-height: 600px) {
+  .hello-world-row {
+    font-size: 1.7em;
+  }
+}
+
+@media (max-height: 900px) and (min-height: 600px) {
+  .hello-world-row {
+    font-size: 2em;
+  }
+}
+
+span.separator {
+  margin-right: 5px;
+}
+
+@media (min-height: 600px) {
+
+  app-home-about-me-row a {
+    line-height: 64px;
+    font-size: 1em;
+    font-weight: 100;
+  }
+
+  a mat-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 36px;
+  }
+
+  fa {
+    font-size: 1.4em !important;
+  }
+}
+
+@media (max-height: 900px) {
+  :host {
+    font-size: 1.5em;
+  }
+
+  app-home-about-me-row {
+    padding: 0.5em 0;
+  }
+}
+
+app-home-about-me-row.has-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+app-home-about-me-row a {
+  margin: 0.5em 1em;
+}
+
+a {
+  min-width: 0 !important;
+}
+
+app-home-about-me-row a:visited {
+  color: white;
+}

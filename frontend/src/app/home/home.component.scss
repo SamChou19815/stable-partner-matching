@@ -1,0 +1,33 @@
+@import '~@angular/material/theming';
+
+$near-black: mat-color(mat-palette($mat-blue-gray, 900));
+$blue-dark-gray: mat-color(mat-palette($mat-blue-gray, 700));
+$blue-gray: mat-color(mat-palette($mat-blue-gray, 500));
+
+:host {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: scroll;
+  scroll-behavior: smooth;
+}
+
+mat-toolbar {
+  top: 0;
+  z-index: 2;
+  position: sticky;
+  color: #f7f7f7;
+  font-size: 1.5em;
+  font-weight: 100;
+  justify-content: center;
+}
+
+#about-me-toolbar, app-home-about-me-section, #tech-specs-toolbar, app-home-tech-specs-section {
+  background-color: $near-black;
+}
+
+#project-toolbar, app-home-projects-section, #open-source-toolbar, app-home-open-source-section {
+  background-color: $blue-gray;
+}

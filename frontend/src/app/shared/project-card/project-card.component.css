@@ -1,0 +1,48 @@
+:host {
+  display: flex;
+  break-inside: avoid;
+  flex-direction: row;
+  justify-content: center;
+}
+
+/*  Mobile */
+@media (max-width: 600px) {
+  mat-card {
+    width: 80%;
+    margin: 1em auto;
+  }
+  mat-card-title {
+    width: calc(100% + 16px);
+    margin-left: -16px;
+    margin-right: -16px;
+    padding-left: 16px;
+  }
+}
+
+/*  Tablet */
+@media (max-width: 900px) and (min-width: 600px) {
+  mat-card {
+    width: 80%;
+    margin: 1em auto;
+  }
+}
+
+/*  Desktop */
+@media (min-width: 900px) and (max-width: 1080px) {
+  mat-card {
+    margin: 1em;
+    width: 400px;
+  }
+}
+
+/*  Desktop Large */
+@media (min-width: 1080px) {
+  mat-card {
+    margin: 1em;
+    width: 500px;
+  }
+}
+
+.project-name {
+  display: none;
+}

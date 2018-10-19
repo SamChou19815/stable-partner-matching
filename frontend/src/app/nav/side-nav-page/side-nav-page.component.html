@@ -1,0 +1,21 @@
+<mat-toolbar color="primary" *ngIf="!isHome" class="mat-elevation-z2">
+  <mat-icon id="hamburger-icon" (click)="drawer.toggle()">menu</mat-icon>
+  <span class="title-content">{{title}}</span>
+  <span style="flex: 1 1 auto;"></span>
+  <!--suppress HtmlUnknownAttribute -->
+  <a mat-button *ngIf="!isHome" (click)="backToHome()">Home Page</a>
+</mat-toolbar>
+<mat-sidenav-container [autosize]="false"
+                       [class.floating-side-nav-container]="isHome">
+  <mat-sidenav mode="over" #drawer>
+    <nav class="nav-toolbar">
+      <app-nav-group *ngFor="let group of navDataList.list"
+                     [group]="group"
+                     (navClicked)="clickNav()"></app-nav-group>
+    </nav>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-icon id="floating-hamburger-icon" *ngIf="isHome" (click)="drawer.toggle()">menu</mat-icon>
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>
