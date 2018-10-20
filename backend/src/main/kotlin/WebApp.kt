@@ -4,19 +4,16 @@ import auth.GoogleUser
 import auth.Role
 import auth.SecurityFilters
 import auth.SecurityFilters.Companion.user
-import com.google.cloud.datastore.Key
 import course.CourseInfo
 import course.StudentCourse
 import freetime.StudentFreeTimeRecord
 import init.InitData
 import partner.PartnerInvitation
 import partner.StudentPartnership
-import partner.StudentRatingRecord
 import spark.Spark.path
 import staticprocessor.StaticProcessor
 import student.StudentPublicInfo
 import web.badRequest
-import web.delete
 import web.get
 import web.initServer
 import web.post
@@ -138,11 +135,12 @@ private fun initializeUserApiHandlers() {
  */
 private fun initializeAdminApiHandlers() {
     // Filters.before(path = "/*", role = Role.ADMIN) // TODO add back
-    get(path = "/init_courses") {
+    get(path = "/init_system") {
+        CourseInfo.deleteAll()
+        GoogleUser.deleteAll()
+        StudentCourse.deleteAll()
         StaticProcessor.importAllCourses()
-    }
-    get(path = "/remove_courses") {
-        CourseInfo.removeAll()
+        StaticProcessor.importAllRandomUsers()
     }
 }
 

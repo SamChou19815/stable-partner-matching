@@ -100,7 +100,7 @@ shadowJar {
     baseName = 'website'
     version = 0.1
     manifest {
-        attributes 'Main-Class': 'TODO' // TODO specify your main class here
+        attributes 'Main-Class': 'CLI'
     }
     zip64 true
     artifacts {

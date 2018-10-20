@@ -47,7 +47,7 @@ public class CourseReader {
         System.out.println("Finished writing data.");
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String... args) throws FileNotFoundException {
         String path = "cs-courses.json";
         BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
 

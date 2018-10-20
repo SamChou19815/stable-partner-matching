@@ -24,8 +24,8 @@ student = {
     "pastCourses": [{"courseName":"CS 1110", "grade": 10}, {"courseName":"CS 2110", "grade": 12}],
     "currentCourses": [{"courseName":"CS 3110", "grade": -1}, {"courseName":"CS 2800", "grade": -1}],
     "futureCourses": [{"courseName":"CS 3410", "grade": -1}, {"courseName":"CS 4740", "grade": -1}],
-    "email": adk9@cornell.edu, 
-    "picture": http://profilepicturesdp.com/wp-content/uploads/2018/06/default-user-profile-picture-7.png, 
+    "email": adk9@cornell.edu,
+    "picture": http://profilepicturesdp.com/wp-content/uploads/2018/06/default-user-profile-picture-7.png,
     "uid": random-user-1
 }
 """

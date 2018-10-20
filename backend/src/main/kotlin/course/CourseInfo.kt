@@ -90,6 +90,17 @@ data class CourseInfo(
         fun getAllSimplified(): List<SimplifiedCourseInfo> = allSimplifiedCourseInfo
 
         /**
+         * [getBySubjectAndCode] returns the course information by [subject] and [code] query.
+         */
+        fun getBySubjectAndCode(subject: Subject, code: String): CourseInfo =
+                CourseInfoEntity.query {
+                    filter {
+                        table.subject eq subject
+                        table.code eq code
+                    }
+                }.first().asCourseInfo
+
+        /**
          * [addAll] adds a list of all the courses in the database.
          */
         fun addAll(list: List<CourseInfo>) {
@@ -103,9 +114,9 @@ data class CourseInfo(
         }
 
         /**
-         * [removeAll] removes all course info from the database, useful for experimentation.
+         * [deleteAll] removes all course info from the database, useful for experimentation.
          */
-        fun removeAll(): Unit = CourseInfoEntity.deleteAll()
+        fun deleteAll(): Unit = CourseInfoEntity.deleteAll()
 
     }
 }

@@ -125,7 +125,8 @@ data class StudentCourse(
                 }.map { it.courseId }.toList()
 
         /**
-         * [getAllCurrCourseKeys] returns a list of all current courses' keys of a student with [id].
+         * [getAllCurrCourseKeys] returns a list of all current courses' keys of a student
+         * with [id].
          */
         fun getAllCurrCourseKeys(id: Key): List<Key> =
                 StudentCourseEntity.query {
@@ -134,6 +135,24 @@ data class StudentCourse(
                         table.status eq TimeStatus.CURRENT
                     }
                 }.map { it.courseId }.toList()
+
+        /**
+         * [batchImport] imports the courses in batch.
+         */
+        fun <T> batchImport(source: List<T>, mapper: (T) -> StudentCourse) {
+            StudentCourseEntity.batchInsert(source = source.map(mapper)) { course ->
+                table.studentId gets course.studentId
+                table.courseId gets course.courseId
+                table.score gets course.score
+                table.status gets course.status
+                table.isTa gets course.isTa
+            }
+        }
+
+        /**
+         * [deleteAll] deletes all courses.
+         */
+        fun deleteAll(): Unit = StudentCourseEntity.deleteAll()
 
     }
 

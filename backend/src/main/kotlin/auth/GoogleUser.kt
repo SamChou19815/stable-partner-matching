@@ -18,7 +18,7 @@ import typedstore.TypedTable
  * @property picture picture of the user.
  * @property studentClass the class of the student.
  * @property graduationYear grad year of the student.
- * @property skiils a list of skills given by the student.
+ * @property skills a list of skills given by the student.
  * @property introduction student's self-intro.
  * @property experience student's self-intro of experience.
  */
@@ -149,6 +149,11 @@ data class GoogleUser(
          */
         fun getAllOtherUserKeys(user: GoogleUser): List<Key> =
                 UserEntity.allKeys().filter { it != user.keyNotNull }.toList()
+
+        /**
+         * [deleteAll] deletes all users.
+         */
+        fun deleteAll(): Unit = UserEntity.deleteAll()
 
     }
 

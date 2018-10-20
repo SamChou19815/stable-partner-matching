@@ -64,7 +64,7 @@ public class Weighting {
         System.out.println("Finished writing data.");
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String... args) throws FileNotFoundException {
         String path = "keywords.json";
         String e_path = "data.json";
         try {
