@@ -12,7 +12,6 @@
             <span style="flex: 1 1 auto"></span>
             <mat-icon (click)="editCourse(course)" class="right-arrow">>arrow_forward</mat-icon>
             <mat-divider></mat-divider>
-            <mat-divider></mat-divider>
           </mat-list-item>
         </mat-list>
         <div *ngIf="currentCourses.length > 0">Current Courses</div>
@@ -31,7 +30,6 @@
             <span>{{getCourseName(course.courseId)}}</span>
             <span style="flex: 1 1 auto"></span>
             <mat-icon (click)="editCourse(course)" class="right-arrow">arrow_forward</mat-icon>
-            <mat-divider></mat-divider>
             <mat-divider></mat-divider>
           </mat-list-item>
         </mat-list>
@@ -84,6 +82,11 @@
           </mat-form-field>
           <div>
             <button mat-button color="primary" (click)="submit()">Submit</button>
+            <!--suppress HtmlUnknownAttribute -->
+            <a mat-button *ngIf="courseToEdit.key" color="primary"
+               [routerLink]="['/matching/course/', courseToEdit.courseId]">
+              Find Partners
+            </a>
           </div>
         </div>
       </mat-drawer-content>

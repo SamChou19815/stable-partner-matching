@@ -101,7 +101,7 @@ data class StudentCourse(
                         table.studentId eq id
                         table.status eq TimeStatus.PAST
                     }
-                }.map { it.key }.toList()
+                }.map { it.courseId }.toList()
 
     }
 
