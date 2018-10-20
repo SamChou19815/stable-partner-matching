@@ -122,7 +122,7 @@ public class CourseReader {
         }
     }
     public static void main(String[] args) throws FileNotFoundException {
-        String path = "single.json";
+        String path = "courses.json";
         BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
 
         Gson gson = new Gson();
