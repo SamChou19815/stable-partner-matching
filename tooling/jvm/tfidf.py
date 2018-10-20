@@ -6,7 +6,7 @@ import json
 import sys
 
 # file = sys.argv[1]
-frame = pd.read_json('entryData.json')
+frame = pd.read_json('data.json')
 text = []
 for chunks in frame['keywords']:
     acc = ''
