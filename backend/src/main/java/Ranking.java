@@ -15,23 +15,21 @@ public class Ranking {
 
     int vectorSize = -1;
     public Map<Key, Double> courseW = null;
-    public MathVector emptyVector = null;
+    public List<String> orderedWeights = null;
 
 
     MathVector getCourseVector(CourseInfo courseInfo) {
         Gson gson = new Gson();
         WeightVector v = gson.fromJson(courseInfo.getWeightVector(), WeightVector.class);
         Map<String, Double> hm = v.getWeightVector();
-        List<String> keys = new ArrayList<>(hm.keySet());
-
-        vectorSize = keys.size();
 
         MathVector retval = new MathVector(vectorSize);
-        Collections.sort(keys); // TODO sorting to maintain consistent order necessary?
         double[] vals = new double[vectorSize];
+
         for (int i = 0; i < vectorSize; i++) {
-            vals[i] = hm.get(keys.get(i));
+            vals[i] = hm.get(orderedWeights.get(i));
         }
+
         retval.fillFromArr(vals);
         return retval;
     }
@@ -40,10 +38,9 @@ public class Ranking {
         CourseInfo info = CourseInfo.Companion.get(course.getKey());
         Gson gson = new Gson();
         WeightVector v = gson.fromJson(info.getWeightVector(), WeightVector.class);
-        int numWeights = v.getWeightVector().keySet().size();
-
-        emptyVector = new MathVector(numWeights);
-        emptyVector.setAll(0.0);
+        orderedWeights = new ArrayList<>(v.getWeightVector().keySet());
+        Collections.sort(orderedWeights);
+        vectorSize = orderedWeights.size();
 
         courseW = new HashMap<Key, Double>();
         for (SimplifiedCourseInfo c : CourseInfo.Companion.getAllSimplified()) {
@@ -53,11 +50,21 @@ public class Ranking {
 
     }
 
-    public MathVector SkillSetSum(String skillStr) {
+    MathVector SkillSetSum(String skillStr) {
         String[] skills = skillStr.split(", ");
+        Set<String> skillSet = new HashSet<String>();
+        MathVector retval = new MathVector(vectorSize);
 
+        double[] skillvector = new double[vectorSize];
 
-        return null; // TODO
+        for (int i = 0; i < vectorSize; i++) {
+            if (skillSet.contains(orderedWeights.get(i))) {
+                skillvector[i] = 1.0; // smoothing
+            }
+        }
+
+        retval.fillFromArr(skillvector);
+        return retval;
     }
 
     public MathVector compute_s_score(Key userKey, Key courseKey) {
@@ -69,14 +76,29 @@ public class Ranking {
 
         List<Key> pastCourses = studInfo.getPastCourses();
 
-        MathVector pastCoursesSum = new MathVector
+        MathVector pastCoursesSum = new MathVector(vectorSize);
         for (Key k : pastCourses) {
             CourseInfo courseInfo = CourseInfo.Companion.get(k);
             MathVector courseVector = getCourseVector(courseInfo);
-            StudentCourse course = StudentCourse.Companion.get
+            StudentCourse course = StudentCourse.Companion.getAllCoursesByStudentAndCourseId(userKey, k);
+
+            courseVector.scalarProduct(course.getScore()); // * grade
+            courseVector.scalarProduct(courseW.get(k)); // * course weight
+            pastCoursesSum.addVector(courseVector);
         }
 
-//        List<Key> currCourses = info.getCurrCourses();
+        List<Key> currCourses = studInfo.getCurrCourses();
+
+        MathVector currCoursesSum = new MathVector(vectorSize);
+        for (Key k : currCourses) {
+            CourseInfo courseInfo = CourseInfo.Companion.get(k);
+            MathVector courseVector = getCourseVector(courseInfo);
+            StudentCourse course = StudentCourse.Companion.getAllCoursesByStudentAndCourseId(userKey, k);
+            courseVector.scalarProduct(8.0); // * grade
+            courseVector.scalarProduct(courseW.get(k)); // * course weight
+            currCoursesSum.addVector(courseVector);
+        }
+        currCoursesSum.scalarProduct(0.5);
 
         return null;
     }

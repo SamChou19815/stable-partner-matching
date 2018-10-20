@@ -39,16 +39,22 @@ public class MathVector {
         }
     }
 
-    void scale(double v) {
+    void addVector(MathVector v) {
+        assert (v.getSize() == size);
+        for (int i = 0; i < size; i++) {
+            arr[i] += v.get(i);
+        }
+    }
+    void scalarProduct(double v) {
         for (int i = 0; i < size; i++) {
             arr[i] *= v;
         }
     }
 
-    void vectorProduct(MathVector v2) {
-        assert (v2.getSize() == size);
+    void vectorProduct(MathVector v) {
+        assert (v.getSize() == size);
         for (int i = 0; i < size; i++) {
-            arr[i] *= v2.get(i);
+            arr[i] *= v.get(i);
         }
     }
 
