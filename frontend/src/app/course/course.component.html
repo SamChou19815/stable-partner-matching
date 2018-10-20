@@ -8,19 +8,86 @@
         <div *ngIf="pastCourses.length > 0">Past Courses</div>
         <mat-list *ngIf="pastCourses.length > 0">
           <mat-list-item *ngFor="let course of pastCourses">
-            {{course.courseId}}
+            <span>{{getCourseName(course.courseId)}}</span>
+            <span style="flex: 1 1 auto"></span>
+            <mat-icon (click)="editCourse(course)">arrow_forward</mat-icon>
+            <mat-divider></mat-divider>
+            <mat-divider></mat-divider>
+          </mat-list-item>
+        </mat-list>
+        <div *ngIf="currentCourses.length > 0">Current Courses</div>
+        <mat-list *ngIf="currentCourses.length > 0">
+          <mat-list-item *ngFor="let course of currentCourses">
+            <span>{{getCourseName(course.courseId)}}</span>
+            <span style="flex: 1 1 auto"></span>
+            <mat-icon (click)="editCourse(course)">arrow_forward</mat-icon>
+            <mat-divider></mat-divider>
+          </mat-list-item>
+        </mat-list>
+        <div *ngIf="futureCourses.length > 0">Future Courses</div>
+        <mat-list *ngIf="futureCourses.length > 0">
+          <mat-list-item *ngFor="let course of futureCourses">
+            <span>{{getCourseName(course.courseId)}}</span>
+            <span style="flex: 1 1 auto"></span>
+            <mat-icon (click)="editCourse(course)">arrow_forward</mat-icon>
+            <mat-divider></mat-divider>
             <mat-divider></mat-divider>
           </mat-list-item>
         </mat-list>
       </mat-drawer>
       <mat-drawer-content>
-        <button mat-button style="margin-top: 1em;" *ngIf="onMobile"
-                (click)="drawer.toggle()">
-          Show Course List
-        </button>
-        HAHA
+        <div>
+          <button mat-button style="margin-top: 1em" *ngIf="onMobile"
+                  (click)="drawer.toggle()">
+            Show Course List
+          </button>
+        </div>
+        <div *ngIf="courseToEdit">
+          <div *ngIf="courseToEdit.key">
+            Course: {{courseToEdit.courseId}}
+          </div>
+          <mat-form-field *ngIf="!courseToEdit.key">
+            <mat-select placeholder="Course" [required]="true" [(ngModel)]="courseToEdit.courseId">
+              <mat-option *ngFor="let course of allCourses" [value]="course.key">
+                {{getCourseName(course.key)}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select placeholder="Time Taken" [required]="true" [(ngModel)]="courseToEdit.status">
+              <mat-option *ngFor="let status of allPossibleTimeStatus" [value]="status">{{status}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select placeholder="Grade (Optional)" [(ngModel)]="courseToEdit.score">
+              <mat-option [value]="0">F</mat-option>
+              <mat-option [value]="1">D-</mat-option>
+              <mat-option [value]="2">D</mat-option>
+              <mat-option [value]="3">D+</mat-option>
+              <mat-option [value]="4">C-</mat-option>
+              <mat-option [value]="5">C</mat-option>
+              <mat-option [value]="6">C+</mat-option>
+              <mat-option [value]="7">B-</mat-option>
+              <mat-option [value]="8">B</mat-option>
+              <mat-option [value]="9">B+</mat-option>
+              <mat-option [value]="10">A-</mat-option>
+              <mat-option [value]="11">A</mat-option>
+              <mat-option [value]="12">A+</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select placeholder="Whether you are TA (Optional)" [(ngModel)]="courseToEdit.isTa">
+              <mat-option [value]="true">Yes</mat-option>
+              <mat-option [value]="false">No</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div>
+            <button mat-button color="primary" (click)="submit()">Submit</button>
+          </div>
+        </div>
       </mat-drawer-content>
     </mat-drawer-container>
+    <button color="accent" mat-fab (click)="editCourse()">+</button>
   </div>
 </ng-container>
 <app-project-card [data]="appIntro" [signInEnabled]="true" *ngIf="!isUserLoggedIn"></app-project-card>

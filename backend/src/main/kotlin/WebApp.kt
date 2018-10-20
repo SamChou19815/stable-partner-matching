@@ -57,7 +57,7 @@ private fun initializeCourseApiHandlers() {
         studentCourse.upsert()
         "OK"
     }
-    delete(path = "/delete") {
+    post(path = "/delete") {
         val studentCourse = toJson<StudentCourse>()
         studentCourse.delete()
         "OK"

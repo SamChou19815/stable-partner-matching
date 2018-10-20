@@ -20,24 +20,24 @@ import typedstore.TypedTable
 data class StudentCourse(
         val key: Key? = null,
         val studentId: Key, val courseId: Key,
-        val score: Long, val status: TimeStatus,
-        val isTa: Boolean
+        val score: Long?, val status: TimeStatus,
+        val isTa: Boolean?
 ) {
 
     private object Table : TypedTable<Table>(tableName = "StudentCourse") {
         val studentId = keyProperty(name = "student_id")
         val courseId = keyProperty(name = "course_id")
-        val score = longProperty(name = "score")
+        val score = nullableLongProperty(name = "score")
         val status = enumProperty(name = "status", clazz = TimeStatus::class.java)
-        val isTa = boolProperty(name = "is_ta")
+        val isTa = nullableBoolProperty(name = "is_ta")
     }
 
     private class StudentCourseEntity(entity: Entity) : TypedEntity<Table>(entity = entity) {
         val studentId: Key = Table.studentId.delegatedValue
         val courseId: Key = Table.courseId.delegatedValue
-        val score: Long = Table.score.delegatedValue
+        val score: Long? = Table.score.delegatedValue
         val status: TimeStatus = Table.status.delegatedValue
-        val isTa: Boolean = Table.isTa.delegatedValue
+        val isTa: Boolean? = Table.isTa.delegatedValue
 
         val asStudentCourse: StudentCourse
             get() = StudentCourse(

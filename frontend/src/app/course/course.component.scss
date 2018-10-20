@@ -3,7 +3,27 @@ mat-drawer-container {
   height: calc(100vh - 64px);
 }
 
-mat-drawer {
-  width: 500px;
+mat-drawer, mat-drawer-content {
   padding: 1em;
+}
+
+@media (min-width: 600px) {
+  mat-drawer {
+    width: 500px;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+label {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+mat-slider {
+  margin-left: 1em;
+  flex: 1 1;
 }
