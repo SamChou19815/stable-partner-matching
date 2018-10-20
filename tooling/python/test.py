@@ -161,7 +161,7 @@ def make_decision_dict(prob_1110, prob_2110, prob_2800, prob_3110, prob_3410,
         decision_dict[new_lower_class+" present"] = lower_present
 
     for new_upper_class in ELECTIVE_UPPER:
-        decision_dict[new_upper_class+" present"] = upper_past
+        decision_dict[new_upper_class+" past"] = upper_past
 
     for new_upper_class in ELECTIVE_UPPER:
         decision_dict[new_upper_class+" present"] = upper_present
@@ -232,6 +232,19 @@ def append_choice_update(student_class_dict, student_choice_dict, student_decisi
     return student_class_dict
 
 
+def append_elective_update(student_class_dict, student_choice_dict, student_decision_dict, class1):
+    random_choice = random.random()
+    random_class = random.random()
+    if random_choice < student_choice_dict[class1]:
+        if (random_class < student_decision_dict[class1 + " past"]):
+            student_class_dict["pastCourses"].append(class1)
+        elif (random_class >= student_decision_dict[class1 + " past"] and
+              random_class < student_decision_dict[class1 + " past"]+student_decision_dict[class1 + " present"]):
+            student_class_dict["currentCourses"].append(class1)
+        else:
+            student_class_dict["futureCourses"].append(class1)
+    return student_class_dict
+
 
 def make_student_class_dict(student_choice_dict, student_decision_dict):
     """
@@ -259,6 +272,11 @@ def make_student_class_dict(student_choice_dict, student_decision_dict):
     append_class_update(student_class_dict, student_choice_dict, student_decision_dict, "CS 4820")
 
     # TODO: append the elective classes
+    for new_lower_class in ELECTIVE_LOWER:
+        append_elective_update(student_class_dict, student_choice_dict, student_decision_dict, new_lower_class)
+
+    for new_upper_class in ELECTIVE_UPPER:
+        append_elective_update(student_class_dict, student_choice_dict, student_decision_dict, new_upper_class)
 
     """
     # deal with CS 1110, CS 1112
@@ -312,88 +330,99 @@ def make_student(course_dict):
 # freshman 1
 # current: CS 1110
 # future: CS 2110/CS2112 and CS 2800 at some prob.
-freshman_1_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.7, 0.2, 0.8, 0, 0, 0, 0, 0, 0.2, 0)
+freshman_1_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.7, 0.2, 0.8, 0, 0, 0, 0, 0, 0.1, 0)
 freshman_1_decision_dict = make_decision_dict(2, 3, 3, 4, 4, 4, 4, 0, 0, 0, 0)
 
 # freshman 2
 # past: CS 1110
 # current: CS 2110/2112
 # future: CS 3110/3410 and CS 2800, each at some prob
-freshman_2_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 0.95, 0.5, 0.25, 0.25, 0, 0, 0.3, 0)
+freshman_2_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 0.95, 0.5, 0.25, 0.25, 0, 0, 0.2, 0)
 freshman_2_decision_dict = make_decision_dict(1, 2, 3, 3, 3, 4, 4, 0, 0, 0, 0)
 
 # freshman 3
 # past: CS 1110
 # current: CS 2110/CS 2112, CS 2800
 # future: CS 3110/3410, CS 4820
-freshman_3_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 0.9, 0.5, 0.25, 0.25, 0, 0.1, 0.5, 0.3)
+freshman_3_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 0.9, 0.5, 0.25, 0.25, 0, 0.1, 0.3, 0.05)
 freshman_3_decision_dict = make_decision_dict(1, 2, 2, 3, 3, 4, 3, 0, 0, 0, 0)
 
 # freshman/sophomore 4
 # past: CS 1110, CS 2110/CS 2112
 # current: CS 2800, CS 3110
 # future:  CS 3410, CS 4820
-freshman_4_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 1, 0.5, 0.5, 0, 0.3, 0.5, 0.3)
-freshman_4_decision_dict = make_decision_dict(1, 1, 2, 2, 3, 4, 3, 0, 0, 0, 0)
+freshman_4_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 1, 0.5, 0.5, 0, 0.3, 0.2, 0.05)
+freshman_4_decision_dict = make_decision_dict(1, 1, 2, 2, 3, 4, 3, 0, 0.1, 0, 0)
 
 # freshman/sophomore 5
 # past: CS 1110, CS 2110/CS 2112
 # current: CS 2800, CS 3410
 # future:  CS 3110, CS 4410, CS 4820
-freshman_5_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 0.8, 0.5, 0.5, 0.3, 0.3, 0.5, 0.3)
-freshman_5_decision_dict = make_decision_dict(1, 1, 2, 3, 2, 3, 3, 0, 0, 0, 0)
+freshman_5_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 0.8, 0.5, 0.5, 0.3, 0.3, 0.2, 0.05)
+freshman_5_decision_dict = make_decision_dict(1, 1, 2, 3, 2, 3, 3, 0, 0.1, 0, 0)
 
 # freshman/sophomore 6
 # past: CS 1110, CS 2110/CS 2112, CS 2800
 # current: CS 3410
 # future:  CS 3110, CS 4410, CS 4820
-freshman_6_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 0.8, 0.5, 0.5, 0.3, 0.3, 0.5, 0.3)
-freshman_6_decision_dict = make_decision_dict(1, 1, 1, 3, 2, 3, 3, 0, 0, 0, 0)
+freshman_6_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 0.8, 0.5, 0.5, 0.3, 0.3, 0.2, 0.1)
+freshman_6_decision_dict = make_decision_dict(1, 1, 1, 3, 2, 3, 3, 0.1, 0.3, 0, 0.1)
 
 # freshman/sophomore 7
 # past: CS 1110, CS 2110/CS 2112, CS 2800
 # current: CS 3110
 # future:  CS 3410, CS 4820
-freshman_7_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 0.8, 0.5, 0.5, 0, 0.3, 0.5, 0.3)
-freshman_7_decision_dict = make_decision_dict(1, 1, 1, 2, 3, 4, 3, 0, 0, 0, 0)
+freshman_7_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 0.8, 0.5, 0.5, 0, 0.3, 0.2, 0.1)
+freshman_7_decision_dict = make_decision_dict(1, 1, 1, 2, 3, 4, 3, 0.1, 0.3, 0, 0.1)
 
 # sophomore 8
 # past: CS 1110, CS 2110/CS 2112, CS 2800, CS 3110
 # current: CS 3410
 # future: CS 4410, CS 4820
-freshman_8_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 0.8, 0.5, 0.5, 0, 0.7, 0.5, 0.3)
-freshman_8_decision_dict = make_decision_dict(1, 1, 1, 1, 2, 3, 3, 0, 0, 0, 0)
+freshman_8_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 0.8, 0.5, 0.5, 0, 0.7, 0.1, 0.2)
+freshman_8_decision_dict = make_decision_dict(1, 1, 1, 1, 2, 3, 3, 0.3, 0.3, 0.1, 0.2)
 
 # sophomore 9
 # past: CS 1110, CS 2110/CS 2112, CS 2800, CS 3410
 # current: CS 3110
 # future: CS 4410, CS 4820
-freshman_9_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 1, 0.5, 0.5, 0.8, 0.8, 0.5, 0.3)
-freshman_9_decision_dict = make_decision_dict(1, 1, 1, 2, 1, 3, 3, 0, 0, 0, 0)
+freshman_9_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 1, 0.5, 0.5, 0.8, 0.8, 0.1, 0.2)
+freshman_9_decision_dict = make_decision_dict(1, 1, 1, 2, 1, 3, 3, 0.3, 0.3, 0.1, 0.2)
 
 # sophomore 10
 # past: CS 1110, CS 2110/CS 2112, CS 2800, CS 3410
 # current: CS 3110, CS 4410
 # future: CS 4820
-freshman_10_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 1, 0.5, 0.5, 1, 0.9, 0.5, 0.3)
-freshman_10_decision_dict = make_decision_dict(1, 1, 1, 2, 1, 2, 3, 0, 0, 0, 0)
+freshman_10_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 1, 0.5, 0.5, 1, 0.9, 0.1, 0.2)
+freshman_10_decision_dict = make_decision_dict(1, 1, 1, 2, 1, 2, 3, 0.3, 0.3, 0.1, 0.2)
 
 # sophomore 11
 # past: CS 1110, CS 2110/CS 2112, CS 2800, CS 3410
 # current: CS 3110, CS 4820
 # future: CS 4410
-freshman_11_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 1, 0.5, 0.5, 0.8, 1, 0.5, 0.3)
-freshman_11_decision_dict = make_decision_dict(1, 1, 1, 2, 1, 3, 2, 0, 0, 0, 0)
+freshman_11_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 1, 0.5, 0.5, 0.8, 1, 0.1, 0.2)
+freshman_11_decision_dict = make_decision_dict(1, 1, 1, 2, 1, 3, 2, 0.3, 0.3, 0.1, 0.2)
 
 # sophomore 12
 # past: CS 1110, CS 2110/CS 2112, CS 2800, CS 3110
 # current: CS 3410, CS 4820
 # future: CS 4410
-freshman_12_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 1, 0.5, 0.5, 0.8, 1, 0.5, 0.3)
-freshman_12_decision_dict = make_decision_dict(1, 1, 1, 1, 2, 3, 2, 0, 0, 0, 0)
+freshman_12_choice_dict = make_choice_dict_prob(0.8, 0.2, 0.8, 0.2, 1, 1, 0.5, 0.5, 0.8, 1, 0.1, 0.2)
+freshman_12_decision_dict = make_decision_dict(1, 1, 1, 1, 2, 3, 2, 0.3, 0.3, 0.1, 0.2)
 
+student_choice_list = [freshman_1_choice_dict, freshman_2_choice_dict, freshman_3_choice_dict,
+                       freshman_4_choice_dict, freshman_5_choice_dict, freshman_6_choice_dict,
+                       freshman_7_choice_dict, freshman_8_choice_dict, freshman_9_choice_dict,
+                       freshman_10_choice_dict, freshman_11_choice_dict, freshman_12_choice_dict]
+student_decision_list = [freshman_1_decision_dict, freshman_2_decision_dict, freshman_3_decision_dict,
+                       freshman_4_decision_dict, freshman_5_decision_dict, freshman_6_decision_dict,
+                       freshman_7_decision_dict, freshman_8_decision_dict, freshman_9_decision_dict,
+                       freshman_10_decision_dict, freshman_11_decision_dict, freshman_12_decision_dict]
 
-freshman_class_dict = make_student_class_dict(freshman_10_choice_dict, freshman_10_decision_dict)
+random_student_type = random.randrange(0, 12)
+
+freshman_class_dict = make_student_class_dict(student_choice_list[random_student_type],
+                                              student_decision_list[random_student_type])
 freshman_student = make_student(freshman_class_dict)
 print(freshman_student)
 
