@@ -100,7 +100,11 @@ public class Ranking {
         }
         currCoursesSum.scalarProduct(0.5);
 
-        return null;
+        skillSetSum.addVector(pastCoursesSum);
+        skillSetSum.addVector(currCoursesSum);
+        // TODO add free time vector
+        return skillSetSum;
+
     }
     public void getRankingForCourse(GoogleUser user, StudentCourse course) {
         InitData data = InitData.Companion.getByUser(user);
