@@ -43,6 +43,11 @@ data class CourseInfo(
                     description = description, weightVector = weightVector
             )
 
+        val asSimplifiedCourseInfo: SimplifiedCourseInfo
+            get() = SimplifiedCourseInfo(
+                    id = id, subject = subject, code = code, title = title
+            )
+
         companion object : TypedEntityCompanion<Table, CourseInfoEntity>(table = Table) {
 
             override fun create(entity: Entity): CourseInfoEntity = CourseInfoEntity(entity)
@@ -67,6 +72,12 @@ data class CourseInfo(
          */
         fun getAll(): List<CourseInfo> =
                 CourseInfoEntity.all().map { it.asCourseInfo }.toList()
+
+        /**
+         * [getAll] returns a list of all [CourseInfo] in the database.
+         */
+        fun getAllSimplified(): List<SimplifiedCourseInfo> =
+                CourseInfoEntity.all().map { it.asSimplifiedCourseInfo }.toList()
 
         /**
          * [addAll] adds a list of all the courses in the database.

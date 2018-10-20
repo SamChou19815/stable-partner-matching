@@ -13,11 +13,7 @@ export class ProjectCardComponent implements OnInit {
    * The data to display.
    * @type {ProjectCardData}
    */
-  @Input() data: ProjectCardData = <ProjectCardData>{ name: '', logo: '' };
-  /**
-   * Whether sign in is enabled, which defaults to false.
-   * @type {boolean}
-   */
+  @Input() data: ProjectCardData = <ProjectCardData>{ name: '' };
   @Input() signInEnabled = false;
 
   constructor(private googleUserService: GoogleUserService) {

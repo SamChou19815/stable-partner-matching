@@ -19,7 +19,7 @@ data class StudentRatingRecord(
         val ratingStudentId: Key, val ratedStudentId: Key, val courseId: Key, val rating: Long
 ) {
 
-    private object Table : TypedTable<Table>() {
+    private object Table : TypedTable<Table>(tableName = "StudentRatingAccumulator") {
         val ratingStudentId = keyProperty(name = "rating_student_id")
         val ratedStudentId = keyProperty(name = "rated_student_id")
         val courseId = keyProperty(name = "course_id")

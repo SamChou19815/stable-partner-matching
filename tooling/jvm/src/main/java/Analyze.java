@@ -44,7 +44,7 @@ import java.lang.AutoCloseable;
  */
 public class Analyze {
 
-    private double EntitySalienceThreshold = 0.5;
+
     /**
      * Identifies entities in the string {@code text}.
      */
