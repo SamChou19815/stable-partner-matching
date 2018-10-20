@@ -3,9 +3,7 @@ import re
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 import json
-import sys
 
-# file = sys.argv[1]
 frame = pd.read_json('data.json')
 text = []
 for chunks in frame['keywords']:
