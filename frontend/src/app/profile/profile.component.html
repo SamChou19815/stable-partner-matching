@@ -1,6 +1,33 @@
 <ng-container *ngIf="isUserLoggedIn">
   <div *ngIf="isInitialized">
-    TODO profile
+    <mat-card>
+      <mat-card-title>Editing your Profile</mat-card-title>
+      <mat-card-content>
+        <mat-form-field>
+          <mat-select placeholder="Student Class" [required]="true" [(ngModel)]="profile.studentClass">
+            <mat-option *ngFor="let clazz of possibleStudentClasses" [value]="clazz">{{clazz}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [(ngModel)]="profile.graduationYear" placeholder="Graduation Year" type="number" required>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [(ngModel)]="profile.skills" placeholder="Skills (separated by comma)"
+                 type="text" required>
+        </mat-form-field>
+        <mat-form-field>
+        <textarea matInput [(ngModel)]="profile.introduction"
+                  placeholder="Introduction" type="text"></textarea>
+        </mat-form-field>
+        <mat-form-field>
+        <textarea matInput [(ngModel)]="profile.experience"
+                  placeholder="Experience" type="text"></textarea>
+        </mat-form-field>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary" (click)="saveChanges()">Save Changes</button>
+      </mat-card-actions>
+    </mat-card>
   </div>
 </ng-container>
 <app-project-card [data]="appIntro" [signInEnabled]="true" *ngIf="!isUserLoggedIn"></app-project-card>

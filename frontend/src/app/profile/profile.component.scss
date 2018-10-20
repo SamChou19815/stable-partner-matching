@@ -1,0 +1,20 @@
+mat-card {
+  width: 90%;
+  height: 90%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+label {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+mat-slider {
+  margin-left: 1em;
+  flex: 1 1;
+}
+

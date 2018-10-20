@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { shortDelay } from '../shared/util';
+import { asyncRun, shortDelay } from '../shared/util';
 import { MatDialog } from '@angular/material';
 import { LoadingOverlayService } from '../shared/overlay/loading-overlay.service';
 import { GoogleUserService } from '../shared/google-user.service';
 import { appCardData, ProjectCardData } from '../shared/project-card-data';
 import { GlobalDataService } from '../shared/global-data.service';
+import { dummyInitData, StudentClass, StudentProfile } from '../shared/data';
+import { ProfileNetworkService } from './profile-network.service';
 
 @Component({
   selector: 'app-profile',
@@ -13,15 +15,20 @@ import { GlobalDataService } from '../shared/global-data.service';
 })
 export class ProfileComponent implements OnInit {
 
+  readonly possibleStudentClasses: StudentClass[] = ['FRESHMAN', 'SOPHOMORE', 'JUNIOR', 'SENIOR'];
+
   readonly appIntro: ProjectCardData = appCardData;
   /**
    * Whether the user has logged in.
    */
   isUserLoggedIn = false;
 
+  profile: StudentProfile = dummyInitData.profile;
+
   constructor(private dataService: GlobalDataService,
               private googleUserService: GoogleUserService,
               private loadingService: LoadingOverlayService,
+              private networkService: ProfileNetworkService,
               private dialog: MatDialog) {
   }
 
@@ -33,7 +40,9 @@ export class ProfileComponent implements OnInit {
         ref.close();
         return;
       }
-      this.dataService.initializeApp().then(ref.close);
+      await this.dataService.initializeApp();
+      this.profile = this.dataService.initData.profile;
+      ref.close();
     });
   }
 
@@ -43,6 +52,15 @@ export class ProfileComponent implements OnInit {
 
   get isInitialized(): boolean {
     return !this.dataService.initData.isNotInitialized;
+  }
+
+  saveChanges() {
+    asyncRun(async () => {
+      const ref = this.loadingService.open();
+      await this.networkService.update(this.profile);
+      this.dataService.initData.profile = this.profile;
+      ref.close();
+    });
   }
 
 }

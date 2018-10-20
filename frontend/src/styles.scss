@@ -1,4 +1,60 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+a {
+  min-width: 0 !important;
+}
+
+.multi-line {
+  white-space: pre-line;
+}
+
+.section-text {
+  margin: 1em;
+}
+
+/* Styling cards on different device widths. */
+
+/*  Mobile */
+@media (max-width: 600px) {
+  mat-card {
+    width: 90%;
+    margin: 0.5em auto;
+  }
+}
+
+/*  Tablet */
+@media (max-width: 900px) and (min-width: 600px) {
+  mat-card {
+    width: 80%;
+    margin: 1em auto;
+  }
+
+  .section-text {
+    text-align: center;
+  }
+}
+
+/*  Desktop */
+@media (min-width: 900px) {
+  mat-card {
+    margin: 1em auto;
+    width: 600px;
+  }
+
+  .section-text {
+    text-align: center;
+  }
+}
+
+.mat-fab {
+  position: fixed !important;
+  right: 1em;
+  bottom: 1em;
+  z-index: 2;
+}
+
