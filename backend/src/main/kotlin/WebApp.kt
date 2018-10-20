@@ -76,7 +76,6 @@ private fun initializePartnerApiHandlers() {
     }
     post(path = "/invite") {
         PartnerInvitation.editPartnerInvitation(invitation = toJson())
-        "OK"
     }
     post(path = "/respond_invitation") {
         val accepted = queryParams("accepted")?.let { it == "true" } ?: badRequest()
