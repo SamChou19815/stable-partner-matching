@@ -9,7 +9,13 @@ mat-drawer, mat-drawer-content {
 
 @media (min-width: 600px) {
   mat-drawer {
-    width: 500px;
+    width: 600px;
+  }
+}
+
+@media (max-width: 600px) {
+  mat-drawer {
+    width: 100%;
   }
 }
 
@@ -29,5 +35,6 @@ mat-slider {
 }
 
 .right-arrow {
+  margin-left: 0.5em;
   cursor: pointer;
 }

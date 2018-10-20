@@ -112,7 +112,9 @@ export class CourseComponent implements OnInit {
   deleteCourse(studentCourse: StudentCourse) {
     asyncRun(async () => {
       const ref = this.loadingService.open();
-      this.networkService.delete(studentCourse).then(ref.close);
+      await this.networkService.delete(studentCourse);
+      this.constructCourseData(this.allMyCourses.filter(c => c.key !== studentCourse.key));
+      ref.close();
     });
   }
 
