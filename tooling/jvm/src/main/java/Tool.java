@@ -5,11 +5,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Tool {
 
@@ -18,16 +14,33 @@ public class Tool {
         System.out.println("WELCOME TO COURSE READER");
         System.out.println("Initializing keyword and category sets...");
 
-        Set<String> keywordSet = new HashSet<String>();
-        Set<String> categorySet = new HashSet<String>();
+//        Set<String> keywordSet = new HashSet<String>();
+        Map<String, Integer> keywordFreq = new HashMap<String, Integer>();
 
+        Map<String, Integer> categoryFreq = new HashMap<String, Integer>();
+//        Set<String> categorySet = new HashSet<String>();
+
+        float totalK = 0f;
+        float totalC = 0f;
         for (Entry e : entryTable) {
             for (String kw : e.getKeywords().keySet()) {
-                keywordSet.add(kw);
+                totalK += 1;
+                Integer curr = keywordFreq.get(kw);
+                if (curr != null) {
+                    keywordFreq.put(kw, curr + 1);
+                } else {
+                    keywordFreq.put(kw, 1);
+                }
 
             }
             for (String ca : e.getCategories().keySet()) {
-                categorySet.add(ca);
+                totalC += 1;
+                Integer curr = categoryFreq.get(ca);
+                if (curr != null) {
+                    categoryFreq.put(ca, curr + 1);
+                } else {
+                    keywordFreq.put(ca, 1);
+                }
             }
         }
         System.out.println("Finished initialization.");
@@ -41,11 +54,13 @@ public class Tool {
             String s = reader.nextLine();
 
             if (s.equals("k")) {
-                for (String kw : keywordSet) {
-                    System.out.println(kw);
+                for (String kw : keywordFreq.keySet()) {
+                    System.out.println(String.format("%-30s %f", kw, 100*keywordFreq.get(kw) / totalK) + "%");
                 }
             } else if (s.equals("c")) {
-                for (String ca : categorySet) {
+                for (String ca : categoryFreq.keySet()) {
+
+                    System.out.println(String.format("%-30s %f", ca, 100*categoryFreq.get(ca) / totalC) + "%");
                     System.out.println(ca);
                 }
             } else if (s.startsWith("find")) {
@@ -54,7 +69,7 @@ public class Tool {
                 String tgt = s.substring(spaceIdx + 1);
 
                 System.out.println("Searching for: " + tgt);
-                if (!keywordSet.contains(tgt)) {
+                if (!keywordFreq.keySet().contains(tgt)) {
                     System.out.println("None of the courses have this keyword.");
                 } else {
                     for (Entry e : entryTable) {
@@ -68,7 +83,7 @@ public class Tool {
 
                 String tgt = s.substring(spaceIdx+1);
                 System.out.println("Searching for: " + tgt);
-                if (!categorySet.contains(tgt)) {
+                if (!categoryFreq.keySet().contains(tgt)) {
                     System.out.println("None of the courses have this category.");
                 } else {
                     for (Entry e : entryTable) {
