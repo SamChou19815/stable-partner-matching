@@ -13,7 +13,7 @@
     <a mat-stroked-button class="sign-in-button" *ngIf="!signedIn" (click)="signIn()" target=_blank>
       <span>Sign in by Google</span>
     </a>
-    <a mat-stroked-button class="sign-in-button" *ngIf="signedIn" routerLink="/profile" target=_blank>
+    <a mat-stroked-button class="sign-in-button" *ngIf="signedIn" [routerLink]="['/profile']">
       <span>My Profile</span>
     </a>
   </nav>

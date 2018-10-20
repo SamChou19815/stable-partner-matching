@@ -59,8 +59,6 @@ sorted_items=sort_coo(tf_idf_vector.tocoo())
 keywords=extract_topn_from_vector(feature_names,sorted_items,round(0.5*len(text)))
 
 result = [k for k in keywords]
-print(result)
-
 
 with open('keywords.json', 'w') as outfile:
     json.dump(result, outfile)

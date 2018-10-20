@@ -101,7 +101,7 @@ data class StudentCourse(
                         table.studentId eq id
                         table.status eq TimeStatus.PAST
                     }
-                }.map { it.key }.toList()
+                }.map { it.courseId }.toList()
 
         /**
          * [getAllCurrCourseKeys] returns a list of all current courses' keys of a student with [id].

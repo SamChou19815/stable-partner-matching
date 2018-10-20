@@ -72,7 +72,7 @@ export class NavDataList {
    */
   getNameByUrl(url: string): string {
     const nameOpt = this.nameMap.get(url);
-    return nameOpt ? nameOpt : 'Developer Sam';
+    return nameOpt ? nameOpt : 'Matching';
   }
 
 }

@@ -58,7 +58,6 @@ data class StudentPartnership(
                 table.student1Id eq student1Id
                 table.student2Id eq student2Id
                 table.courseId eq courseId
-                table.timeStatus eq timeStatus
             }
         }.firstOrNull()
         val entityOpt2 = StudentPartnershipEntity.query {
@@ -66,7 +65,6 @@ data class StudentPartnership(
                 table.student1Id eq student2Id
                 table.student2Id eq student1Id
                 table.courseId eq courseId
-                table.timeStatus eq timeStatus
             }
         }.firstOrNull()
         val existingEntitiesKeys = arrayListOf<Key>()
@@ -78,6 +76,19 @@ data class StudentPartnership(
     }
 
     companion object {
+
+        /**
+         * [exists] returns whether a partnership parameterized by [student1Id], [student2Id] and
+         * [courseId] exists.
+         */
+        fun exists(student1Id: Key, student2Id: Key, courseId: Key): Boolean =
+                StudentPartnershipEntity.any {
+                    filter {
+                        table.student1Id eq student1Id
+                        table.student2Id eq student2Id
+                        table.courseId eq courseId
+                    }
+                }
 
         /**
          * [getAllPartnerships] returns a list of all partnerships given a [studentId].
@@ -92,10 +103,12 @@ data class StudentPartnership(
          * [handleInvitation] handles an invitation given the [invitation] and whether it's
          * [accepted].
          */
-        fun handleInvitation(invitation: PartnerInvitation, accepted: Boolean) {
+        fun handleInvitation(
+                invitation: PartnerInvitation, accepted: Boolean
+        ): StudentPartnership? {
             invitation.delete()
             if (!accepted) {
-                return
+                return null
             }
             // Delete existing partnership
             val entityOpt1 = StudentPartnershipEntity.query {
@@ -103,7 +116,6 @@ data class StudentPartnership(
                     table.student1Id eq invitation.invitedId
                     table.student2Id eq invitation.inviterId
                     table.courseId eq invitation.courseId
-                    table.timeStatus eq invitation.timeStatus
                 }
             }.firstOrNull()
             val entityOpt2 = StudentPartnershipEntity.query {
@@ -111,7 +123,6 @@ data class StudentPartnership(
                     table.student1Id eq invitation.inviterId
                     table.student2Id eq invitation.invitedId
                     table.courseId eq invitation.courseId
-                    table.timeStatus eq invitation.timeStatus
                 }
             }.firstOrNull()
             val existingEntitiesKeys = arrayListOf<Key>()
@@ -122,17 +133,17 @@ data class StudentPartnership(
             }
             // Create new
             StudentPartnershipEntity.insert {
-                table.student1Id gets invitation.inviterId
-                table.student2Id gets invitation.invitedId
-                table.courseId gets invitation.courseId
-                table.timeStatus gets invitation.timeStatus
-            }
-            StudentPartnershipEntity.insert {
                 table.student1Id gets invitation.invitedId
                 table.student2Id gets invitation.inviterId
                 table.courseId gets invitation.courseId
                 table.timeStatus gets invitation.timeStatus
             }
+            return StudentPartnershipEntity.insert {
+                table.student1Id gets invitation.inviterId
+                table.student2Id gets invitation.invitedId
+                table.courseId gets invitation.courseId
+                table.timeStatus gets invitation.timeStatus
+            }.asStudentPartnership
         }
 
     }
