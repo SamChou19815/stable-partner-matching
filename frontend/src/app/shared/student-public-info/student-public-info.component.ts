@@ -11,7 +11,7 @@ export class StudentPublicInfoComponent implements OnInit {
 
   @Input() s: StudentPublicInfo = <StudentPublicInfo>{
     id: '', name: '', email: '', picture: '', skills: '', introduction: '', experience: '',
-    averageRating: '', courses: []
+    averageRating: 0, pastCourses: []
   };
 
   constructor(private dataService: GlobalDataService) { }

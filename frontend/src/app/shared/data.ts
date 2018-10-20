@@ -29,7 +29,7 @@ export interface StudentPublicInfo {
   readonly skills: string;
   readonly introduction: string;
   readonly experience: string;
-  readonly courses: string[]; // an array of course IDs.
+  readonly pastCourses: string[]; // an array of course IDs.
   readonly grade?: number; // an optional grade for debugging
 }
 
@@ -40,15 +40,6 @@ export interface StudentCourse {
   readonly score?: number; // Must be an int
   status: TimeStatus;
   isTa?: boolean;
-}
-
-export interface StudentPublicInfo {
-  readonly id: string;
-  readonly name: string;
-  readonly email: string;
-  readonly averageRating: number;
-  readonly pastCourses: number[]; // an array of course IDs.
-  readonly grade?: number; // an optional grade for debugging
 }
 
 export interface StudentPartnership {
