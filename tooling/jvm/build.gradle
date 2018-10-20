@@ -50,6 +50,8 @@ allprojects {
         api 'com.github.SamChou19815:kinetics:0.4.1'
         // Cornell API Client Library
         api 'com.github.SamChou19815:cornell-api-libs:0.2.0'
+        // Google NLP
+        api 'com.google.cloud:google-cloud-language:1.49.0'
     }
 
     compileKotlin {

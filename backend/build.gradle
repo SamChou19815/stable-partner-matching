@@ -46,8 +46,23 @@ allprojects {
         implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.71'
         // Test
         testImplementation 'junit:junit:4.12'
-        // Kinetics
-        api 'com.github.SamChou19815:kinetics:0.4.1'
+        // Spark
+        implementation 'com.sparkjava:spark-core:2.8.0'
+        implementation 'com.sparkjava:spark-kotlin:1.0.0-alpha'
+        // Firebase
+        implementation 'com.google.firebase:firebase-admin:6.5.0'
+        // Spark Pac4j
+        api 'org.pac4j:spark-pac4j:2.2.0'
+        api 'org.pac4j:pac4j-http:2.2.1'
+        // GSON
+        api 'com.google.code.gson:gson:2.8.5'
+        // Database
+        api 'com.github.SamChou19815:typed-store:0.8.2'
+        // Logging
+        implementation 'org.slf4j:slf4j-api:1.7.25'
+        implementation 'org.slf4j:jcl-over-slf4j:1.7.25'
+        implementation 'org.slf4j:slf4j-log4j12:1.7.25'
+        implementation 'log4j:log4j:1.2.17'
         // Cornell API Client Library
         api 'com.github.SamChou19815:cornell-api-libs:0.2.0'
     }
@@ -85,6 +100,8 @@ dependencies {
     implementation 'com.sparkjava:spark-core:2.8.0'
     implementation 'com.sparkjava:spark-kotlin:1.0.0-alpha'
     // Add your dependencies here
+    // Google NLP
+    api 'com.google.cloud:google-cloud-language:1.49.0'
 }
 
 /*
@@ -126,7 +143,7 @@ task updateDatastoreIndices {
     String indexFile = '~/.config/gcloud/emulators/datastore/WEB-INF/index.yaml'
     doLast {
         exec {
-            commandLine 'sh', '-c', gcloud datastore create-indexes 
+            commandLine 'sh', '-c', gcloud datastore create-indexes
         }
     }
 }
