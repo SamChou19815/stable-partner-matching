@@ -106,7 +106,8 @@ public class Analyze {
             ClassifyTextResponse response = language.classifyText(request);
 
             for (ClassificationCategory category : response.getCategoriesList()) {
-                categories.add(category.getName().substring(1).toLowerCase());
+                String catName = category.getName();
+                categories.add(catName.substring(catName.lastIndexOf('/') + 1));
             }
         } catch (RuntimeException e) {
             System.out.println("Too few tokens to analyze categories for.");
