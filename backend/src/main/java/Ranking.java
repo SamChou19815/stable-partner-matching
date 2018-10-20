@@ -106,6 +106,12 @@ public class Ranking {
         return skillSetSum;
 
     }
+
+    private double computeFreeTimeScore() {
+
+
+    }
+
     public void getRankingForCourse(GoogleUser user, StudentCourse course) {
         InitData data = InitData.Companion.getByUser(user);
         Key userKey =  user.getKey();
