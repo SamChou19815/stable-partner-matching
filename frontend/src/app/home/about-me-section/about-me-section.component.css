@@ -9,8 +9,7 @@
 }
 
 .hello-world-row {
-  font-size: 2.5em;
-  font-family: 'Roboto Mono', 'Source Code Pro', 'Courier New', Courier, monospace;
+  font-size: 2em;
   font-weight: 100;
 }
 
@@ -81,4 +80,8 @@ a {
 
 app-home-about-me-row a:visited {
   color: white;
+}
+
+.sign-in-button {
+  border: 1px solid white;
 }
