@@ -127,6 +127,7 @@ private fun initializeUserApiHandlers() {
     Filters.before(path = "/*", role = Role.USER)
     get(path = "/load") { InitData.getByUser(user = user) }
     path("/profile", ::initializeProfileApiHandlers)
+    path("/free-time", ::initializeFreeTimeApiHandlers)
     path("/courses", ::initializeCourseApiHandlers)
     path("/partners", ::initializePartnerApiHandlers)
     path("/matching", ::initializeMatchingApiHandlers)

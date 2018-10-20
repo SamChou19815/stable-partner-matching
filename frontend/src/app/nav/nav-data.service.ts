@@ -14,6 +14,7 @@ export class NavDataService {
     name: 'App', icon: Icon.ofMaterial('android'),
     children: [
       { name: 'Profile', icon: Icon.ofMaterial('person'), link: '/profile' },
+      { name: 'Free Times', icon: Icon.ofMaterial('schedule'), link: '/free-time' },
       { name: 'Courses', icon: Icon.ofMaterial('school'), link: '/courses' },
       { name: 'Partners', icon: Icon.ofMaterial('group'), link: '/partners' },
       { name: 'Matching', icon: Icon.ofMaterial('person_add'), link: '/matching' }

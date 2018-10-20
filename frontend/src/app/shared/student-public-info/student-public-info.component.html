@@ -32,6 +32,17 @@
       </mat-list-item>
     </mat-list>
   </mat-card-content>
+  <mat-divider *ngIf="s.freeTimes.record.length > 0"></mat-divider>
+  <mat-card-content *ngIf="s.freeTimes.record.length > 0">
+    <div class="text-div" style="padding-top: 0.5em">Free Times</div>
+    <mat-list>
+      <mat-list-item *ngFor="let interval of s.freeTimes.record">
+        <span>{{getIntervalName(interval.start)}} - {{getIntervalName(interval.end)}}</span>
+        <span style="flex: 1 1 auto"></span>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
   <mat-card-actions>
     <ng-content></ng-content>
   </mat-card-actions>
