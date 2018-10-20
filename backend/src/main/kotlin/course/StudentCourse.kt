@@ -92,6 +92,19 @@ data class StudentCourse(
                 }.map { it.asStudentCourse }.toList()
 
         /**
+         * [getAllCoursesByStudentAndCourseId] returns a list of all courses
+         * with [studentId] and [courseId].
+         */
+        fun getAllCoursesByStudentAndCourseId(studentId: Key, courseId: Key): StudentCourse? =
+                StudentCourseEntity.query {
+                    filter {
+                        table.studentId eq studentId
+                        table.courseId eq courseId
+                    }
+                    order { table.status.asc() }
+                }.firstOrNull()?.asStudentCourse
+
+        /**
          * [getAllCoursesByCourseId] returns a list of all courses with [courseId].
          */
         fun getAllCoursesByCourseId(courseId: Key): List<StudentCourse> =
