@@ -93,7 +93,7 @@ public class Analyze {
 
         List<String> categories = new ArrayList<String>();
         for (ClassificationCategory category : response.getCategoriesList()) {
-            categories.add(category.getName());
+            categories.add(category.getName().substring(1));
         }
 
         return categories;
