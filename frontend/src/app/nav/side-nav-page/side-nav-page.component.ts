@@ -23,17 +23,14 @@ export class SideNavPageComponent implements OnInit, AfterViewInit {
 
   /**
    * Title displayed at the top.
-   * @type {string}
    */
   title: string;
   /**
    * Whether the page is home page.
-   * @type {boolean}
    */
   isHome = true;
   /**
    * Current width of the window.
-   * @type {number}
    */
   private windowWidth = 800;
   /**
@@ -64,7 +61,7 @@ export class SideNavPageComponent implements OnInit, AfterViewInit {
         }
         let title: string;
         if (currentUrl === '/') {
-          title = 'Developer Sam';
+          title = 'APP NAME';
           this.isHome = true;
         } else {
           title = this.navDataList.getNameByUrl(currentUrl);
