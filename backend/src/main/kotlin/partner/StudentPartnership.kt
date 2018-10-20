@@ -22,7 +22,7 @@ data class StudentPartnership(
         val timeStatus: TimeStatus
 ) {
 
-    private object Table : TypedTable<Table>() {
+    private object Table : TypedTable<Table>(tableName = "StudentPartnership") {
         val student1Id = keyProperty(name = "student1_id")
         val student2Id = keyProperty(name = "student2_id")
         val courseId = keyProperty(name = "course_id")

@@ -17,7 +17,7 @@ data class StudentRatingAccumulator(
         val ratedStudentId: Key, val totalRating: Long, val totalRater: Long
 ) {
 
-    private object Table : TypedTable<Table>() {
+    private object Table : TypedTable<Table>(tableName = "StudentRatingAccumulator") {
         val ratedStudentId = keyProperty(name = "rated_student_id")
         val totalRating = longProperty(name = "total_rating")
         val totalRater = longProperty(name = "total_rater")

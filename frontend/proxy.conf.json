@@ -1,0 +1,10 @@
+{
+  "/apis/": {
+    "target": "http://localhost:8080",
+    "secure": false
+  },
+  "/_ah/": {
+    "target": "http://localhost:8080",
+    "secure": false
+  }
+}

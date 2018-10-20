@@ -5,6 +5,7 @@ import auth.Role
 import auth.SecurityFilters
 import auth.SecurityFilters.Companion.user
 import course.StudentCourse
+import init.InitData
 import partner.PartnerInvitation
 import partner.StudentPartnership
 import partner.StudentRatingRecord
@@ -37,9 +38,8 @@ private object Filters : SecurityFilters(adminEmails = setOf())
  * [initializeLoadApiHandlers] initializes a list of load related API handlers.
  */
 private fun initializeLoadApiHandlers() {
-    get(path = "load") {
-        val currentUser = user
-        "TODO"
+    get(path = "/load") {
+        InitData.getByUser(user = user)
     }
 }
 
@@ -94,6 +94,7 @@ private fun initializePartnerApiHandlers() {
  */
 private fun initializeUserApiHandlers() {
     Filters.before(path = "/*", role = Role.USER)
+    initializeLoadApiHandlers()
     path("/profile", ::initializeProfileApiHandlers)
     path("/courses", ::initializeCourseApiHandlers)
     path("/partner", ::initializePartnerApiHandlers)

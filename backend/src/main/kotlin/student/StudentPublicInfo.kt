@@ -16,7 +16,7 @@ import partner.StudentRatingAccumulator
  * @property introduction introduction of the student.
  * @property experience experience of the student.
  * @property averageRating average rating of the student.
- * @property pastCourses a list of keys of past courses.
+ * @property courses a list of keys of past courses.
  * @property grade the grade of the student, which means different things in different context.
  */
 data class StudentPublicInfo(
