@@ -11,21 +11,12 @@ export class NavDataService {
    * The group for scheduler.
    */
   private readonly appGroup: NavGroup = <NavGroup>{
-    name: 'App', icon: Icon.ofMaterial('event_note'),
+    name: 'App', icon: Icon.ofMaterial('android'),
     children: [
-      {
-        name: 'Profile', icon: Icon.ofMaterial('profile'),
-        link: '/scheduler/projects'
-      },
-      {
-        name: 'Courses', icon: Icon.ofMaterial('school'), link: '/scheduler/events'
-      },
-      {
-        name: 'Partners', icon: Icon.ofMaterial('group'), link: '/friends'
-      },
-      {
-        name: 'Matching', icon: Icon.ofMaterial('dashboard'), link: '/scheduler/auto'
-      }
+      { name: 'Profile', icon: Icon.ofMaterial('person'), link: '/profile' },
+      { name: 'Courses', icon: Icon.ofMaterial('school'), link: '/courses' },
+      { name: 'Partners', icon: Icon.ofMaterial('group'), link: '/partners' },
+      { name: 'Matching', icon: Icon.ofMaterial('person_add'), link: '/matching' }
     ]
   };
   /**
