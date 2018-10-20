@@ -1,7 +1,8 @@
 import random
 import json
 
-#import pandas as pd
+import numpy as np
+import pandas as pd
 
 """
 type Student {
@@ -25,32 +26,17 @@ student = {
 }
 """
 
-# stdin
-#num_student = input()
-
-
-# Step -1: Make sure json works
-def naive_student():
-    student_dict = dict()
-    student_dict["name"] = "Alice"
-    student_dict["graduationYear"] = 2021
-    student_dict["pastCourses"] = [{"courseName":"CS 1110", "grade": 10}, {"course_name":"CS 2110", "grade": 12}]
-    student_dict["currentCourses"] = [{"courseName":"CS 3110", "grade": -1}, {"course_name":"CS 2800", "grade": -1}]
-    student_dict["futureCourses"] = [{"courseName":"CS 3410", "grade": -1}, {"course_name":"CS 4740", "grade": -1}]
-    student_json = json.dumps(student_dict)
-    return student_json
-
-#print(naive_student())
-
 # Step 1: Randomize the student's name
+# Using data from https://github.com/hadley/data-baby-names
 
 # TODO: importing a csv of names have some problems.
-# names = pd.read_csv("./baby-names.csv")
+names = pd.read_csv("./baby-names.csv")
+name_list = names['name'].tolist()[0:1000]
 
 name_temp = ["Alice", "Bob", "Carol", "Douglas"]
 
 def name_randomize():
-    random_name = random.choice(name_temp)
+    random_name = random.choice(name_list)
     return random_name
 
 # Step 2: Randomize the graduation year
@@ -73,6 +59,9 @@ def gpa_uniform():
     return random_gpa
 
 # TODO: Make the gpa gaussian based on past median
+def gpa_gaussian():
+    gaussian_gpa = np.random.normal(9, 2.0)
+    return int(gaussian_gpa)
 
 # Step 4: Randomize the past courses
 # Idea 1: Typical Student Profile
@@ -87,7 +76,7 @@ def grade_courses_gen(past_course_list):
     for course in past_course_list:
         temp_course_dict = dict()
         temp_course_dict['courseName'] = course
-        temp_course_dict['grade'] = gpa_uniform()
+        temp_course_dict['grade'] = gpa_gaussian()
         all_courses_list.append(temp_course_dict)
     return all_courses_list
 
@@ -271,41 +260,19 @@ def make_student_class_dict(student_choice_dict, student_decision_dict):
     append_class_update(student_class_dict, student_choice_dict, student_decision_dict, "CS 4410")
     append_class_update(student_class_dict, student_choice_dict, student_decision_dict, "CS 4820")
 
-    # TODO: append the elective classes
+    # then deal with the elective classes
     for new_lower_class in ELECTIVE_LOWER:
         append_elective_update(student_class_dict, student_choice_dict, student_decision_dict, new_lower_class)
 
     for new_upper_class in ELECTIVE_UPPER:
         append_elective_update(student_class_dict, student_choice_dict, student_decision_dict, new_upper_class)
 
-    """
-    # deal with CS 1110, CS 1112
-    if (student_decision_dict["CS 1110"] < 4):
-        # update_type gives past/current/future courses
-        update_type = DECISION_ASSOC_DICT.get(student_decision_dict["CS 1110"])
-        # provide the probabilities for 1110 and 1112
-        prob_1110 = student_choice_dict["CS 1110"]
-        prob_1112 = student_choice_dict["CS 1112"]
-        student_class_dict[update_type] = \
-            append_choice(student_class_dict[update_type],"CS 1110", "CS 1112", prob_1110, prob_1112)
-
-    # deal with CS 2110, CS 2112
-    if (student_decision_dict["CS 2110"] < 4):
-        # update_type gives past/current/future courses
-        update_type = DECISION_ASSOC_DICT.get(student_decision_dict["CS 2110"])
-        # provide the probabilities for 1110 and 1112
-        prob_2110 = student_choice_dict["CS 2110"]
-        prob_2112 = student_choice_dict["CS 2112"]
-        student_class_dict[update_type] = \
-            append_choice(student_class_dict[update_type], "CS 2110", "CS 2112", prob_2110, prob_2112)
-    """
-
     return student_class_dict
 
 
 
 # Step infty: Put everything together!
-def make_student(course_dict):
+def make_student(course_dict, year_input):
     """
 
     :param past_course: A list of the student's past courses
@@ -316,7 +283,7 @@ def make_student(course_dict):
 
     new_student_dict = dict()
     new_student_dict['name'] = name_randomize()
-    new_student_dict['graduationYear'] = year_randomize()
+    new_student_dict['graduationYear'] = year_input
     new_student_dict['pastCourses'] = grade_courses_gen(course_dict['pastCourses'])
     new_student_dict['currentCourses'] = nograde_courses_gen(course_dict['currentCourses'])
     new_student_dict['futureCourses'] = nograde_courses_gen(course_dict['futureCourses'])
@@ -418,12 +385,12 @@ student_decision_list = [freshman_1_decision_dict, freshman_2_decision_dict, fre
                        freshman_4_decision_dict, freshman_5_decision_dict, freshman_6_decision_dict,
                        freshman_7_decision_dict, freshman_8_decision_dict, freshman_9_decision_dict,
                        freshman_10_decision_dict, freshman_11_decision_dict, freshman_12_decision_dict]
-
+graduation_year_list = [2022, 2022, 2022, 2022, 2022, 2021, 2021, 2021, 2021, 2020, 2020, 2020]
 random_student_type = random.randrange(0, 12)
 
 freshman_class_dict = make_student_class_dict(student_choice_list[random_student_type],
                                               student_decision_list[random_student_type])
-freshman_student = make_student(freshman_class_dict)
+freshman_student = make_student(freshman_class_dict, graduation_year_list[random_student_type])
 print(freshman_student)
 
 
