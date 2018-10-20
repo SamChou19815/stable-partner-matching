@@ -6,16 +6,26 @@
   </mat-card-header>
   <mat-divider></mat-divider>
   <mat-card-content>
-    <div class="text-div">Average Rating: {{s.averageRating}}</div>
     <div class="text-div">Skills: {{s.skills}}</div>
     <div class="text-div">Introduction: {{s.introduction}}</div>
     <div class="text-div">Experience: {{s.experience}}</div>
   </mat-card-content>
-  <mat-divider *ngIf="s.courses.length > 0"></mat-divider>
-  <mat-card-content *ngIf="s.courses.length > 0">
+  <mat-divider *ngIf="s.pastCourses.length > 0"></mat-divider>
+  <mat-card-content *ngIf="s.pastCourses.length > 0">
     <div class="text-div" style="padding-top: 0.5em">Past Courses</div>
     <mat-list>
-      <mat-list-item *ngFor="let courseKey of s.courses">
+      <mat-list-item *ngFor="let courseKey of s.pastCourses">
+        <span>{{getCourseName(courseKey)}}</span>
+        <span style="flex: 1 1 auto"></span>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+  <mat-divider *ngIf="s.currCourses.length > 0"></mat-divider>
+  <mat-card-content *ngIf="s.currCourses.length > 0">
+    <div class="text-div" style="padding-top: 0.5em">Current Courses</div>
+    <mat-list>
+      <mat-list-item *ngFor="let courseKey of s.currCourses">
         <span>{{getCourseName(courseKey)}}</span>
         <span style="flex: 1 1 auto"></span>
         <mat-divider></mat-divider>

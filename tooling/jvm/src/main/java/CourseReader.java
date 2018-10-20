@@ -48,7 +48,7 @@ public class CourseReader {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        String path = "smol_course.json";
+        String path = "cs-courses.json";
         BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
 
         Gson gson = new Gson();
@@ -59,7 +59,7 @@ public class CourseReader {
 
             List<Entry> entryTable = createEntryTable(courseArray);
             try {
-                writeData(entryTable, "entryData.json");
+                writeData(entryTable, "data.json");
             } catch (IOException e) {
                 System.out.println("Failed to write entry data to json");
             }

@@ -137,14 +137,14 @@ data class StudentPartnership(
             }
             // Create new
             StudentPartnershipEntity.insert {
-                table.student1Id gets invitation.invitedId
-                table.student2Id gets invitation.inviterId
+                table.student1Id gets invitation.inviterId
+                table.student2Id gets invitation.invitedId
                 table.courseId gets invitation.courseId
                 table.timeStatus gets invitation.timeStatus
             }
             return StudentPartnershipEntity.insert {
-                table.student1Id gets invitation.inviterId
-                table.student2Id gets invitation.invitedId
+                table.student1Id gets invitation.invitedId
+                table.student2Id gets invitation.inviterId
                 table.courseId gets invitation.courseId
                 table.timeStatus gets invitation.timeStatus
             }.asStudentPartnership

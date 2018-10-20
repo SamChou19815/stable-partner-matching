@@ -65,8 +65,8 @@ public class Weighting {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        String path = "weights.json";
-        String e_path = "entryData.json";
+        String path = "keywords.json";
+        String e_path = "data.json";
         try {
             String[] weights = readWeights(path);
             try {
