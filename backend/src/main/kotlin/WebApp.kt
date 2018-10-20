@@ -7,6 +7,7 @@ import auth.SecurityFilters.Companion.user
 import com.google.cloud.datastore.Key
 import course.CourseInfo
 import course.StudentCourse
+import freetime.StudentFreeTimeRecord
 import init.InitData
 import partner.PartnerInvitation
 import partner.StudentPartnership
@@ -52,7 +53,17 @@ private fun initializeProfileApiHandlers() {
 }
 
 /**
- * [initializeCourseApiHandlers] initializes a list of profile related API handlers.
+ * [initializeFreeTimeApiHandlers] initializes a list of free time related API handlers.
+ */
+private fun initializeFreeTimeApiHandlers() {
+    post(path = "/update") {
+        val record: StudentFreeTimeRecord = toJson()
+        record.upsert()
+    }
+}
+
+/**
+ * [initializeCourseApiHandlers] initializes a list of course related API handlers.
  */
 private fun initializeCourseApiHandlers() {
     post(path = "/edit") {

@@ -2,7 +2,6 @@ package course
 
 import com.google.cloud.datastore.Entity
 import com.google.cloud.datastore.Key
-import com.sun.xml.internal.fastinfoset.alphabet.BuiltInRestrictedAlphabets.table
 import common.TimeStatus
 import typedstore.TypedEntity
 import typedstore.TypedEntityCompanion
@@ -89,6 +88,15 @@ data class StudentCourse(
         fun getAllCoursesByStudentId(id: Key): List<StudentCourse> =
                 StudentCourseEntity.query {
                     filter { table.studentId eq id }
+                    order { table.status.asc() }
+                }.map { it.asStudentCourse }.toList()
+
+        /**
+         * [getAllCoursesByCourseId] returns a list of all courses with [courseId].
+         */
+        fun getAllCoursesByCourseId(courseId: Key): List<StudentCourse> =
+                StudentCourseEntity.query {
+                    filter { table.courseId eq courseId }
                     order { table.status.asc() }
                 }.map { it.asStudentCourse }.toList()
 
