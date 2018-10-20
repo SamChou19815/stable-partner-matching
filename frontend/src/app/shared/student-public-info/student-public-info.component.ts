@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GlobalDataService } from '../global-data.service';
-import { StudentPublicInfo } from '../data';
+import { StudentPublicInfo, timeIntervalIdToStr } from '../data';
 
 @Component({
   selector: 'app-student-public-info',
@@ -10,8 +10,16 @@ import { StudentPublicInfo } from '../data';
 export class StudentPublicInfoComponent implements OnInit {
 
   @Input() s: StudentPublicInfo = <StudentPublicInfo>{
-    id: '', name: '', email: '', picture: '', skills: '',
-    introduction: '', experience: '', pastCourses: [], currCourses: []
+    id: '',
+    name: '',
+    email: '',
+    picture: '',
+    skills: '',
+    introduction: '',
+    experience: '',
+    freeTimes: { key: '', studentId: '', record: [] },
+    pastCourses: [],
+    currCourses: []
   };
 
   constructor(private dataService: GlobalDataService) { }
@@ -21,6 +29,11 @@ export class StudentPublicInfoComponent implements OnInit {
 
   getCourseName(key: string): string {
     return this.dataService.getCourseNameByKey(key);
+  }
+
+  // noinspection JSMethodCanBeStatic
+  getIntervalName(interval: number): string {
+    return timeIntervalIdToStr(interval);
   }
 
 }

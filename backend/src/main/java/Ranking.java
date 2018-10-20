@@ -110,7 +110,6 @@ public class Ranking {
 
     }
 
-
     public final List<InitData> getRankingForCourse(List<InitData> data, GoogleUser user, StudentCourse course) {
         if (orderedWeights == null) {
             init(course);
@@ -118,11 +117,10 @@ public class Ranking {
 
         CourseInfo courseInfo = CourseInfo.Companion.get(course.getKey());
         MathVector courseW = getCourseVector(courseInfo);
+
         Key userKey =  user.getKey();
 
         MathVector userScore = compute_s_score(userKey, courseW);
-
-//        Map<Key, Double> scores = new HashMap<Key, Double>();
 
         List<Key> partners = new ArrayList<Key>();
         List<Double> scores = new ArrayList<Double>();
