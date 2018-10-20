@@ -1,21 +1,21 @@
 import java.util.Map;
 
 public class Vector {
-    int courseId;
-    Map<String, Double> weights;
+    String subject;
+    String code;
+    String title;
+    String description;
+    Map<String, Double> weightVector;
 
-    Vector(int id, Map<String, Double> w) {
-        courseId = id;
-        weights = w;
+    Vector(String subj, String nbr, String ttl, String dsc, Map<String, Double> w) {
+        subject = subj;
+        code = nbr;
+        title = ttl;
+        description = dsc;
+        weightVector = w;
     }
 
-    public int getCourseId() {
-        return courseId;
-    }
 
-    public Map<String, Double> weights() {
-        return weights;
-    }
 
 
 }
