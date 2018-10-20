@@ -61,6 +61,12 @@ data class CourseInfo(
     companion object {
 
         /**
+         * A list of all simplified course info, cached here.
+         */
+        private val allSimplifiedCourseInfo: List<SimplifiedCourseInfo> =
+                CourseInfoEntity.all().map { it.asSimplifiedCourseInfo }.toList()
+
+        /**
          * [get] returns an optional course information given the id of the course.
          */
         operator fun get(key: Key): CourseInfo? = CourseInfoEntity[key]?.asCourseInfo
@@ -81,8 +87,7 @@ data class CourseInfo(
         /**
          * [getAll] returns a list of all [CourseInfo] in the database.
          */
-        fun getAllSimplified(): List<SimplifiedCourseInfo> =
-                CourseInfoEntity.all().map { it.asSimplifiedCourseInfo }.toList()
+        fun getAllSimplified(): List<SimplifiedCourseInfo> = allSimplifiedCourseInfo
 
         /**
          * [addAll] adds a list of all the courses in the database.

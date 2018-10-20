@@ -2,6 +2,7 @@ package course
 
 import com.google.cloud.datastore.Entity
 import com.google.cloud.datastore.Key
+import com.sun.xml.internal.fastinfoset.alphabet.BuiltInRestrictedAlphabets.table
 import common.TimeStatus
 import typedstore.TypedEntity
 import typedstore.TypedEntityCompanion
@@ -20,24 +21,24 @@ import typedstore.TypedTable
 data class StudentCourse(
         val key: Key? = null,
         val studentId: Key, val courseId: Key,
-        val score: Long, val status: TimeStatus,
-        val isTa: Boolean
+        val score: Long?, val status: TimeStatus,
+        val isTa: Boolean?
 ) {
 
     private object Table : TypedTable<Table>(tableName = "StudentCourse") {
         val studentId = keyProperty(name = "student_id")
         val courseId = keyProperty(name = "course_id")
-        val score = longProperty(name = "score")
+        val score = nullableLongProperty(name = "score")
         val status = enumProperty(name = "status", clazz = TimeStatus::class.java)
-        val isTa = boolProperty(name = "is_ta")
+        val isTa = nullableBoolProperty(name = "is_ta")
     }
 
     private class StudentCourseEntity(entity: Entity) : TypedEntity<Table>(entity = entity) {
         val studentId: Key = Table.studentId.delegatedValue
         val courseId: Key = Table.courseId.delegatedValue
-        val score: Long = Table.score.delegatedValue
+        val score: Long? = Table.score.delegatedValue
         val status: TimeStatus = Table.status.delegatedValue
-        val isTa: Boolean = Table.isTa.delegatedValue
+        val isTa: Boolean? = Table.isTa.delegatedValue
 
         val asStudentCourse: StudentCourse
             get() = StudentCourse(
@@ -54,17 +55,22 @@ data class StudentCourse(
     }
 
     /**
-     * [upsert] upserts the record into the database.
+     * [upsert] upserts the record into the database and returns the upserted one.
      */
-    fun upsert() {
-        val entityOpt = key?.let { StudentCourseEntity[it] }
-        StudentCourseEntity.upsert(entity = entityOpt) {
+    fun upsert(): StudentCourse {
+        val entityOpt = StudentCourseEntity.query {
+            filter {
+                table.studentId eq studentId
+                table.courseId eq courseId
+            }
+        }.firstOrNull()
+        return StudentCourseEntity.upsert(entity = entityOpt) {
             table.studentId gets studentId
             table.courseId gets courseId
             table.score gets score
             table.status gets status
             table.isTa gets isTa
-        }
+        }.asStudentCourse
     }
 
     /**

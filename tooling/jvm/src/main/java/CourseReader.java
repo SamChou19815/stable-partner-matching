@@ -32,7 +32,7 @@ public class CourseReader {
                 System.out.println("Could not initialize category analysis for: " + title);
                 System.out.println(e.getMessage());
             }
-            entryTable.add(new Entry(title, subject, catalogNbr, id, keywords, categories));
+            entryTable.add(new Entry(title, subject, catalogNbr, desc, keywords, categories));
         }
         return entryTable;
 

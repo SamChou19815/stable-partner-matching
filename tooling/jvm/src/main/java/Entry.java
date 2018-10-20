@@ -8,15 +8,15 @@ public class Entry {
     String title;
     String subject;
     String catalogNbr;
-    int courseId = -1;
+    String desc;
 
-    public Entry(String t, String s, String nbr, int id, Map<String, Double> kw, Map<String, Double> cg) {
+    public Entry(String t, String s, String nbr, String dsc, Map<String, Double> kw, Map<String, Double> cg) {
         title = t;
         subject = s;
         catalogNbr = nbr;
+        desc = dsc;
         keywords = kw;
         categories = cg;
-        courseId = id;
     }
 
     public String getTitle() {
@@ -31,9 +31,8 @@ public class Entry {
         return catalogNbr;
     }
 
-    public int getCourseId() {
-        return courseId;
-    }
+    public String getDescription() { return desc; }
+
     public Map<String, Double> getKeywords() {
         return keywords;
     }

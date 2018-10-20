@@ -10,12 +10,6 @@ public class Weighting {
 
     public static String[] readWeights(String path) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
-//        JSONArray arr = new JSONArray(bufferedReader.readLine());
-//        String[] weights = new String[arr.length()];
-//
-//        for (int i = 0; i < weights.length; i++) {
-//            weights[i] = arr.getString(i);
-//        }
 
         Gson gson = new Gson();
         String[] weights;
@@ -55,7 +49,7 @@ public class Weighting {
             for (String cat : entryCatSet) {
                 hm.put(cat, entryCategories.get(cat));
             }
-            retval.add(new Vector(e.getCourseId(), hm));
+            retval.add(new Vector(e.getSubj(), e.getCatalogNbr(), e.getTitle(), e.getDescription(), hm));
 
         }
         return retval;
