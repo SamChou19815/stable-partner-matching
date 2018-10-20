@@ -91,8 +91,17 @@ data class PartnerInvitation(
             if (partnershipAlreadyExists) {
                 return false
             }
-            val entityOpt = invitation.key?.let { PartnerInvitationEntity[it] }
+            val entityOpt = PartnerInvitationEntity.query {
+                filter {
+                    table.inviterId eq invitation.inviterId
+                    table.invitedId eq invitation.invitedId
+                    table.courseId eq invitation.courseId
+                }
+            }.firstOrNull()
             PartnerInvitationEntity.upsert(entity = entityOpt) {
+                table.inviterId gets invitation.inviterId
+                table.invitedId gets invitation.invitedId
+                table.courseId gets invitation.courseId
                 table.timeStatus gets invitation.timeStatus
             }
             return true
