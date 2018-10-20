@@ -3,6 +3,7 @@ package student
 import auth.GoogleUser
 import com.google.cloud.datastore.Key
 import course.StudentCourse
+import freetime.StudentFreeTimeRecord
 import partner.StudentRatingAccumulator
 
 /**
@@ -15,7 +16,7 @@ import partner.StudentRatingAccumulator
  * @property skills picture of the student.
  * @property introduction introduction of the student.
  * @property experience experience of the student.
- * @property averageRating average rating of the student.
+ * @property freeTimes student's free times.
  * @property pastCourses a list of keys of past courses.
  * @property currCourses a list of keys of current courses.
  * @property grade the grade of the student, which means different things in different context.
@@ -23,6 +24,7 @@ import partner.StudentRatingAccumulator
 data class StudentPublicInfo(
         val id: Key, val name: String, val email: String, val picture: String,
         val skills: String, val introduction: String, val experience: String,
+        val freeTimes: StudentFreeTimeRecord,
         val pastCourses: List<Key>, val currCourses: List<Key>,
         val grade: Double = 3.0
 ) {
@@ -40,6 +42,7 @@ data class StudentPublicInfo(
                     id = studentId, name = user.name, email = user.email,
                     picture = user.picture, skills = user.skills,
                     introduction = user.introduction, experience = user.experience,
+                    freeTimes = StudentFreeTimeRecord.getByStudentId(studentId = studentId),
                     pastCourses = pastCourses, currCourses = currCourses
             )
         }

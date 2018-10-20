@@ -1,14 +1,35 @@
+package freetime;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public final class Interval {
+/**
+ * A utility class that deals with free time intervals.
+ */
+public final class FreeTimeInterval {
     
-    public final int start, end;
+    /**
+     * Start and end time.
+     */
+    final int start, end;
     
-    public Interval(int start, int end) {
+    /**
+     * Constructor for GSON.
+     */
+    private FreeTimeInterval() {
+        this(0, 0);
+    }
+    
+    /**
+     * Construct by start and end time.
+     *
+     * @param start start time.
+     * @param end end time.
+     */
+    FreeTimeInterval(int start, int end) {
         this.start = start;
         this.end = end;
     }
@@ -20,17 +41,18 @@ public final class Interval {
      * @return intervals that doesn't overlap
      */
     @NotNull
-    public static List<Interval> mergeInterval(@NotNull List<Interval> intervals) {
+    static List<FreeTimeInterval> mergeInterval(@NotNull List<FreeTimeInterval> intervals) {
         // then compare the first
         if (intervals.size() <= 1) {
             return intervals;
         }
-        intervals.sort((Comparator.comparing((Interval o) -> o.start).thenComparing(o -> o.end)));
-        List<Interval> mergedInterval = new ArrayList<Interval>() {};
-        Interval last = intervals.get(0);
-        for (Interval current : intervals) {
+        intervals.sort((Comparator.comparing((FreeTimeInterval o) -> o.start)
+                .thenComparing(o -> o.end)));
+        List<FreeTimeInterval> mergedInterval = new ArrayList<FreeTimeInterval>() {};
+        FreeTimeInterval last = intervals.get(0);
+        for (FreeTimeInterval current : intervals) {
             if (last.end >= current.start) {
-                last = new Interval(last.start, Math.max(current.end, last.end));
+                last = new FreeTimeInterval(last.start, Math.max(current.end, last.end));
             } else {
                 mergedInterval.add(last);
                 last = current;
@@ -47,14 +69,14 @@ public final class Interval {
      * @param intervals2 the second initial list of time intervals.
      * @return total overlapping.
      */
-    public static int totalOverlap(@NotNull List<Interval> intervals1,
-                                   @NotNull List<Interval> intervals2) {
-        List<Interval> combinedIntervals =
+    public static int totalOverlap(@NotNull List<FreeTimeInterval> intervals1,
+                                   @NotNull List<FreeTimeInterval> intervals2) {
+        List<FreeTimeInterval> combinedIntervals =
                 new ArrayList<>(intervals1.size() + intervals2.size());
         combinedIntervals.addAll(intervals1);
         combinedIntervals.addAll(intervals2);
         int countDup = combinedIntervals.stream().mapToInt(i -> i.end - i.start).sum();
-        List<Interval> mergedIntervals = mergeInterval(combinedIntervals);
+        List<FreeTimeInterval> mergedIntervals = mergeInterval(combinedIntervals);
         int countNoDup = mergedIntervals.stream().mapToInt(i -> i.end - i.start).sum();
         return countDup - countNoDup;
     }

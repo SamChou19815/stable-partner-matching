@@ -29,6 +29,7 @@ export interface StudentPublicInfo {
   readonly introduction: string;
   readonly experience: string;
   readonly pastCourses: string[]; // an array of course IDs.
+  readonly currCourses: string[]; // an array of course IDs.
   readonly grade?: number; // an optional grade for debugging
 }
 

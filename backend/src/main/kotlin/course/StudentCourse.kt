@@ -112,7 +112,7 @@ data class StudentCourse(
                         table.studentId eq id
                         table.status eq TimeStatus.CURRENT
                     }
-                }.map { it.key }.toList()
+                }.map { it.courseId }.toList()
 
     }
 
