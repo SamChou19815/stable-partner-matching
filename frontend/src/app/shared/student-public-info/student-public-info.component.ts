@@ -10,8 +10,8 @@ import { StudentPublicInfo } from '../data';
 export class StudentPublicInfoComponent implements OnInit {
 
   @Input() s: StudentPublicInfo = <StudentPublicInfo>{
-    id: '', name: '', email: '', picture: '', skills: '', introduction: '', experience: '',
-    averageRating: 0, pastCourses: []
+    id: '', name: '', email: '', picture: '', skills: '',
+    introduction: '', experience: '', pastCourses: []
   };
 
   constructor(private dataService: GlobalDataService) { }

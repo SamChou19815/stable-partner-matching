@@ -23,7 +23,7 @@ import partner.StudentRatingAccumulator
 data class StudentPublicInfo(
         val id: Key, val name: String, val email: String, val picture: String,
         val skills: String, val introduction: String, val experience: String,
-        val averageRating: Double, val pastCourses: List<Key>, val currCourses: List<Key>,
+        val pastCourses: List<Key>, val currCourses: List<Key>,
         val grade: Double = 3.0
 ) {
 
@@ -34,14 +34,13 @@ data class StudentPublicInfo(
          */
         fun buildForGeneral(studentId: Key): StudentPublicInfo? {
             val user = GoogleUser.getByKey(key = studentId) ?: return null
-            val averageRating = StudentRatingAccumulator.getAverageRating(studentId = studentId)
             val pastCourses = StudentCourse.getAllPastCourseKeys(id = studentId)
             val currCourses = StudentCourse.getAllCurrCourseKeys(id = studentId)
             return StudentPublicInfo(
-                    id = studentId, name = user.name, email = user.email, picture = user.picture,
-                    skills = user.skills, introduction = user.introduction,
-                    experience = user.experience,
-                    averageRating = averageRating, pastCourses = pastCourses, currCourses = currCourses
+                    id = studentId, name = user.name, email = user.email,
+                    picture = user.picture, skills = user.skills,
+                    introduction = user.introduction, experience = user.experience,
+                    pastCourses = pastCourses, currCourses = currCourses
             )
         }
 
