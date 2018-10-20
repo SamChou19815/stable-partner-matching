@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Google Inc.
  *
@@ -35,27 +36,15 @@ public class Analyze {
         // [START language_entities_text]
         // Instantiate the Language client com.google.cloud.language.v1.LanguageServiceClient
         LanguageServiceClient language = LanguageServiceClient.create();
-        try {
-            Document doc = Document.newBuilder()
-                    .setContent(text)
-                    .setType(Type.PLAIN_TEXT)
-                    .build();
-            AnalyzeEntitiesRequest request = AnalyzeEntitiesRequest.newBuilder()
-                    .setDocument(doc)
-                    .setEncodingType(EncodingType.UTF16)
-                    .build();
+        Document doc = Document.newBuilder()
+                .setContent(text)
+                .setType(Type.PLAIN_TEXT)
+                .build();
+        AnalyzeEntitiesRequest request = AnalyzeEntitiesRequest.newBuilder()
+                .setDocument(doc)
+                .setEncodingType(EncodingType.UTF16)
+                .build();
 
-<<<<<<< HEAD
-            AnalyzeEntitiesResponse response = language.analyzeEntities(request);
-
-            List<String> keywords = new ArrayList<String>();
-            for (Entity entity : response.getEntitiesList()) {
-                keywords.add(entity.getName().toLowerCase());
-            }
-            return keywords;
-        } finally {
-            language.shutdown();
-=======
         Map<String, Double> keywords = new HashMap<String, Double>();
 
 
@@ -69,7 +58,6 @@ public class Analyze {
         } finally {
             language.close();
             return keywords;
->>>>>>> 5588bc1048c3511a8f9018bd2fd42bd78e12965f
         }
 
         // [END language_entities_text]
