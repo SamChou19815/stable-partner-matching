@@ -86,6 +86,17 @@ data class StudentCourse(
                     order { table.status.asc() }
                 }.map { it.asStudentCourse }.toList()
 
+        /**
+         * [getAllPastCourseKeys] returns a list of all past courses key's of a student with [id].
+         */
+        fun getAllPastCourseKeys(id: Key): List<Key> =
+                StudentCourseEntity.query {
+                    filter {
+                        table.studentId eq id
+                        table.status eq TimeStatus.PAST
+                    }
+                }.map { it.key }.toList()
+
     }
 
 }
