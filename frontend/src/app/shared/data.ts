@@ -25,7 +25,6 @@ export interface StudentPublicInfo {
   readonly name: string;
   readonly email: string;
   readonly picture: string;
-  readonly averageRating: number;
   readonly skills: string;
   readonly introduction: string;
   readonly experience: string;
