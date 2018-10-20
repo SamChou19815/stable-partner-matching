@@ -1,6 +1,40 @@
 <ng-container *ngIf="isUserLoggedIn">
   <div *ngIf="isInitialized">
-    TODO partner
+    <mat-drawer-container>
+      <mat-drawer #drawer [mode]="mode" [opened]="!onMobile">
+        <div *ngIf="invitations.length !== 0">Your Partner Invitations</div>
+        <app-student-public-info *ngFor="let inv of invitations" [s]="inv.inviterInfo">
+          <button mat-button color="primary" (click)="acceptInvitation(inv)">Accept</button>
+          <button mat-button color="primary" (click)="rejectInvitation(inv)">Reject</button>
+        </app-student-public-info>
+        <div *ngIf="pastPartners.length === 0 && currentPartners.length === 0 && futurePartners.length === 0">
+          You don't have any partners. Try to invite some.
+        </div>
+        <div *ngIf="pastPartners.length > 0">Past Partners</div>
+        <app-student-public-info *ngFor="let p of pastPartners" [s]="p.student2Info">
+          <button mat-button color="primary" (click)="removePartner(p)">Remove</button>
+        </app-student-public-info>
+        <mat-divider *ngIf="pastPartners.length > 0"></mat-divider>
+        <div *ngIf="currentPartners.length > 0">Current Partners</div>
+        <app-student-public-info *ngFor="let p of currentPartners" [s]="p.student2Info">
+          <button mat-button color="primary" (click)="removePartner(p)">Remove</button>
+        </app-student-public-info>
+        <mat-divider *ngIf="currentPartners.length > 0"></mat-divider>
+        <div *ngIf="futurePartners.length > 0">Future Partners</div>
+        <app-student-public-info *ngFor="let p of futurePartners" [s]="p.student2Info">
+          <button mat-button color="primary" (click)="removePartner(p)">Remove</button>
+        </app-student-public-info>
+        <mat-divider *ngIf="futurePartners.length > 0"></mat-divider>
+      </mat-drawer>
+      <mat-drawer-content>
+        <div>
+          <button mat-button style="margin-top: 1em" *ngIf="onMobile"
+                  (click)="drawer.toggle()">
+            Show Partner List
+          </button>
+        </div>
+      </mat-drawer-content>
+    </mat-drawer-container>
   </div>
 </ng-container>
 <app-project-card [data]="appIntro" [signInEnabled]="true" *ngIf="!isUserLoggedIn"></app-project-card>

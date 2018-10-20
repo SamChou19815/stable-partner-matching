@@ -1,0 +1,41 @@
+mat-drawer-container {
+  width: 100%;
+  height: calc(100vh - 64px);
+}
+
+mat-drawer, mat-drawer-content {
+  padding: 1em;
+  background: #EEEEEE;
+}
+
+@media (min-width: 600px) {
+  mat-drawer {
+    width: 600px;
+  }
+}
+
+@media (max-width: 600px) {
+  mat-drawer {
+    width: 100%;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+label {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+mat-slider {
+  margin-left: 1em;
+  flex: 1 1;
+}
+
+.right-arrow {
+  margin-left: 0.5em;
+  cursor: pointer;
+}

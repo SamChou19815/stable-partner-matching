@@ -3,6 +3,7 @@ package partner
 import com.google.cloud.datastore.Entity
 import com.google.cloud.datastore.Key
 import common.TimeStatus
+import student.StudentPublicInfo
 import typedstore.TypedEntity
 import typedstore.TypedEntityCompanion
 import typedstore.TypedTable
@@ -19,6 +20,7 @@ import typedstore.TypedTable
 data class PartnerInvitation(
         val key: Key? = null,
         val inviterId: Key,
+        val inviterInfo: StudentPublicInfo? = null,
         val invitedId: Key,
         val courseId: Key,
         val timeStatus: TimeStatus
@@ -74,7 +76,12 @@ data class PartnerInvitation(
         fun getAllInvitations(invitedId: Key): List<PartnerInvitation> =
                 PartnerInvitationEntity.query {
                     filter { table.invitedId eq invitedId }
-                }.map { it.asPartnerInvitation }.toList()
+                }.map { entity ->
+                    val inv = entity.asPartnerInvitation
+                    inv.copy(
+                            inviterInfo = StudentPublicInfo.buildForGeneral(studentId = inv.invitedId)
+                    )
+                }.toList()
 
         /**
          * [editPartnerInvitation] edits one partner invitation based on the given

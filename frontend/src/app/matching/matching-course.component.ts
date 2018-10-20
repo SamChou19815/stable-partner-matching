@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatchingNetworkService } from './matching-network.service';
 import { PartnerInvitation, StudentPublicInfo, TimeStatus } from '../shared/data';
 import { PartnerNetworkService } from '../partner/partner-network.service';
+import { AlertComponent } from '../shared/alert/alert.component';
 
 @Component({
   selector: 'app-matching-course',
@@ -91,9 +92,8 @@ export class MatchingCourseComponent implements OnInit {
         timeStatus: this.status
       });
       ref.close();
-      if (!canInvite) {
-        alert('You cannot invite because you are already partners.');
-      }
+      const message = canInvite ? 'Invitation succeeds.' : 'You cannot invite because you are already partners.';
+      this.dialog.open(AlertComponent, { data: message });
     });
   }
 

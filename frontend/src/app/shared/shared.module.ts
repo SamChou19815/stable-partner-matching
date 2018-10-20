@@ -12,15 +12,16 @@ import { BlockingOverlayComponent } from './overlay/blocking-overlay.component';
 import { LoadingOverlayComponent } from './overlay/loading-overlay.component';
 import { UserCardComponent } from './user-card/user-card.component';
 import { ProjectCardComponent } from './project-card/project-card.component';
+import { StudentPublicInfoComponent } from './student-public-info/student-public-info.component';
 
 @NgModule({
   imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, AngularFontAwesomeModule, HttpClientModule,
     RouterModule],
   exports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, AngularFontAwesomeModule, HttpClientModule,
     BlockingOverlayComponent, NotFoundComponent, AlertComponent, IconComponent, UserCardComponent,
-    ProjectCardComponent],
+    ProjectCardComponent, StudentPublicInfoComponent],
   declarations: [BlockingOverlayComponent, LoadingOverlayComponent, NotFoundComponent, AlertComponent, IconComponent,
-    UserCardComponent, ProjectCardComponent],
+    UserCardComponent, ProjectCardComponent, StudentPublicInfoComponent],
   providers: [HttpClient],
   entryComponents: [AlertComponent, LoadingOverlayComponent]
 })
