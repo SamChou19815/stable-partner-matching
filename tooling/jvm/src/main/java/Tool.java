@@ -22,11 +22,11 @@ public class Tool {
         Set<String> categorySet = new HashSet<String>();
 
         for (Entry e : entryTable) {
-            for (String kw : e.getKeywords()) {
+            for (String kw : e.getKeywords().keySet()) {
                 keywordSet.add(kw);
 
             }
-            for (String ca : e.getCategories()) {
+            for (String ca : e.getCategories().keySet()) {
                 categorySet.add(ca);
             }
         }
@@ -58,7 +58,7 @@ public class Tool {
                     System.out.println("None of the courses have this keyword.");
                 } else {
                     for (Entry e : entryTable) {
-                        if (e.getKeywords().contains(tgt)) {
+                        if (e.getKeywords().containsKey(tgt)) {
                             System.out.println(e.getSubj() + " " + e.getCatalogNbr() + ": " + e.getTitle());
                         }
                     }
@@ -72,7 +72,7 @@ public class Tool {
                     System.out.println("None of the courses have this category.");
                 } else {
                     for (Entry e : entryTable) {
-                        if (e.getCategories().contains(tgt)) {
+                        if (e.getCategories().containsKey(tgt)) {
                             System.out.println(e.getSubj() + " " + e.getCatalogNbr() + ": " + e.getTitle());
                         }
                     }

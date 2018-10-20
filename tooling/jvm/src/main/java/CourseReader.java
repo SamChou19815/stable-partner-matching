@@ -1,15 +1,10 @@
+import api.cornell.data.classes.Course;
+import com.google.gson.Gson;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import api.cornell.data.classes.*;
-import com.google.cloud.language.v1.LanguageServiceClient;
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
 
 public class CourseReader {
 
@@ -23,7 +18,7 @@ public class CourseReader {
             String subject = c.getSubject().toString();
             String catalogNbr = c.getCatalogNumber();
             String desc = c.getDescription();
-            List<String> keywords = null;
+            Map<String, Double> keywords = null;
             System.out.println("Analyzing: " + subject + " " + catalogNbr + ": " + title + "...");
             try {
                 keywords = Analyze.analyzeEntitiesText(title + ". " + desc);
@@ -31,7 +26,7 @@ public class CourseReader {
                 System.out.println("Could not initialize entity analysis for: " + title);
                 System.out.println(e.getMessage());
             }
-            List<String> categories = null;
+            Map<String, Double> categories = null;
             try {
                 categories = Analyze.analyzeCategoriesText(title + ". " + desc);
             } catch (Exception e) {
@@ -55,7 +50,7 @@ public class CourseReader {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        String path = "cs-courses.json";
+        String path = "smol_course.json";
         BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
 
         Gson gson = new Gson();
