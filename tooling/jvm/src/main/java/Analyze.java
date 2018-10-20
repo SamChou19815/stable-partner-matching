@@ -32,11 +32,14 @@ import com.google.cloud.language.v1.EntityMention;
 import com.google.cloud.language.v1.LanguageServiceClient;
 import com.google.cloud.language.v1.Sentiment;
 import com.google.cloud.language.v1.Token;
+import org.omg.SendingContext.RunTime;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.lang.AutoCloseable;
+import java.lang.RuntimeException;
+import java.io.IOException;
 
 /**
  * A sample application that uses the Natural Language API to perform entity, sentiment and syntax
@@ -61,13 +64,21 @@ public class Analyze {
                 .setEncodingType(EncodingType.UTF16)
                 .build();
 
-        AnalyzeEntitiesResponse response = language.analyzeEntities(request);
-
         List<String> keywords = new ArrayList<String>();
-        for (Entity entity : response.getEntitiesList()) {
-            keywords.add(entity.getName().toLowerCase());
+
+
+        try {
+            AnalyzeEntitiesResponse response = language.analyzeEntities(request);
+
+            for (Entity entity : response.getEntitiesList()) {
+                keywords.add(entity.getName().toLowerCase());
+            }
+        } catch (RuntimeException e) {
+            System.out.println("Too few tokens to analyze categories for.");
+        } finally {
+            language.close();
+            return keywords;
         }
-        return keywords;
 
         // [END language_entities_text]
     }
@@ -75,7 +86,7 @@ public class Analyze {
     /**
      * Detects categories in text using the Language Beta API.
      */
-    public static List<String> analyzeCategoriesText(String text) throws Exception {
+    public static List<String> analyzeCategoriesText(String text) throws IOException {
         // [START language_classify_text]
         // Instantiate the Language client com.google.cloud.language.v1.LanguageServiceClient
         LanguageServiceClient language = LanguageServiceClient.create();
@@ -89,14 +100,21 @@ public class Analyze {
                 .setDocument(doc)
                 .build();
         // detect categories in the given text
-        ClassifyTextResponse response = language.classifyText(request);
-
         List<String> categories = new ArrayList<String>();
-        for (ClassificationCategory category : response.getCategoriesList()) {
-            categories.add(category.getName().substring(1).toLowerCase());
+
+        try {
+            ClassifyTextResponse response = language.classifyText(request);
+
+            for (ClassificationCategory category : response.getCategoriesList()) {
+                categories.add(category.getName().substring(1).toLowerCase());
+            }
+        } catch (RuntimeException e) {
+            System.out.println("Too few tokens to analyze categories for.");
+        } finally {
+            language.close();
+            return categories;
         }
 
-        return categories;
         // [END language_classify_text]
     }
 

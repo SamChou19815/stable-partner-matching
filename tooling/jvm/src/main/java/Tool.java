@@ -49,13 +49,11 @@ public class Tool {
                     System.out.println(ca);
                 }
             } else if (s.startsWith("find")) {
-                String[] in = s.split(" ");
+                int spaceIdx = s.indexOf(' ');
 
-                String tgt = "";
-                for (int i = 1; i < in.length; i++) {
-                    tgt += in[i] + " ";
-                }
-                tgt = tgt.trim();
+                String tgt = s.substring(spaceIdx + 1);
+
+                System.out.println("Searching for: " + tgt);
                 if (!keywordSet.contains(tgt)) {
                     System.out.println("None of the courses have this keyword.");
                 } else {
@@ -66,13 +64,10 @@ public class Tool {
                     }
                 }
             } else if (s.startsWith("cat")) {
-                String[] in = s.split(" ");
+                int spaceIdx = s.indexOf(' ');
 
-                String tgt = "";
-                for (int i = 1; i < in.length; i++) {
-                    tgt += in[i] + " ";
-                }
-                tgt = tgt.trim();
+                String tgt = s.substring(spaceIdx+1);
+                System.out.println("Searching for: " + tgt);
                 if (!categorySet.contains(tgt)) {
                     System.out.println("None of the courses have this category.");
                 } else {

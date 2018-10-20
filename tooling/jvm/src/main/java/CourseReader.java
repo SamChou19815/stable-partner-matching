@@ -24,17 +24,18 @@ public class CourseReader {
             String catalogNbr = c.getCatalogNumber();
             String desc = c.getDescription();
             List<String> keywords = null;
+            System.out.println("Analyzing: " + subject + " " + catalogNbr + ": " + title + "...");
             try {
                 keywords = Analyze.analyzeEntitiesText(title + ". " + desc);
             } catch (Exception e) {
-                System.out.println("Could not analyze entities for: " + title);
+                System.out.println("Could not initialize entity analysis for: " + title);
                 System.out.println(e.getMessage());
             }
             List<String> categories = null;
             try {
                 categories = Analyze.analyzeCategoriesText(title + ". " + desc);
             } catch (Exception e) {
-                System.out.println("Could not analyze categories for: " + title);
+                System.out.println("Could not initialize category analysis for: " + title);
                 System.out.println(e.getMessage());
             }
             entryTable.add(new Entry(title, subject, catalogNbr, keywords, categories));
@@ -46,13 +47,15 @@ public class CourseReader {
     public static void writeData(List<Entry> entryTable) throws IOException {
         Gson gson = new Gson();
         String path = "entryData.json";
+        System.out.println("Writing data to: " + path);
         BufferedWriter bw = new BufferedWriter(new FileWriter(path));
         bw.write(gson.toJson(entryTable));
         bw.close();
+        System.out.println("Finished writing data.");
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        String path = "courses.json";
+        String path = "cs-courses.json";
         BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
 
         Gson gson = new Gson();
