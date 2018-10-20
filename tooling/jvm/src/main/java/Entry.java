@@ -1,14 +1,15 @@
 import java.util.List;
+import java.util.Map;
 
 public class Entry {
 
-    public List<String> keywords;
-    public List<String> categories;
+    public Map<String, Double> keywords;
+    public Map<String, Double> categories;
     public String title;
     public String subject;
     public String catalogNbr;
 
-    public Entry(String t, String s, String nbr, List<String> kw, List<String> cg) {
+    public Entry(String t, String s, String nbr, Map<String, Double> kw, Map<String, Double> cg) {
         title = t;
         subject = s;
         catalogNbr = nbr;
@@ -28,11 +29,11 @@ public class Entry {
         return catalogNbr;
     }
 
-    public List<String> getKeywords() {
+    public Map<String, Double> getKeywords() {
         return keywords;
     }
 
-    public List<String> getCategories() {
+    public Map<String, Double> getCategories() {
         return categories;
     }
 
