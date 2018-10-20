@@ -111,7 +111,7 @@ private fun initializeUserApiHandlers() {
     get(path = "/load") { InitData.getByUser(user = user) }
     path("/profile", ::initializeProfileApiHandlers)
     path("/courses", ::initializeCourseApiHandlers)
-    path("/partner", ::initializePartnerApiHandlers)
+    path("/partners", ::initializePartnerApiHandlers)
     path("/matching", ::initializeMatchingApiHandlers)
 }
 
