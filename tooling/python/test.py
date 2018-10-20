@@ -26,10 +26,11 @@ student = {
     "futureCourses": [{"courseName":"CS 3410", "grade": -1}, {"courseName":"CS 4740", "grade": -1}],
     "email": adk9@cornell.edu, 
     "picture": http://profilepicturesdp.com/wp-content/uploads/2018/06/default-user-profile-picture-7.png, 
-    "uid": random-user-
+    "uid": random-user-1
 }
 """
 
+# input for number of students
 num_student = 1000
 
 
@@ -39,13 +40,20 @@ num_student = 1000
 names = pd.read_csv("./baby-names.csv")
 name_list = names['name'].tolist()[0:1000]
 
-name_temp = ["Alice", "Bob", "Carol", "Douglas"]
-
 def name_randomize():
+    """
+    Randomly choose a student first name from a list of names
+    :return:
+    """
     random_name = random.choice(name_list)
     return random_name
 
 def email_randomize(initial):
+    """
+    :param initial: the initial letter of the student's first name
+    :return: A email in the style of netid@cornell.edu, where netid has first letter matching the first name of the
+    student followed by a number between [10000, 49999] (Of course this can't correspond to real cornell students.)
+    """
     random_num = random.randrange(10000, 50000)
     string_length = random.randrange(2, 4)
     if string_length == 2:
@@ -55,11 +63,16 @@ def email_randomize(initial):
     final_email = str.lower(initial) + random_string + str(random_num) + "@cornell.edu"
     return final_email
 
+
 # Step 2: Randomize the graduation year
 
 years = [2019, 2020, 2021, 2022]
 
 def year_randomize():
+    """
+    Gives a random graduation year. Not used in current version as we're hard-coding students.
+    :return:
+    """
     random_year = random.choice(years)
     return random_year
 
@@ -71,18 +84,33 @@ def year_randomize():
 uniform_gpa = range(5, 13)
 
 def gpa_uniform():
+    """
+    Gives a uniform distribution of student grades with median B+
+    :return:
+    """
     random_gpa = random.choice(uniform_gpa)
     return random_gpa
 
 def gpa_gaussian():
+    """
+    Gives a gaussian distribution of student grades with median B+
+    :return:
+    """
     gaussian_gpa = int(np.random.normal(9, 2.0))
     return gaussian_gpa
 
 def gpa_good_gaussian():
+    """
+    Gives a gaussian distribution of good student grades with median A-/A
+    :return:
+    """
     gaussian_gpa = int(np.random.normal(10.5, 1.0))
     if gaussian_gpa > 12:
         gaussian_gpa = 12
     return gaussian_gpa
+
+# Proportion of good students
+PROPORTION_GOOD_STUDENT = 0.2
 
 # Step 4: Randomize the past courses
 # Idea 1: Typical Student Profile
@@ -90,11 +118,10 @@ def gpa_good_gaussian():
 def grade_courses_gen(past_course_list):
     """
     Takes a list of courses and generate the list of dictionaries of each course
-    :param past_course_list: the past course list
-    :return: dictionary in the form [{"courseName":"CS 3110", "grade": -1}, {"course_name":"CS 2800", "grade": -1}]
+    :param past_course_list: the past course list e.g. ["CS 3110", "CS 2800"]
+    :return: dictionary in the form [{"courseName":"CS 3110", "grade": 9}, {"course_name":"CS 2800", "grade": 11}]
     """
-    proportion_good_student = 0.2
-    if (random.random() < proportion_good_student):
+    if random.random() < PROPORTION_GOOD_STUDENT:
         good_student_flag = True
     else:
         good_student_flag = False
@@ -112,8 +139,9 @@ def grade_courses_gen(past_course_list):
 def nograde_courses_gen(past_course_list):
     """
         Takes a list of courses and generate the list of dictionaries of each course
-        :param past_course_list: the past course list
+        :param past_course_list: the past course list ["CS 3110", "CS 2800"]
         :return: dictionary in the form [{"courseName":"CS 3110", "grade": -1}, {"course_name":"CS 2800", "grade": -1}]
+        with grades hard-coded to -1 indicating no grade.
         """
     all_courses_list = []
     for course in past_course_list:
@@ -135,8 +163,8 @@ ELECTIVE_UPPER = ["CS 3300", "CS 3758", "CS 4110", "CS 4120", "CS 4121", "CS 416
 def make_choice_dict_prob(prob_1110, prob_1112, prob_2110, prob_2112, prob_2800, prob_3110, prob_3410, prob_3420,
                           prob_4410, prob_4820, lower_prob, upper_prob):
     """
-
-    :return: probability of a class appearing in the student's list [Not specified where]
+    Creates a dict encoding the probability of a class appearing in the student's list [Not specified where]
+    :return: a dictionary mapping each class to a probability
     """
     choice_dict = dict()
     choice_dict["CS 1110"]=prob_1110
@@ -162,10 +190,14 @@ def make_choice_dict_prob(prob_1110, prob_1112, prob_2110, prob_2112, prob_2800,
 def make_decision_dict(prob_1110, prob_2110, prob_2800, prob_3110, prob_3410,
                           prob_4410, prob_4820, lower_past, lower_present, upper_past, upper_present):
     """
-
-    :return: if a core class is chosen, decide where it should appear. 1 represent past, 2 represent present, 3 represent
-    future, 4 placeholder for not happening. If a elective class is chosen, decide the prob for it to appear in past
-    or present or future classes
+    Creates a decision dict that encodes where the classes should appear (in past/present/future)
+    1. If a core class is chosen, decide where it should appear. 1 represent past, 2 represent present, 3 represent
+    future, 4 placeholder for not happening.
+    2. If a elective class is chosen, decide the prob for it to appear in past or present or future classes.
+    :return: A dictionary that maps each core course to a number {1,2,3,4} indicating where it should be (e.g.
+    {"CS 2800": 1}),
+    a lower-level course to past/present probability (e.g. {"CS 1300 past": 0.6, "CS 1300 present": 0.2}),
+    a lower-level course to past/present probability (e.g. {"CS 4700 past": 0.3, "CS 4700 present": 0.7})
     """
 
     decision_dict = dict()
@@ -196,6 +228,13 @@ DECISION_ASSOC_DICT = {1:"pastCourses", 2: "currentCourses", 3: "futureCourses",
 
 
 def append_class(class_list, class1, prob):
+    """
+    Adds a class to a class list based on some probability.
+    :param class_list: Initial list of classes
+    :param class1: The class to decide whether to add
+    :param prob: Probability of adding that class
+    :return: Updated list of classes
+    """
     if random.random() < prob:
         class_list.append(class1)
     return class_list
@@ -203,10 +242,11 @@ def append_class(class_list, class1, prob):
 
 def append_class_update(student_class_dict, student_choice_dict, student_decision_dict, class1):
     """
+    Updates the class dict for a single class according to the choice and decision dicts
     :param student_class_dict: dict of student classes
-    :param student_choice_dict:
-    :param student_decision_dict:
-    :param class1:
+    :param student_choice_dict: dict of class choice
+    :param student_decision_dict: dict of class decision
+    :param class1: the class to add
     :return: update a class based on choice_dict/decision_dict
     """
     if (student_decision_dict[class1] < 4):
@@ -220,7 +260,8 @@ def append_class_update(student_class_dict, student_choice_dict, student_decisio
 
 def append_choice(class_list, class1, class2, prob_choice1, prob_choice2):
     """
-    :param class_list: List of classes we're working with
+    Choose between two conflicting classes and add one of these to a class list based on some probability.
+    :param class_list: initial list of classes
     :param class1: first class
     :param class2: second class
     :param prob_choice1: prob of choosing first class
@@ -237,11 +278,12 @@ def append_choice(class_list, class1, class2, prob_choice1, prob_choice2):
 
 def append_choice_update(student_class_dict, student_choice_dict, student_decision_dict, class1, class2):
     """
+    Update the class dict by adding one of two conflicting classes based on choice and decision dicts
     :param student_class_dict: dict of student classes
-    :param student_choice_dict:
-    :param student_decision_dict:
-    :param class1:
-    :param class2:
+    :param student_choice_dict: dict of class choice
+    :param student_decision_dict: dict of class decision
+    :param class1: first class to add
+    :param class2: second class to add
     :return: update a class based on choice_dict/decision_dict
     """
 
@@ -257,10 +299,11 @@ def append_choice_update(student_class_dict, student_choice_dict, student_decisi
 
 def append_elective_update(student_class_dict, student_choice_dict, student_decision_dict, class1):
     """
+    Update the elective classes based on choice and decision
     :param student_class_dict: dict of student classes
-    :param student_choice_dict:
-    :param student_decision_dict:
-    :param class1:
+    :param student_choice_dict: dict of class choice
+    :param student_decision_dict: dict of class decision
+    :param class1: the class to add
     :return: update an elective class based on choice_dict/decision_dict
     """
 
@@ -316,10 +359,10 @@ def make_student_class_dict(student_choice_dict, student_decision_dict):
 # Step infty: Put everything together!
 def make_one_student(course_dict, year_input, index):
     """
-
-    :param past_course: A list of the student's past courses
-    :param current_course: A list of the student's current courses
-    :param future_course: A list of the students's future courses
+    Make a dict for a single student with the information given
+    :param course_dict: the dict containing the past/present/future courses of the student.
+    :param year_input: the class year of the student
+    :param index: the index of the student in the sequence
     :return: a dictionary of student with profiles
     """
 
@@ -336,6 +379,7 @@ def make_one_student(course_dict, year_input, index):
     return new_student_dict
 
 
+# Hard_encoding some typical students from freshman to junior
 # freshman 1
 # current: CS 1110
 # future: CS 2110/CS2112 and CS 2800 at some prob.
@@ -432,10 +476,12 @@ student_decision_list = [freshman_1_decision_dict, freshman_2_decision_dict, fre
 graduation_year_list = [2022, 2022, 2022, 2022, 2022, 2021, 2021, 2021, 2021, 2020, 2020, 2020]
 
 
-random_student_type = random.randrange(0, 12)
-
-
 def make_n_students(n):
+    """
+    Generate a list of students
+    :param n: Number of students to be added
+    :return: A json file containing a list of student dicts
+    """
     student_list = []
     for i in range(n):
         random_student_type = random.randrange(0, 12)
@@ -448,9 +494,11 @@ def make_n_students(n):
 
 student_json_list = make_n_students(num_student)
 
+# output the json file
 with open('student_data.json', 'w') as outfile:
     json.dump(student_json_list, outfile)
 
+# reads in the outputted json file and make sure it works
 with open('student_data.json', encoding='utf-8') as data_file:
     student_json_list_read = json.loads(data_file.read())
 
