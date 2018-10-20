@@ -35,8 +35,6 @@ export class GlobalDataService extends AuthenticatedNetworkService {
   getCourseByKey(key: string): SimplifiedCourseInfo {
     const ans = this._keyToCourseMap.get(key);
     if (ans == null) {
-      console.log(this._keyToCourseMap);
-      console.log(key);
       throw new Error();
     } else {
       return ans;
