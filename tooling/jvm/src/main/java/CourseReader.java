@@ -8,8 +8,6 @@ import java.util.Map;
 
 public class CourseReader {
 
-
-
     private static List<Entry> createEntryTable(Course[] courseArray) {
         List<Entry> entryTable = new ArrayList<Entry>();
         for (int i = 0; i < courseArray.length; i++) {
@@ -18,6 +16,7 @@ public class CourseReader {
             String subject = c.getSubject().toString();
             String catalogNbr = c.getCatalogNumber();
             String desc = c.getDescription();
+            int id = c.getCourseId();
             Map<String, Double> keywords = null;
             System.out.println("Analyzing: " + subject + " " + catalogNbr + ": " + title + "...");
             try {
@@ -33,15 +32,14 @@ public class CourseReader {
                 System.out.println("Could not initialize category analysis for: " + title);
                 System.out.println(e.getMessage());
             }
-            entryTable.add(new Entry(title, subject, catalogNbr, keywords, categories));
+            entryTable.add(new Entry(title, subject, catalogNbr, id, keywords, categories));
         }
         return entryTable;
 
     }
 
-    public static void writeData(List<Entry> entryTable) throws IOException {
+    public static void writeData(List<Entry> entryTable, String path) throws IOException {
         Gson gson = new Gson();
-        String path = "entryData.json";
         System.out.println("Writing data to: " + path);
         BufferedWriter bw = new BufferedWriter(new FileWriter(path));
         bw.write(gson.toJson(entryTable));
@@ -61,7 +59,7 @@ public class CourseReader {
 
             List<Entry> entryTable = createEntryTable(courseArray);
             try {
-                writeData(entryTable);
+                writeData(entryTable, "entryData.json");
             } catch (IOException e) {
                 System.out.println("Failed to write entry data to json");
             }

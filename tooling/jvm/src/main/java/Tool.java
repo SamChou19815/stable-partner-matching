@@ -84,25 +84,33 @@ public class Tool {
             }
         }
     }
-    public static void main(String[] args) throws FileNotFoundException {
-        String path = "entryData.json";
+
+    public static List<Entry> readEntryData(String path) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
 
         Gson gson = new Gson();
         Entry[] entryArray;
+        entryArray = gson.fromJson(bufferedReader, Entry[].class);
+        bufferedReader.close();
+        List<Entry> entryTable = new ArrayList<Entry>();
+        for (int i = 0; i < entryArray.length; i++) {
+            entryTable.add(entryArray[i]);
+        }
+        return entryTable;
+    }
+    public static void main(String[] args) throws FileNotFoundException {
+        String path = "entryData.json";
 
         try {
-            entryArray = gson.fromJson(bufferedReader, Entry[].class);
-            bufferedReader.close();
 
-            List<Entry> entryTable = new ArrayList<Entry>();
-            for (int i = 0; i < entryArray.length; i++) {
-                entryTable.add(entryArray[i]);
-            }
+            List<Entry> entryTable = readEntryData(path);
+
             prompter(entryTable);
 
         } catch (IOException e) {
             System.out.println("Failed to read from input file.");
+        } finally {
+
         }
     }
 
