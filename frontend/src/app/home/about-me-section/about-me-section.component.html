@@ -1,6 +1,6 @@
 <!--suppress HtmlUnknownAttribute -->
 <app-home-about-me-row class="hello-world-row">
-  Stable Partner Matching
+  Stable Course Partner Matching
 </app-home-about-me-row>
 <app-home-about-me-row class="has-icon">
   <mat-icon>school</mat-icon>
@@ -10,8 +10,11 @@
 <div style="flex: 1 1;"></div>
 <app-home-about-me-row>
   <nav>
-    <a mat-stroked-button class="sign-in-button" href="https://github.com/SamChou19815" target=_blank>
+    <a mat-stroked-button class="sign-in-button" *ngIf="!signedIn" (click)="signIn()" target=_blank>
       <span>Sign in by Google</span>
+    </a>
+    <a mat-stroked-button class="sign-in-button" *ngIf="signedIn" routerLink="/profile" target=_blank>
+      <span>My Profile</span>
     </a>
   </nav>
 </app-home-about-me-row>
