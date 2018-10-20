@@ -1,6 +1,26 @@
 <ng-container *ngIf="isUserLoggedIn">
   <div *ngIf="isInitialized">
-    TODO course
+    <mat-drawer-container>
+      <mat-drawer #drawer [mode]="mode" [opened]="!onMobile">
+        <div *ngIf="pastCourses.length === 0 && currentCourses.length === 0 && futureCourses.length === 0">
+          You don't have any courses. Try to add some.
+        </div>
+        <div *ngIf="pastCourses.length > 0">Past Courses</div>
+        <mat-list *ngIf="pastCourses.length > 0">
+          <mat-list-item *ngFor="let course of pastCourses">
+            {{course.courseId}}
+            <mat-divider></mat-divider>
+          </mat-list-item>
+        </mat-list>
+      </mat-drawer>
+      <mat-drawer-content>
+        <button mat-button style="margin-top: 1em;" *ngIf="onMobile"
+                (click)="drawer.toggle()">
+          Show Course List
+        </button>
+        HAHA
+      </mat-drawer-content>
+    </mat-drawer-container>
   </div>
 </ng-container>
 <app-project-card [data]="appIntro" [signInEnabled]="true" *ngIf="!isUserLoggedIn"></app-project-card>

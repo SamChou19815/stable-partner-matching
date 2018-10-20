@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { appCardData, ProjectCardData } from '../shared/project-card-data';
 import { GlobalDataService } from '../shared/global-data.service';
 import { GoogleUserService } from '../shared/google-user.service';
 import { LoadingOverlayService } from '../shared/overlay/loading-overlay.service';
 import { MatDialog } from '@angular/material';
 import { shortDelay } from '../shared/util';
+import { StudentCourse, TimeStatus } from '../shared/data';
 
 @Component({
   selector: 'app-course',
@@ -18,6 +19,13 @@ export class CourseComponent implements OnInit {
    * Whether the user has logged in.
    */
   isUserLoggedIn = false;
+
+  private allCourses: StudentCourse[] = [];
+  pastCourses: StudentCourse[] = [];
+  currentCourses: StudentCourse[] = [];
+  futureCourses: StudentCourse[] = [];
+
+  @ViewChild('drawer') drawer: any | undefined;
 
   constructor(private dataService: GlobalDataService,
               private googleUserService: GoogleUserService,
@@ -33,7 +41,9 @@ export class CourseComponent implements OnInit {
         ref.close();
         return;
       }
-      this.dataService.initializeApp().then(ref.close);
+      await this.dataService.initializeApp();
+      this.constructCourseData(this.dataService.initData.courses);
+      ref.close();
     });
   }
 
@@ -43,6 +53,35 @@ export class CourseComponent implements OnInit {
 
   get isInitialized(): boolean {
     return !this.dataService.initData.isNotInitialized;
+  }
+
+  // noinspection JSMethodCanBeStatic
+  get onMobile() {
+    return window.innerWidth < 800;
+  }
+
+  get mode() {
+    return this.onMobile ? 'over' : 'side';
+  }
+
+  private constructCourseData(allCourses: StudentCourse[]) {
+    this.allCourses = allCourses;
+    this.pastCourses = [];
+    this.currentCourses = [];
+    this.futureCourses = [];
+    for (const course of allCourses) {
+      switch (course.status) {
+        case 'PAST':
+          this.pastCourses.push(course);
+          break;
+        case 'CURRENT':
+          this.currentCourses.push(course);
+          break;
+        case 'FUTURE':
+          this.futureCourses.push(course);
+          break;
+      }
+    }
   }
 
 }

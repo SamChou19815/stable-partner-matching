@@ -43,9 +43,7 @@ private object Filters : SecurityFilters(
 private fun initializeProfileApiHandlers() {
     post(path = "/update") {
         val updatedUser = user.updateWith(anotherUser = toJson())
-        println(updatedUser)
-        val upsertUser = updatedUser.upsert()
-        println(upsertUser)
+        updatedUser.upsert()
         "OK"
     }
 }
