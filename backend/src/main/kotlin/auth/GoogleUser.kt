@@ -148,7 +148,7 @@ data class GoogleUser(
          * [getAllOtherUserKeys] returns a list of all user's keys except [user].
          */
         fun getAllOtherUserKeys(user: GoogleUser): List<Key> =
-                UserEntity.allKeys().filter { true /* it != user.keyNotNull */ }.toList()
+                UserEntity.allKeys().filter { it != user.keyNotNull }.toList()
 
     }
 

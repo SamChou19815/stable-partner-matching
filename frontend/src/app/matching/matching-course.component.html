@@ -1,33 +1,8 @@
 <ng-container *ngIf="isUserLoggedIn">
   <div *ngIf="isInitialized">
-    <mat-card *ngFor="let p of partnerList">
-      <mat-card-header>
-        <div mat-card-avatar [style.background-image]="'url(' + p.picture + ')'"></div>
-        <mat-card-title>{{p.name}}</mat-card-title>
-        <mat-card-subtitle>Email: {{p.email}}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-divider></mat-divider>
-      <mat-card-content>
-        <div class="text-div">Average Rating: {{p.averageRating}}</div>
-        <div class="text-div">Skills: {{p.skills}}</div>
-        <div class="text-div">Introduction: {{p.introduction}}</div>
-        <div class="text-div">Experience: {{p.experience}}</div>
-      </mat-card-content>
-      <mat-divider *ngIf="p.courses.length > 0"></mat-divider>
-      <mat-card-content *ngIf="p.courses.length > 0">
-        <div class="text-div" style="padding-top: 0.5em">Past Courses</div>
-        <mat-list>
-          <mat-list-item *ngFor="let courseKey of p.courses">
-            <span>{{getCourseName(courseKey)}}</span>
-            <span style="flex: 1 1 auto"></span>
-            <mat-divider></mat-divider>
-          </mat-list-item>
-        </mat-list>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="primary" (click)="invitePartner(p)">Invite to be partners</button>
-      </mat-card-actions>
-    </mat-card>
+    <app-student-public-info *ngFor="let p of partnerList" [s]="p">
+      <button mat-button color="primary" (click)="invitePartner(p)">Invite to be partners</button>
+    </app-student-public-info>
   </div>
 </ng-container>
 <app-project-card [data]="appIntro" [signInEnabled]="true" *ngIf="!isUserLoggedIn"></app-project-card>

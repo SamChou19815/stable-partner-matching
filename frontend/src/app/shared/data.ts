@@ -29,7 +29,7 @@ export interface StudentPublicInfo {
   readonly skills: string;
   readonly introduction: string;
   readonly experience: string;
-  readonly courses: string[]; // an array of course IDs.
+  readonly pastCourses: string[]; // an array of course IDs.
   readonly grade?: number; // an optional grade for debugging
 }
 
@@ -42,18 +42,11 @@ export interface StudentCourse {
   isTa?: boolean;
 }
 
-export interface StudentPublicInfo {
-  readonly id: string;
-  readonly name: string;
-  readonly email: string;
-  readonly averageRating: number;
-  readonly pastCourses: number[]; // an array of course IDs.
-  readonly grade?: number; // an optional grade for debugging
-}
-
 export interface StudentPartnership {
+  readonly key: string;
   readonly student1Id: string;
   readonly student2Id: string;
+  readonly student2Info: StudentPublicInfo;
   readonly courseId: string;
   readonly timeStatus: TimeStatus;
 }
@@ -61,6 +54,7 @@ export interface StudentPartnership {
 export interface PartnerInvitation {
   readonly key: string;
   readonly inviterId: string;
+  readonly inviterInfo: StudentPublicInfo;
   readonly invitedId: string;
   readonly courseId: string;
   readonly timeStatus: TimeStatus;

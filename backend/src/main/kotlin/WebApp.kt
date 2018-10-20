@@ -82,6 +82,11 @@ private fun initializePartnerApiHandlers() {
         val accepted = queryParams("accepted")?.let { it == "true" } ?: badRequest()
         StudentPartnership.handleInvitation(invitation = toJson(), accepted = accepted)
     }
+    post(path = "/remove") {
+        val partnership: StudentPartnership = toJson()
+        partnership.removeSelf()
+        "OK"
+    }
 }
 
 /**
