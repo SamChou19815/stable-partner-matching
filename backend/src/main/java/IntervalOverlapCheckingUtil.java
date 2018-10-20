@@ -1,2 +1,5 @@
-public class IntervalOverlapCheckingUtil {
+public final class IntervalOverlapCheckingUtil {
+    
+
+
 }
