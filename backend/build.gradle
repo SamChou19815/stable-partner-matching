@@ -63,8 +63,6 @@ allprojects {
         implementation 'org.slf4j:jcl-over-slf4j:1.7.25'
         implementation 'org.slf4j:slf4j-log4j12:1.7.25'
         implementation 'log4j:log4j:1.2.17'
-        // Cornell API Client Library
-        api 'com.github.SamChou19815:cornell-api-libs:0.2.0'
     }
 
     compileKotlin {
@@ -102,6 +100,8 @@ dependencies {
     // Add your dependencies here
     // Google NLP
     api 'com.google.cloud:google-cloud-language:1.49.0'
+    // Cornell API Client Library
+    api 'com.github.SamChou19815:cornell-api-libs:0.3.2'
 }
 
 /*
@@ -114,7 +114,7 @@ shadowJar {
     baseName = 'website'
     version = 0.1
     manifest {
-        attributes 'Main-Class': 'TODO' // TODO specify your main class here
+        attributes 'Main-Class': 'WebApp'
     }
     zip64 true
     artifacts {
