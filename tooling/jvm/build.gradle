@@ -118,19 +118,3 @@ test {
 }
 
 project.tasks.assemble.dependsOn(shadowJar)
-
-
-/*
- * --------------------------------------------------------------------------------
- * Part 4: Tasks to Build and Deploy Other Parts
- * --------------------------------------------------------------------------------
- */
-
-task updateDatastoreIndices {
-    String indexFile = '~/.config/gcloud/emulators/datastore/WEB-INF/index.yaml'
-    doLast {
-        exec {
-            commandLine 'sh', '-c', gcloud datastore create-indexes
-        }
-    }
-}
