@@ -1,8 +1,10 @@
 @file:JvmName(name = "WebApp")
 
+import auth.GoogleUser
 import auth.Role
 import auth.SecurityFilters
 import auth.SecurityFilters.Companion.user
+import com.google.cloud.datastore.Key
 import course.CourseInfo
 import course.StudentCourse
 import init.InitData
@@ -11,6 +13,7 @@ import partner.StudentPartnership
 import partner.StudentRatingRecord
 import spark.Spark.path
 import staticprocessor.StaticProcessor
+import student.StudentPublicInfo
 import web.badRequest
 import web.delete
 import web.get
@@ -83,6 +86,24 @@ private fun initializePartnerApiHandlers() {
 }
 
 /**
+ * [initializeMatchingApiHandlers] initializes a list of matching related API handlers.
+ */
+private fun initializeMatchingApiHandlers() {
+    get(path = "/general") {
+        val keys = GoogleUser.getAllOtherUserKeys(user = user)
+        keys.map { StudentPublicInfo.buildForGeneral(studentId = it) }
+    }
+    get(path = "/course") {
+        /*
+        val courseId = queryParams("course_id")
+                ?.let { Key.fromUrlSafe(it) } ?: badRequest()
+                */
+        val keys = GoogleUser.getAllOtherUserKeys(user = user)
+        keys.map { StudentPublicInfo.buildForGeneral(studentId = it) }
+    }
+}
+
+/**
  * [initializeUserApiHandlers] initializes a list of user API handlers.
  */
 private fun initializeUserApiHandlers() {
@@ -91,6 +112,7 @@ private fun initializeUserApiHandlers() {
     path("/profile", ::initializeProfileApiHandlers)
     path("/courses", ::initializeCourseApiHandlers)
     path("/partner", ::initializePartnerApiHandlers)
+    path("/matching", ::initializeMatchingApiHandlers)
 }
 
 /**

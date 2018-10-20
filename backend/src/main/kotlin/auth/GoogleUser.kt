@@ -144,6 +144,12 @@ data class GoogleUser(
         fun getByEmail(email: String): GoogleUser? =
                 UserEntity.query { filter { table.email eq email } }.firstOrNull()?.asGoogleUser
 
+        /**
+         * [getAllOtherUserKeys] returns a list of all user's keys except [user].
+         */
+        fun getAllOtherUserKeys(user: GoogleUser): List<Key> =
+                UserEntity.allKeys().filter { true /* it != user.keyNotNull */ }.toList()
+
     }
 
 }
