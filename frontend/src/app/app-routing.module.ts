@@ -8,31 +8,22 @@ const routes: Routes = [
     path: '',
     component: HomeComponent
   },
-  /*,
   {
-    path: 'friends',
-    loadChildren: 'app/friends/friends.module#FriendsModule'
+    path: 'profile',
+    loadChildren: './profile/profile.module#ProfileModule'
   },
   {
-    path: 'scheduler',
-    loadChildren: 'app/scheduler/scheduler.module#SchedulerModule'
+    path: 'courses',
+    loadChildren: './course/course.module#CourseModule'
   },
   {
-    path: 'rss-reader',
-    loadChildren: 'app/rss-reader/rss-reader.module#RssReaderModule'
+    path: 'partners',
+    loadChildren: './partner/partner.module#PartnerModule'
   },
   {
-    path: 'playground/sampl',
-    loadChildren: 'app/sampl/sampl.module#SamplModule'
+    path: 'matching',
+    loadChildren: './matching/matching.module#MatchingModule'
   },
-  {
-    path: 'playground/chunk-reader',
-    loadChildren: 'app/chunk-reader/chunk-reader.module#ChunkReaderModule'
-  },
-  {
-    path: 'playground/ten',
-    loadChildren: 'app/ten/ten.module#TenModule'
-  },*/
   {
     path: '**',
     component: NotFoundComponent

@@ -22,7 +22,7 @@ import { AngularFireModule } from '@angular/fire';
     AboutMeSectionComponent
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'dev-sam-frontend' }), NavModule, BrowserAnimationsModule,
+    BrowserModule.withServerTransition({ appId: 'stable-pm' }), NavModule, BrowserAnimationsModule,
     AngularFireModule.initializeApp(environment.firebase), AngularFireAuthModule, NgxJsonLdModule,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     AppRoutingModule,
