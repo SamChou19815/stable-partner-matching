@@ -4,9 +4,15 @@ import auth.GoogleUser
 import auth.Role
 import auth.SecurityFilters
 import auth.SecurityFilters.Companion.user
+import course.StudentCourse
+import partner.PartnerInvitation
+import partner.StudentPartnership
+import partner.StudentRatingRecord
 import web.get
 import web.initServer
 import spark.Spark.path
+import web.badRequest
+import web.delete
 import web.post
 import web.toJson
 
@@ -52,14 +58,35 @@ private fun initializeProfileApiHandlers() {
  * [initializeCourseApiHandlers] initializes a list of profile related API handlers.
  */
 private fun initializeCourseApiHandlers() {
-
+    post(path = "edit") {
+        val studentCourse = toJson<StudentCourse>()
+        studentCourse.upsert()
+        "OK"
+    }
+    delete(path = "delete") {
+        val studentCourse = toJson<StudentCourse>()
+        studentCourse.delete()
+        "OK"
+    }
 }
 
 /**
  * [initializePartnerApiHandlers] initializes a list of profile related API handlers.
  */
 private fun initializePartnerApiHandlers() {
-
+    post(path = "rating") {
+        StudentRatingRecord.editRating(record = toJson())
+        "OK"
+    }
+    post(path = "invite") {
+        PartnerInvitation.editPartnerInvitation(invitation = toJson())
+        "OK"
+    }
+    post(path = "respond_invitation") {
+        val accepted = queryParams("accepted")?.let { it == "true" } ?: badRequest()
+        StudentPartnership.handleInvitation(invitation = toJson(), accepted = accepted)
+        "OK"
+    }
 }
 
 /**
