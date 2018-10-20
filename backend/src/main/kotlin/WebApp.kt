@@ -1,6 +1,5 @@
 @file:JvmName(name = "WebApp")
 
-import auth.GoogleUser
 import auth.Role
 import auth.SecurityFilters
 import auth.SecurityFilters.Companion.user
@@ -10,12 +9,12 @@ import init.InitData
 import partner.PartnerInvitation
 import partner.StudentPartnership
 import partner.StudentRatingRecord
-import web.get
-import web.initServer
 import spark.Spark.path
 import staticprocessor.StaticProcessor
 import web.badRequest
 import web.delete
+import web.get
+import web.initServer
 import web.post
 import web.toJson
 
@@ -29,7 +28,7 @@ import web.toJson
  * [Filters] can be used to create security filters.
  */
 private object Filters : SecurityFilters(
-        adminEmails = setOf("sam@developersam.com")
+        adminEmails = setOf()
 )
 
 /*
@@ -37,15 +36,6 @@ private object Filters : SecurityFilters(
  * Part 1: Route Declarations
  * ------------------------------------------------------------------------------------------
  */
-
-/**
- * [initializeLoadApiHandlers] initializes a list of load related API handlers.
- */
-private fun initializeLoadApiHandlers() {
-    get(path = "/load") {
-        InitData.getByUser(user = user)
-    }
-}
 
 /**
  * [initializeProfileApiHandlers] initializes a list of profile related API handlers.
@@ -98,7 +88,7 @@ private fun initializePartnerApiHandlers() {
  */
 private fun initializeUserApiHandlers() {
     Filters.before(path = "/*", role = Role.USER)
-    initializeLoadApiHandlers()
+    get(path = "/load") { InitData.getByUser(user = user) }
     path("/profile", ::initializeProfileApiHandlers)
     path("/courses", ::initializeCourseApiHandlers)
     path("/partner", ::initializePartnerApiHandlers)
