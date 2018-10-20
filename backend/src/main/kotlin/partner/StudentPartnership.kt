@@ -103,10 +103,12 @@ data class StudentPartnership(
          * [handleInvitation] handles an invitation given the [invitation] and whether it's
          * [accepted].
          */
-        fun handleInvitation(invitation: PartnerInvitation, accepted: Boolean) {
+        fun handleInvitation(
+                invitation: PartnerInvitation, accepted: Boolean
+        ): StudentPartnership? {
             invitation.delete()
             if (!accepted) {
-                return
+                return null
             }
             // Delete existing partnership
             val entityOpt1 = StudentPartnershipEntity.query {
@@ -131,17 +133,17 @@ data class StudentPartnership(
             }
             // Create new
             StudentPartnershipEntity.insert {
-                table.student1Id gets invitation.inviterId
-                table.student2Id gets invitation.invitedId
-                table.courseId gets invitation.courseId
-                table.timeStatus gets invitation.timeStatus
-            }
-            StudentPartnershipEntity.insert {
                 table.student1Id gets invitation.invitedId
                 table.student2Id gets invitation.inviterId
                 table.courseId gets invitation.courseId
                 table.timeStatus gets invitation.timeStatus
             }
+            return StudentPartnershipEntity.insert {
+                table.student1Id gets invitation.inviterId
+                table.student2Id gets invitation.invitedId
+                table.courseId gets invitation.courseId
+                table.timeStatus gets invitation.timeStatus
+            }.asStudentPartnership
         }
 
     }

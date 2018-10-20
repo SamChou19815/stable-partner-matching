@@ -5,7 +5,7 @@ import { MatchingCourseComponent } from './matching-course.component';
 
 const routes: Routes = [
   { path: '', component: MatchingComponent },
-  { path: 'course/:id', component: MatchingCourseComponent }
+  { path: 'course/:status/:id', component: MatchingCourseComponent }
 ];
 
 @NgModule({

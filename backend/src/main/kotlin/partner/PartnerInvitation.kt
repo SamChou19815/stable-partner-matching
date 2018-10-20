@@ -79,20 +79,23 @@ data class PartnerInvitation(
         /**
          * [editPartnerInvitation] edits one partner invitation based on the given
          * [invitation].
+         *
+         * @return whether you can send the invitation.
          */
-        fun editPartnerInvitation(invitation: PartnerInvitation): PartnerInvitation? {
+        fun editPartnerInvitation(invitation: PartnerInvitation): Boolean {
             val partnershipAlreadyExists = StudentPartnership.exists(
                     student1Id = invitation.inviterId,
                     student2Id = invitation.invitedId,
                     courseId = invitation.courseId
             )
             if (partnershipAlreadyExists) {
-                return null
+                return false
             }
             val entityOpt = invitation.key?.let { PartnerInvitationEntity[it] }
-            return PartnerInvitationEntity.upsert(entity = entityOpt) {
+            PartnerInvitationEntity.upsert(entity = entityOpt) {
                 table.timeStatus gets invitation.timeStatus
-            }.asPartnerInvitation
+            }
+            return true
         }
 
     }
