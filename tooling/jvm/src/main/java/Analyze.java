@@ -87,7 +87,7 @@ public class Analyze {
 
             for (ClassificationCategory category : response.getCategoriesList()) {
                 double conf = category.getConfidence();
-                String[] catNames = category.getName().substring(1).split("/");
+                String[] catNames = category.getName().substring(1).toLowerCase().split("/");
                 for (int i = 0; i < catNames.length; i++) {
                     categories.put(catNames[i], conf);
                 }
