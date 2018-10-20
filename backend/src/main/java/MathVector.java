@@ -24,6 +24,11 @@ public class MathVector {
         }
     }
 
+    MathVector duplicate() {
+        MathVector retval = new MathVector(size);
+        retval.copyVector(this);
+        return retval;
+    }
 
     void copyVector(MathVector v) {
         size = v.getSize();
@@ -65,6 +70,18 @@ public class MathVector {
             sum += v.get(i) * arr[i];
         }
         return sum;
+    }
+
+    void abs() {
+        for (int i = 0; i < size; i++) {
+            arr[i] = Math.abs(arr[i]);
+        }
+    }
+
+    void exp() {
+        for (int i = 0; i < size; i++) {
+            arr[i] = Math.exp(arr[i]);
+        }
     }
 
     public double get(int i) {
