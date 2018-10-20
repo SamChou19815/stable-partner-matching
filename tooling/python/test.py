@@ -1,5 +1,6 @@
 import random
 import json
+import string
 
 import numpy as np
 import pandas as pd
@@ -23,13 +24,16 @@ student = {
     "pastCourses": [{"courseName":"CS 1110", "grade": 10}, {"courseName":"CS 2110", "grade": 12}],
     "currentCourses": [{"courseName":"CS 3110", "grade": -1}, {"courseName":"CS 2800", "grade": -1}],
     "futureCourses": [{"courseName":"CS 3410", "grade": -1}, {"courseName":"CS 4740", "grade": -1}],
+    "email": adk9@cornell.edu, 
+    "picture": http://profilepicturesdp.com/wp-content/uploads/2018/06/default-user-profile-picture-7.png, 
+    "uid": random-user-
 }
 """
 
-num_student = 50
+num_student = 1000
 
 
-# Step 1: Randomize the student's name
+# Step 1: Randomize the student's name and email
 # Using data from https://github.com/hadley/data-baby-names
 
 names = pd.read_csv("./baby-names.csv")
@@ -40,6 +44,16 @@ name_temp = ["Alice", "Bob", "Carol", "Douglas"]
 def name_randomize():
     random_name = random.choice(name_list)
     return random_name
+
+def email_randomize(initial):
+    random_num = random.randrange(10000, 50000)
+    string_length = random.randrange(2, 4)
+    if string_length == 2:
+        random_string = random.choice(str.lower(string.ascii_letters))
+    else:
+        random_string = random.choice(str.lower(string.ascii_letters)) + random.choice(str.lower(string.ascii_letters))
+    final_email = str.lower(initial) + random_string + str(random_num) + "@cornell.edu"
+    return final_email
 
 # Step 2: Randomize the graduation year
 
@@ -300,7 +314,7 @@ def make_student_class_dict(student_choice_dict, student_decision_dict):
 
 
 # Step infty: Put everything together!
-def make_one_student(course_dict, year_input):
+def make_one_student(course_dict, year_input, index):
     """
 
     :param past_course: A list of the student's past courses
@@ -315,6 +329,10 @@ def make_one_student(course_dict, year_input):
     new_student_dict['pastCourses'] = grade_courses_gen(course_dict['pastCourses'])
     new_student_dict['currentCourses'] = nograde_courses_gen(course_dict['currentCourses'])
     new_student_dict['futureCourses'] = nograde_courses_gen(course_dict['futureCourses'])
+    new_student_dict['uid'] = "random_user_"+str(index)
+    new_student_dict['picture'] = \
+        'http://profilepicturesdp.com/wp-content/uploads/2018/06/default-user-profile-picture-7.png'
+    new_student_dict['email'] = email_randomize(new_student_dict['name'][0])
     return new_student_dict
 
 
@@ -423,12 +441,22 @@ def make_n_students(n):
         random_student_type = random.randrange(0, 12)
         student_class_dict = make_student_class_dict(student_choice_list[random_student_type],
                                                       student_decision_list[random_student_type])
-        student_info = make_one_student(student_class_dict, graduation_year_list[random_student_type])
+        student_info = make_one_student(student_class_dict, graduation_year_list[random_student_type], i)
         student_list.append(student_info)
     student_json = json.dumps(student_list, sort_keys=True, indent=4, separators=(',', ': '))
     return student_json
 
-print(make_n_students(num_student))
+student_json_list = make_n_students(num_student)
+
+with open('student_data.json', 'w') as outfile:
+    json.dump(student_json_list, outfile)
+
+with open('student_data.json', encoding='utf-8') as data_file:
+    student_json_list_read = json.loads(data_file.read())
+
+print(student_json_list_read)
+
+
 
 
 
