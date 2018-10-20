@@ -1,6 +1,8 @@
 package course
 
+import api.cornell.data.classes.Subject
 import com.google.cloud.datastore.Entity
+import com.google.cloud.datastore.Key
 import typedstore.TypedEntity
 import typedstore.TypedEntityCompanion
 import typedstore.TypedTable
@@ -8,7 +10,7 @@ import typedstore.TypedTable
 /**
  * [CourseInfo] is the static information about all the courses.
  *
- * @property id id of the course.
+ * @property key key of the course.
  * @property subject subject of the course. e.g. "CS"
  * @property code code of the course. e.g. "2112"
  * @property title title of the course. e.g. "Algo"
@@ -16,13 +18,13 @@ import typedstore.TypedTable
  * @property weightVector the string form of the hashtable based vector.
  */
 data class CourseInfo(
-        val id: Long, val subject: String, val code: String, val title: String,
+        val key: Key? = null, val subject: Subject = Subject.CS,
+        val code: String, val title: String,
         val description: String, val weightVector: String
 ) {
 
     private object Table : TypedTable<Table>(tableName = "CourseInfo") {
-        val id = longProperty(name = "id")
-        val subject = stringProperty(name = "subject")
+        val subject = enumProperty(name = "subject", clazz = Subject::class.java)
         val code = stringProperty(name = "code")
         val title = stringProperty(name = "title")
         val description = longStringProperty(name = "description")
@@ -30,8 +32,7 @@ data class CourseInfo(
     }
 
     private class CourseInfoEntity(entity: Entity) : TypedEntity<Table>(entity = entity) {
-        val id: Long = Table.id.delegatedValue
-        val subject: String = Table.subject.delegatedValue
+        val subject: Subject = Table.subject.delegatedValue
         val code: String = Table.code.delegatedValue
         val title: String = Table.title.delegatedValue
         val description: String = Table.description.delegatedValue
@@ -39,13 +40,13 @@ data class CourseInfo(
 
         val asCourseInfo: CourseInfo
             get() = CourseInfo(
-                    id = id, subject = subject, code = code, title = title,
+                    key = key, subject = subject, code = code, title = title,
                     description = description, weightVector = weightVector
             )
 
         val asSimplifiedCourseInfo: SimplifiedCourseInfo
             get() = SimplifiedCourseInfo(
-                    id = id, subject = subject, code = code, title = title
+                    key = key, subject = subject, code = code, title = title
             )
 
         companion object : TypedEntityCompanion<Table, CourseInfoEntity>(table = Table) {
@@ -60,12 +61,16 @@ data class CourseInfo(
     companion object {
 
         /**
-         * [getById] returns an optional course information given the id of the course.
+         * [get] returns an optional course information given the id of the course.
          */
-        fun getById(id: Long): CourseInfo? =
-                CourseInfoEntity.query {
-                    filter { table.id eq id }
-                }.firstOrNull()?.asCourseInfo
+        operator fun get(key: Key): CourseInfo? = CourseInfoEntity[key]?.asCourseInfo
+
+        /**
+         * [getSimplified] returns an optional simplified course information given the id of the
+         * course.
+         */
+        fun getSimplified(key: Key): SimplifiedCourseInfo? =
+                CourseInfoEntity[key]?.asSimplifiedCourseInfo
 
         /**
          * [getAll] returns a list of all [CourseInfo] in the database.
@@ -84,7 +89,6 @@ data class CourseInfo(
          */
         fun addAll(list: List<CourseInfo>) {
             CourseInfoEntity.batchInsert(source = list) { courseInfo ->
-                table.id gets courseInfo.id
                 table.subject gets courseInfo.subject
                 table.code gets courseInfo.code
                 table.title gets courseInfo.title
@@ -92,6 +96,11 @@ data class CourseInfo(
                 table.weightVector gets courseInfo.weightVector
             }
         }
+
+        /**
+         * [removeAll] removes all course info from the database, useful for experimentation.
+         */
+        fun removeAll(): Unit = CourseInfoEntity.deleteAll()
 
     }
 }
