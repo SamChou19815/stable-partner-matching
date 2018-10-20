@@ -1,0 +1,28 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar [style.background-image]="'url(' + s.picture + ')'"></div>
+    <mat-card-title>{{s.name}}</mat-card-title>
+    <mat-card-subtitle>Email: {{s.email}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <div class="text-div">Average Rating: {{s.averageRating}}</div>
+    <div class="text-div">Skills: {{s.skills}}</div>
+    <div class="text-div">Introduction: {{s.introduction}}</div>
+    <div class="text-div">Experience: {{s.experience}}</div>
+  </mat-card-content>
+  <mat-divider *ngIf="s.courses.length > 0"></mat-divider>
+  <mat-card-content *ngIf="s.courses.length > 0">
+    <div class="text-div" style="padding-top: 0.5em">Past Courses</div>
+    <mat-list>
+      <mat-list-item *ngFor="let courseKey of s.courses">
+        <span>{{getCourseName(courseKey)}}</span>
+        <span style="flex: 1 1 auto"></span>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+  <mat-card-actions>
+    <ng-content></ng-content>
+  </mat-card-actions>
+</mat-card>

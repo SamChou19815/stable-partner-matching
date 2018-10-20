@@ -4,7 +4,9 @@ import { GlobalDataService } from '../shared/global-data.service';
 import { GoogleUserService } from '../shared/google-user.service';
 import { LoadingOverlayService } from '../shared/overlay/loading-overlay.service';
 import { MatDialog } from '@angular/material';
-import { shortDelay } from '../shared/util';
+import { asyncRun, shortDelay } from '../shared/util';
+import { PartnerInvitation, StudentCourse, StudentPartnership } from '../shared/data';
+import { PartnerNetworkService } from './partner-network.service';
 
 @Component({
   selector: 'app-partner',
@@ -19,8 +21,16 @@ export class PartnerComponent implements OnInit {
    */
   isUserLoggedIn = false;
 
+  invitations: PartnerInvitation[] = [];
+
+  private allMyPartners: StudentPartnership[] = [];
+  pastPartners: StudentPartnership[] = [];
+  currentPartners: StudentPartnership[] = [];
+  futurePartners: StudentPartnership[] = [];
+
   constructor(private dataService: GlobalDataService,
               private googleUserService: GoogleUserService,
+              private networkService: PartnerNetworkService,
               private loadingService: LoadingOverlayService,
               private dialog: MatDialog) {
   }
@@ -33,7 +43,10 @@ export class PartnerComponent implements OnInit {
         ref.close();
         return;
       }
-      this.dataService.initializeApp().then(ref.close);
+      await this.dataService.initializeApp();
+      this.invitations = this.dataService.initData.partnerInvitations;
+      this.constructPartnershipData(this.dataService.initData.partners);
+      ref.close();
     });
   }
 
@@ -43,6 +56,70 @@ export class PartnerComponent implements OnInit {
 
   get isInitialized(): boolean {
     return !this.dataService.initData.isNotInitialized;
+  }
+
+  // noinspection JSMethodCanBeStatic
+  get onMobile() {
+    return window.innerWidth < 800;
+  }
+
+  get mode() {
+    return this.onMobile ? 'over' : 'side';
+  }
+
+  getCourseName(key: string): string {
+    return this.dataService.getCourseNameByKey(key);
+  }
+
+  private constructPartnershipData(allMyPartners: StudentPartnership[]) {
+    this.allMyPartners = allMyPartners;
+    const pastPartners = [];
+    const currentPartners = [];
+    const futurePartners = [];
+    for (const partner of allMyPartners) {
+      switch (partner.timeStatus) {
+        case 'PAST':
+          pastPartners.push(partner);
+          break;
+        case 'CURRENT':
+          currentPartners.push(partner);
+          break;
+        case 'FUTURE':
+          futurePartners.push(partner);
+          break;
+      }
+    }
+    this.pastPartners = pastPartners;
+    this.currentPartners = currentPartners;
+    this.futurePartners = futurePartners;
+  }
+
+  removePartner(studentPartnership: StudentPartnership) {
+    asyncRun(async () => {
+      const ref = this.loadingService.open();
+      await this.networkService.removePartner(studentPartnership);
+      this.constructPartnershipData(this.allMyPartners.filter(p => p.key !== studentPartnership.key));
+      ref.close();
+    });
+  }
+
+  acceptInvitation(invitation: PartnerInvitation) {
+    asyncRun(async () => {
+      const ref = this.loadingService.open();
+      const partnership = await this.networkService.acceptInvitation(invitation);
+      this.constructPartnershipData([...this.allMyPartners, partnership]);
+      this.invitations = this.invitations.filter(i => i.key !== invitation.key);
+      ref.close();
+    });
+  }
+
+  rejectInvitation(invitation: PartnerInvitation) {
+    asyncRun(async () => {
+      const ref = this.loadingService.open();
+      await this.networkService.rejectInvitation(invitation);
+      this.invitations = this.invitations.filter(i => i.key !== invitation.key);
+      ref.close();
+    });
   }
 
 }

@@ -52,8 +52,10 @@ export interface StudentPublicInfo {
 }
 
 export interface StudentPartnership {
+  readonly key: string;
   readonly student1Id: string;
   readonly student2Id: string;
+  readonly student2Info: StudentPublicInfo;
   readonly courseId: string;
   readonly timeStatus: TimeStatus;
 }
@@ -61,6 +63,7 @@ export interface StudentPartnership {
 export interface PartnerInvitation {
   readonly key: string;
   readonly inviterId: string;
+  readonly inviterInfo: StudentPublicInfo;
   readonly invitedId: string;
   readonly courseId: string;
   readonly timeStatus: TimeStatus;

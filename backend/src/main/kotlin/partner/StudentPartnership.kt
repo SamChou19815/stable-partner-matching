@@ -3,6 +3,7 @@ package partner
 import com.google.cloud.datastore.Entity
 import com.google.cloud.datastore.Key
 import common.TimeStatus
+import student.StudentPublicInfo
 import typedstore.TypedEntity
 import typedstore.TypedEntityCompanion
 import typedstore.TypedTable
@@ -16,8 +17,10 @@ import typedstore.TypedTable
  * @property timeStatus the time status of the partnership.
  */
 data class StudentPartnership(
+        val key: Key? = null,
         val student1Id: Key,
         val student2Id: Key,
+        val student2Info: StudentPublicInfo? = null,
         val courseId: Key,
         val timeStatus: TimeStatus
 ) {
@@ -37,7 +40,8 @@ data class StudentPartnership(
 
         val asStudentPartnership: StudentPartnership
             get() = StudentPartnership(
-                    student1Id = student1Id, student2Id = student2Id,
+                    key = key, student1Id = student1Id, student2Id = student2Id,
+                    student2Info = StudentPublicInfo.buildForGeneral(studentId = student2Id),
                     courseId = courseId, timeStatus = timeStatus
             )
 

@@ -23,7 +23,7 @@ export class PartnerNetworkService extends AuthenticatedNetworkService {
     partnerInvitation: PartnerInvitation, accepted: boolean
   ): Promise<StudentPartnership | null> {
     this.firebaseAuthToken = await this.googleUserService.afterSignedIn();
-    return this.postData(`/respond_invitation?accepted=${accepted}`, partnerInvitation);
+    return this.postData<StudentPartnership | null>(`/respond_invitation?accepted=${accepted}`, partnerInvitation);
   }
 
   async acceptInvitation(partnerInvitation: PartnerInvitation): Promise<StudentPartnership> {
@@ -36,6 +36,11 @@ export class PartnerNetworkService extends AuthenticatedNetworkService {
 
   async rejectInvitation(partnerInvitation: PartnerInvitation): Promise<void> {
     await this.respondInvitation(partnerInvitation, false);
+  }
+
+  async removePartner(studentPartnership: StudentPartnership): Promise<void> {
+    this.firebaseAuthToken = await this.googleUserService.afterSignedIn();
+    await this.postDataForText('/remove', studentPartnership);
   }
 
   async getRanking(courseId?: string): Promise<StudentPublicInfo[]> {
