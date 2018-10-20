@@ -45,6 +45,7 @@ public class CourseReader {
     }
 
     public static void prompter(List<Entry> entryTable) {
+        System.out.println("WELCOME TO COURSE READER");
         System.out.println("Initializing keyword and category sets");
 
         Set<String> keywordSet = new HashSet<String>();
@@ -61,16 +62,15 @@ public class CourseReader {
         }
         System.out.println("Initialized sets");
 
-        for
-        System.out.println("Enter 'k' for a list of keywords, 'c' for a list of categories");
-        System.out.println("Enter 'find [keyword]' for a list of courses with specified [keyword]");
-        System.out.println("Enter 'cat [category]' for a list of courses with specified [category]");
-        System.out.println("Enter 'exit' to end the program.");
+
 
         Scanner reader = new Scanner(System.in);
 
         while (true) {
-            String s = reader.next();
+            System.out.println("\nEnter 'k' for a list of keywords, 'c' for a list of categories");
+            System.out.println("Enter 'find [keyword]' for a list of courses with specified [keyword]. Enter 'cat [category]' for a list of courses with specified [category].");
+            System.out.println("Enter 'exit' to end the program.\n");
+            String s = reader.nextLine();
 
             if (s.equals("k")) {
                 for (String kw : keywordSet) {
@@ -81,9 +81,39 @@ public class CourseReader {
                     System.out.println(ca);
                 }
             } else if (s.startsWith("find")) {
-                String[]  s.split(" ")
-            } else if (s.startsWith("cat")) {
+                String[] in = s.split(" ");
 
+                String tgt = null;
+                for (int i = 1; i < in.length; i++) {
+                    tgt += in[i] + " ";
+                }
+                tgt = tgt.trim();
+                if (!keywordSet.contains(tgt)) {
+                    System.out.println("None of the courses have this keyword.");
+                } else {
+                    for (Entry e : entryTable) {
+                        if (e.getKeywords().contains(tgt)) {
+                            System.out.println(e.getSubj() + " " + e.getCatalogNbr() + ": " + e.getTitle());
+                        }
+                    }
+                }
+            } else if (s.startsWith("cat")) {
+                String[] in = s.split(" ");
+
+                String tgt = null;
+                for (int i = 1; i < in.length; i++) {
+                    tgt += in[i] + " ";
+                }
+                tgt = tgt.trim();
+                if (!categorySet.contains(tgt)) {
+                    System.out.println("None of the courses have this category.");
+                } else {
+                    for (Entry e : entryTable) {
+                        if (e.getCategories().contains(tgt)) {
+                            System.out.println(e.getSubj() + " " + e.getCatalogNbr() + ": " + e.getTitle());
+                        }
+                    }
+                }
             } else if (s.equals("exit")) {
                 return;
             } else {
@@ -98,21 +128,10 @@ public class CourseReader {
         Gson gson = new Gson();
         Course[] courseArray = gson.fromJson(bufferedReader, Course[].class);
 
-        System.out.println(courseArray[0]);
-        Course c = courseArray[0];
-        System.out.println(c.getSubject().toString());
         List<Entry> entryTable = createEntryTable(courseArray);
 
-        Entry e = entryTable.get(0);
-        List<String> kw = e.getKeywords();
-        for (String s : kw) {
-            System.out.println(s);
-        }
+        prompter(entryTable);
 
-        List<String> cat = e.getCategories();
-        for (String ca : cat) {
-            System.out.println(ca);
-        }
     }
 
 }

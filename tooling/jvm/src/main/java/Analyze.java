@@ -65,7 +65,7 @@ public class Analyze {
 
         List<String> keywords = new ArrayList<String>();
         for (Entity entity : response.getEntitiesList()) {
-            keywords.add(entity.getName());
+            keywords.add(entity.getName().toLowerCase());
         }
         return keywords;
 
@@ -93,7 +93,7 @@ public class Analyze {
 
         List<String> categories = new ArrayList<String>();
         for (ClassificationCategory category : response.getCategoriesList()) {
-            categories.add(category.getName().substring(1));
+            categories.add(category.getName().substring(1).toLowerCase());
         }
 
         return categories;
