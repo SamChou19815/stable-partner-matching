@@ -123,11 +123,19 @@ export class CourseComponent implements OnInit {
       if (course == null) {
         throw new Error();
       }
-      await this.networkService.edit(course);
+      const newCourse = await this.networkService.edit(course);
       if (course.key == null) {
-        this.constructCourseData([...this.allMyCourses, course]);
+        if (this.allMyCourses.find(c => c.courseId === newCourse.courseId)) {
+          this.constructCourseData(this.allMyCourses.map(c => {
+            return (c.courseId === newCourse.courseId) ? newCourse : c;
+          }));
+        } else {
+          this.constructCourseData([...this.allMyCourses, newCourse]);
+        }
       } else {
-        this.constructCourseData(this.allMyCourses.map(c => c.key === course.key ? course : c));
+        this.constructCourseData(this.allMyCourses.map(c => {
+          return (c.courseId === newCourse.courseId) ? newCourse : c;
+        }));
       }
       ref.close();
     });

@@ -10,7 +10,7 @@
           <mat-list-item *ngFor="let course of pastCourses">
             <span>{{getCourseName(course.courseId)}}</span>
             <span style="flex: 1 1 auto"></span>
-            <mat-icon (click)="editCourse(course)">arrow_forward</mat-icon>
+            <mat-icon (click)="editCourse(course)" class="right-arrow">>arrow_forward</mat-icon>
             <mat-divider></mat-divider>
             <mat-divider></mat-divider>
           </mat-list-item>
@@ -20,7 +20,7 @@
           <mat-list-item *ngFor="let course of currentCourses">
             <span>{{getCourseName(course.courseId)}}</span>
             <span style="flex: 1 1 auto"></span>
-            <mat-icon (click)="editCourse(course)">arrow_forward</mat-icon>
+            <mat-icon (click)="editCourse(course)" class="right-arrow">arrow_forward</mat-icon>
             <mat-divider></mat-divider>
           </mat-list-item>
         </mat-list>
@@ -29,7 +29,7 @@
           <mat-list-item *ngFor="let course of futureCourses">
             <span>{{getCourseName(course.courseId)}}</span>
             <span style="flex: 1 1 auto"></span>
-            <mat-icon (click)="editCourse(course)">arrow_forward</mat-icon>
+            <mat-icon (click)="editCourse(course)" class="right-arrow">arrow_forward</mat-icon>
             <mat-divider></mat-divider>
             <mat-divider></mat-divider>
           </mat-list-item>
@@ -43,8 +43,8 @@
           </button>
         </div>
         <div *ngIf="courseToEdit">
-          <div *ngIf="courseToEdit.key">
-            Course: {{courseToEdit.courseId}}
+          <div *ngIf="courseToEdit.key" style="margin-bottom: 1em">
+            Course: {{getCourseName(courseToEdit.courseId)}}
           </div>
           <mat-form-field *ngIf="!courseToEdit.key">
             <mat-select placeholder="Course" [required]="true" [(ngModel)]="courseToEdit.courseId">

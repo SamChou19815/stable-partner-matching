@@ -2,6 +2,7 @@ package course
 
 import com.google.cloud.datastore.Entity
 import com.google.cloud.datastore.Key
+import com.sun.xml.internal.fastinfoset.alphabet.BuiltInRestrictedAlphabets.table
 import common.TimeStatus
 import typedstore.TypedEntity
 import typedstore.TypedEntityCompanion
@@ -54,17 +55,22 @@ data class StudentCourse(
     }
 
     /**
-     * [upsert] upserts the record into the database.
+     * [upsert] upserts the record into the database and returns the upserted one.
      */
-    fun upsert() {
-        val entityOpt = key?.let { StudentCourseEntity[it] }
-        StudentCourseEntity.upsert(entity = entityOpt) {
+    fun upsert(): StudentCourse {
+        val entityOpt = StudentCourseEntity.query {
+            filter {
+                table.studentId eq studentId
+                table.courseId eq courseId
+            }
+        }.firstOrNull()
+        return StudentCourseEntity.upsert(entity = entityOpt) {
             table.studentId gets studentId
             table.courseId gets courseId
             table.score gets score
             table.status gets status
             table.isTa gets isTa
-        }
+        }.asStudentCourse
     }
 
     /**

@@ -13,14 +13,9 @@ export class CourseNetworkService extends AuthenticatedNetworkService {
     super(http, '/apis/courses');
   }
 
-  async edit(studentCourse: StudentCourse): Promise<void> {
+  async edit(studentCourse: StudentCourse): Promise<StudentCourse> {
     this.firebaseAuthToken = await this.googleUserService.afterSignedIn();
-    const okText = await this.postDataForText('/edit', studentCourse);
-    if (okText === 'OK') {
-      return;
-    } else {
-      throw new Error();
-    }
+    return this.postData<StudentCourse>('/edit', studentCourse);
   }
 
   async delete(studentCourse: StudentCourse): Promise<void> {
