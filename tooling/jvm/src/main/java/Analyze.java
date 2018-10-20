@@ -52,22 +52,26 @@ public class Analyze {
         // [START language_entities_text]
         // Instantiate the Language client com.google.cloud.language.v1.LanguageServiceClient
         LanguageServiceClient language = LanguageServiceClient.create();
-        Document doc = Document.newBuilder()
-                .setContent(text)
-                .setType(Type.PLAIN_TEXT)
-                .build();
-        AnalyzeEntitiesRequest request = AnalyzeEntitiesRequest.newBuilder()
-                .setDocument(doc)
-                .setEncodingType(EncodingType.UTF16)
-                .build();
+        try {
+            Document doc = Document.newBuilder()
+                    .setContent(text)
+                    .setType(Type.PLAIN_TEXT)
+                    .build();
+            AnalyzeEntitiesRequest request = AnalyzeEntitiesRequest.newBuilder()
+                    .setDocument(doc)
+                    .setEncodingType(EncodingType.UTF16)
+                    .build();
 
-        AnalyzeEntitiesResponse response = language.analyzeEntities(request);
+            AnalyzeEntitiesResponse response = language.analyzeEntities(request);
 
-        List<String> keywords = new ArrayList<String>();
-        for (Entity entity : response.getEntitiesList()) {
-            keywords.add(entity.getName().toLowerCase());
+            List<String> keywords = new ArrayList<String>();
+            for (Entity entity : response.getEntitiesList()) {
+                keywords.add(entity.getName().toLowerCase());
+            }
+            return keywords;
+        } finally {
+            language.shutdown();
         }
-        return keywords;
 
         // [END language_entities_text]
     }
