@@ -24,7 +24,7 @@ data class PartnerInvitation(
         val timeStatus: TimeStatus
 ) {
 
-    private object Table : TypedTable<Table>() {
+    private object Table : TypedTable<Table>(tableName = "PartnerInvitation") {
         val inviterId = keyProperty(name = "inviter_id")
         val invitedId = keyProperty(name = "invited_id")
         val courseId = keyProperty(name = "course_id")

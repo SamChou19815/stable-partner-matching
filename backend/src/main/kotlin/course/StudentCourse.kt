@@ -24,7 +24,7 @@ data class StudentCourse(
         val isTa: Boolean
 ) {
 
-    private object Table : TypedTable<Table>() {
+    private object Table : TypedTable<Table>(tableName = "StudentCourse") {
         val studentId = keyProperty(name = "student_id")
         val courseId = keyProperty(name = "course_id")
         val score = longProperty(name = "score")

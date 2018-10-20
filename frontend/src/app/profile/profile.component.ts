@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material';
 import { LoadingOverlayService } from '../shared/overlay/loading-overlay.service';
 import { GoogleUserService } from '../shared/google-user.service';
 import { appCardData, ProjectCardData } from '../shared/project-card-data';
+import { GlobalDataService } from '../shared/global-data.service';
 
 @Component({
   selector: 'app-profile',
@@ -18,7 +19,7 @@ export class ProfileComponent implements OnInit {
    */
   isUserLoggedIn = false;
 
-  constructor(private dataService: SchedulerDataService,
+  constructor(private dataService: GlobalDataService,
               private googleUserService: GoogleUserService,
               private loadingService: LoadingOverlayService,
               private dialog: MatDialog) {
@@ -32,24 +33,16 @@ export class ProfileComponent implements OnInit {
         ref.close();
         return;
       }
-      this.dataService.initializedSchedulerApp().then(ref.close);
+      this.dataService.initializeApp().then(ref.close);
     });
   }
 
-  /**
-   * Let the user sign in.
-   */
   signIn(): void {
     this.googleUserService.signIn();
   }
 
-  /**
-   * Returns whether the data is initialized.
-   *
-   * @returns {boolean} whether the data is initialized.
-   */
   get isInitialized(): boolean {
-    return !this.dataService.schedulerData.isNotInitialized;
+    return !this.dataService.initData.isNotInitialized;
   }
 
 }
