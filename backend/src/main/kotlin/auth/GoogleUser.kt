@@ -52,7 +52,7 @@ data class GoogleUser(
      *
      * @return the corresponding user with key.
      */
-    fun upsert(): GoogleUser {
+    fun upsert(modifyAppInfo: Boolean = true): GoogleUser {
         val entityOpt = getEntityByUid(uid = uid)
         return UserEntity.upsert(entity = entityOpt) {
             table.uid gets uid
@@ -65,7 +65,7 @@ data class GoogleUser(
                 table.skills gets "break things"
                 table.introduction gets "I write bugs."
                 table.experience gets "I broke the codebase in my last intern and got fired."
-            } else {
+            } else if (modifyAppInfo) {
                 table.studentClass gets studentClass
                 table.graduationYear gets graduationYear
                 table.skills gets skills

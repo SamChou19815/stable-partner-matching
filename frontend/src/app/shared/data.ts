@@ -1,5 +1,5 @@
 export interface SimplifiedCourseInfo {
-  readonly id: number;
+  readonly key: string;
   readonly subject: string;
   readonly code: string;
   readonly title: string;

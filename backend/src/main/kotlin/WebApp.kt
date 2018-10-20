@@ -1,19 +1,20 @@
 @file:JvmName(name = "WebApp")
 
-import auth.GoogleUser
 import auth.Role
 import auth.SecurityFilters
 import auth.SecurityFilters.Companion.user
+import course.CourseInfo
 import course.StudentCourse
 import init.InitData
 import partner.PartnerInvitation
 import partner.StudentPartnership
 import partner.StudentRatingRecord
-import web.get
-import web.initServer
 import spark.Spark.path
+import staticprocessor.StaticProcessor
 import web.badRequest
 import web.delete
+import web.get
+import web.initServer
 import web.post
 import web.toJson
 
@@ -26,7 +27,9 @@ import web.toJson
 /**
  * [Filters] can be used to create security filters.
  */
-private object Filters : SecurityFilters(adminEmails = setOf())
+private object Filters : SecurityFilters(
+        adminEmails = setOf()
+)
 
 /*
  * ------------------------------------------------------------------------------------------
@@ -35,21 +38,14 @@ private object Filters : SecurityFilters(adminEmails = setOf())
  */
 
 /**
- * [initializeLoadApiHandlers] initializes a list of load related API handlers.
- */
-private fun initializeLoadApiHandlers() {
-    get(path = "/load") {
-        InitData.getByUser(user = user)
-    }
-}
-
-/**
  * [initializeProfileApiHandlers] initializes a list of profile related API handlers.
  */
 private fun initializeProfileApiHandlers() {
-    post(path = "update") {
+    post(path = "/update") {
         val updatedUser = user.updateWith(anotherUser = toJson())
-        updatedUser.upsert()
+        println(updatedUser)
+        val upsertUser = updatedUser.upsert()
+        println(upsertUser)
         "OK"
     }
 }
@@ -58,12 +54,12 @@ private fun initializeProfileApiHandlers() {
  * [initializeCourseApiHandlers] initializes a list of profile related API handlers.
  */
 private fun initializeCourseApiHandlers() {
-    post(path = "edit") {
+    post(path = "/edit") {
         val studentCourse = toJson<StudentCourse>()
         studentCourse.upsert()
         "OK"
     }
-    delete(path = "delete") {
+    delete(path = "/delete") {
         val studentCourse = toJson<StudentCourse>()
         studentCourse.delete()
         "OK"
@@ -74,15 +70,15 @@ private fun initializeCourseApiHandlers() {
  * [initializePartnerApiHandlers] initializes a list of profile related API handlers.
  */
 private fun initializePartnerApiHandlers() {
-    post(path = "rating") {
+    post(path = "/rating") {
         StudentRatingRecord.editRating(record = toJson())
         "OK"
     }
-    post(path = "invite") {
+    post(path = "/invite") {
         PartnerInvitation.editPartnerInvitation(invitation = toJson())
         "OK"
     }
-    post(path = "respond_invitation") {
+    post(path = "/respond_invitation") {
         val accepted = queryParams("accepted")?.let { it == "true" } ?: badRequest()
         StudentPartnership.handleInvitation(invitation = toJson(), accepted = accepted)
         "OK"
@@ -94,10 +90,23 @@ private fun initializePartnerApiHandlers() {
  */
 private fun initializeUserApiHandlers() {
     Filters.before(path = "/*", role = Role.USER)
-    initializeLoadApiHandlers()
+    get(path = "/load") { InitData.getByUser(user = user) }
     path("/profile", ::initializeProfileApiHandlers)
     path("/courses", ::initializeCourseApiHandlers)
     path("/partner", ::initializePartnerApiHandlers)
+}
+
+/**
+ * [initializeAdminApiHandlers] initializes a list of admin API handlers.
+ */
+private fun initializeAdminApiHandlers() {
+    // Filters.before(path = "/*", role = Role.ADMIN) // TODO add back
+    get(path = "/init_courses") {
+        StaticProcessor.importAllCourses()
+    }
+    get(path = "/remove_courses") {
+        CourseInfo.removeAll()
+    }
 }
 
 /**
@@ -106,6 +115,7 @@ private fun initializeUserApiHandlers() {
 private fun initializeApiHandlers() {
     get(path = "/") { "OK" } // Used for health check
     path("/apis", ::initializeUserApiHandlers)
+    path("/admin_apis", ::initializeAdminApiHandlers)
 }
 
 /*

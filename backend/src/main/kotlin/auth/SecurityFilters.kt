@@ -66,7 +66,7 @@ open class SecurityFilters(private val adminEmails: Set<String> = emptySet()) {
         val googleUser = GoogleUser(
                 uid = firebaseToken.uid, name = firebaseToken.name,
                 email = firebaseToken.email, picture = firebaseToken.picture
-        ).upsert()
+        ).upsert(modifyAppInfo = false)
         val profile = Profile(googleUser)
         credentials.userProfile = profile
     }.apply { addAuthorizationGenerator(authorizationGenerator) }
