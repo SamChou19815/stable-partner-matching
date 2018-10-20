@@ -4,8 +4,9 @@ import { GlobalDataService } from '../shared/global-data.service';
 import { GoogleUserService } from '../shared/google-user.service';
 import { LoadingOverlayService } from '../shared/overlay/loading-overlay.service';
 import { MatDialog } from '@angular/material';
-import { shortDelay } from '../shared/util';
-import { StudentCourse, TimeStatus } from '../shared/data';
+import { asyncRun, shortDelay } from '../shared/util';
+import { SimplifiedCourseInfo, StudentCourse, TimeStatus } from '../shared/data';
+import { CourseNetworkService } from './course-network.service';
 
 @Component({
   selector: 'app-course',
@@ -14,21 +15,27 @@ import { StudentCourse, TimeStatus } from '../shared/data';
 })
 export class CourseComponent implements OnInit {
 
+  allCourses: SimplifiedCourseInfo[] = [];
+  readonly allPossibleTimeStatus: TimeStatus[] = ['PAST', 'CURRENT', 'FUTURE'];
+
   readonly appIntro: ProjectCardData = appCardData;
   /**
    * Whether the user has logged in.
    */
   isUserLoggedIn = false;
 
-  private allCourses: StudentCourse[] = [];
+  private allMyCourses: StudentCourse[] = [];
   pastCourses: StudentCourse[] = [];
   currentCourses: StudentCourse[] = [];
   futureCourses: StudentCourse[] = [];
+
+  courseToEdit: StudentCourse | null = null;
 
   @ViewChild('drawer') drawer: any | undefined;
 
   constructor(private dataService: GlobalDataService,
               private googleUserService: GoogleUserService,
+              private networkService: CourseNetworkService,
               private loadingService: LoadingOverlayService,
               private dialog: MatDialog) {
   }
@@ -42,6 +49,7 @@ export class CourseComponent implements OnInit {
         return;
       }
       await this.dataService.initializeApp();
+      this.allCourses = this.dataService.initData.allCourses;
       this.constructCourseData(this.dataService.initData.courses);
       ref.close();
     });
@@ -64,24 +72,73 @@ export class CourseComponent implements OnInit {
     return this.onMobile ? 'over' : 'side';
   }
 
-  private constructCourseData(allCourses: StudentCourse[]) {
-    this.allCourses = allCourses;
-    this.pastCourses = [];
-    this.currentCourses = [];
-    this.futureCourses = [];
-    for (const course of allCourses) {
+  getCourseName(key: string): string {
+    return this.dataService.getCourseNameByKey(key);
+  }
+
+  private constructCourseData(allMyCourses: StudentCourse[]) {
+    this.allMyCourses = allMyCourses;
+    const pastCourses = [];
+    const currentCourses = [];
+    const futureCourses = [];
+    for (const course of allMyCourses) {
       switch (course.status) {
         case 'PAST':
-          this.pastCourses.push(course);
+          pastCourses.push(course);
           break;
         case 'CURRENT':
-          this.currentCourses.push(course);
+          currentCourses.push(course);
           break;
         case 'FUTURE':
-          this.futureCourses.push(course);
+          futureCourses.push(course);
           break;
       }
     }
+    this.pastCourses = pastCourses;
+    this.currentCourses = currentCourses;
+    this.futureCourses = futureCourses;
+  }
+
+  editCourse(studentCourse?: StudentCourse) {
+    this.courseToEdit = studentCourse == null
+      ? <StudentCourse> {
+        studentId: this.dataService.initData.profile.key,
+        courseId: '',
+        status: 'CURRENT'
+      }
+      : <StudentCourse>{ ...studentCourse };
+  }
+
+  deleteCourse(studentCourse: StudentCourse) {
+    asyncRun(async () => {
+      const ref = this.loadingService.open();
+      this.networkService.delete(studentCourse).then(ref.close);
+    });
+  }
+
+  submit() {
+    asyncRun(async () => {
+      const ref = this.loadingService.open();
+      const course = this.courseToEdit;
+      if (course == null) {
+        throw new Error();
+      }
+      const newCourse = await this.networkService.edit(course);
+      if (course.key == null) {
+        if (this.allMyCourses.find(c => c.courseId === newCourse.courseId)) {
+          this.constructCourseData(this.allMyCourses.map(c => {
+            return (c.courseId === newCourse.courseId) ? newCourse : c;
+          }));
+        } else {
+          this.constructCourseData([...this.allMyCourses, newCourse]);
+        }
+      } else {
+        this.constructCourseData(this.allMyCourses.map(c => {
+          return (c.courseId === newCourse.courseId) ? newCourse : c;
+        }));
+      }
+      ref.close();
+    });
   }
 
 }

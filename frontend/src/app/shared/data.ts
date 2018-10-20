@@ -37,9 +37,9 @@ export interface StudentCourse {
   readonly key?: string;
   readonly studentId: string;
   readonly courseId: string;
-  readonly score: number; // Must be an int
+  readonly score?: number; // Must be an int
   status: TimeStatus;
-  isTa: boolean;
+  isTa?: boolean;
 }
 
 export interface StudentPublicInfo {
