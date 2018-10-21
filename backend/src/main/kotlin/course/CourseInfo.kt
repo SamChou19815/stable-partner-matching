@@ -75,6 +75,14 @@ data class CourseInfo(
         private val weightVectorType: Type = object : TypeToken<Map<String, Double>>() {}.type
 
         /**
+         * [allCourseInfoMap] is a map from all course info to maps.
+         */
+        private val allCourseInfoMap: Map<Key, CourseInfo> =
+                CourseInfoEntity.all().map { entity ->
+                    entity.key to entity.asCourseInfo
+                }.toMap()
+
+        /**
          * A list of all simplified course info, cached here.
          */
         private val allSimplifiedCourseInfo: List<SimplifiedCourseInfo> =
@@ -86,29 +94,40 @@ data class CourseInfo(
         /**
          * [get] returns an optional course information given the id of the course.
          */
+        @JvmStatic
         operator fun get(key: Key): CourseInfo? = CourseInfoEntity[key]?.asCourseInfo
+
+        /**
+         * [getCached] returns a cached course information on the server.
+         */
+        @JvmStatic
+        fun getCached(key: Key): CourseInfo = allCourseInfoMap[key]!!
 
         /**
          * [getSimplified] returns an optional simplified course information given the id of the
          * course.
          */
+        @JvmStatic
         fun getSimplified(key: Key): SimplifiedCourseInfo? =
                 CourseInfoEntity[key]?.asSimplifiedCourseInfo
 
         /**
          * [getAll] returns a list of all [CourseInfo] in the database.
          */
+        @JvmStatic
         fun getAll(): List<CourseInfo> =
                 CourseInfoEntity.all().map { it.asCourseInfo }.toList()
 
         /**
          * [getAll] returns a list of all [CourseInfo] in the database.
          */
+        @JvmStatic
         fun getAllSimplified(): List<SimplifiedCourseInfo> = allSimplifiedCourseInfo
 
         /**
          * [getBySubjectAndCode] returns the course information by [subject] and [code] query.
          */
+        @JvmStatic
         fun getBySubjectAndCode(subject: Subject, code: String): CourseInfo =
                 CourseInfoEntity.query {
                     filter {
@@ -120,6 +139,7 @@ data class CourseInfo(
         /**
          * [addAll] adds a list of all the courses in the database.
          */
+        @JvmStatic
         fun addAll(list: List<CourseInfo>) {
             CourseInfoEntity.batchInsert(source = list) { courseInfo ->
                 table.subject gets courseInfo.subject
@@ -133,6 +153,7 @@ data class CourseInfo(
         /**
          * [deleteAll] removes all course info from the database, useful for experimentation.
          */
+        @JvmStatic
         fun deleteAll(): Unit = CourseInfoEntity.deleteAll()
 
     }

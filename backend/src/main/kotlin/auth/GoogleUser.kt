@@ -164,33 +164,26 @@ data class GoogleUser(
         /**
          * [getByKey] returns a [GoogleUser] by the given [key], which may be `null`.
          */
+        @JvmStatic
         fun getByKey(key: Key): GoogleUser? = UserEntity[key]?.asGoogleUser
 
         /**
          * [getByUid] returns a [GoogleUser] by [uid], which may be `null`.
          */
+        @JvmStatic
         fun getByUid(uid: String): GoogleUser? = getEntityByUid(uid = uid)?.asGoogleUser
-
-        /**
-         * [getByEmail] returns a [GoogleUser] by [email], which may be `null`.
-         */
-        fun getByEmail(email: String): GoogleUser? =
-                UserEntity.query { filter { table.email eq email } }.firstOrNull()?.asGoogleUser
-
-        /**
-         * [getAllUserKeys] returns a list of all user's keys.
-         */
-        fun getAllUserKeys(): List<Key> = UserEntity.allKeys().toList()
 
         /**
          * [getAllOtherUserKeys] returns a list of all user's keys except [user].
          */
+        @JvmStatic
         fun getAllOtherUserKeys(user: GoogleUser): List<Key> =
                 UserEntity.allKeys().filter { it != user.keyNotNull }.toList()
 
         /**
          * [deleteAll] deletes all users.
          */
+        @JvmStatic
         fun deleteAll() {
             // To overcome the API limitation of 500 operations
             val keys = UserEntity.allKeys().toList()

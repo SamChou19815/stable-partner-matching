@@ -85,6 +85,7 @@ data class StudentCourse(
          * [getAllCoursesByStudentId] returns a list of all courses belongs to a student given
          * his [id].
          */
+        @JvmStatic
         fun getAllCoursesByStudentId(id: Key): List<StudentCourse> =
                 StudentCourseEntity.query {
                     filter { table.studentId eq id }
@@ -95,6 +96,7 @@ data class StudentCourse(
          * [getAllCoursesByStudentAndCourseId] returns a list of all courses
          * with [studentId] and [courseId].
          */
+        @JvmStatic
         fun getAllCoursesByStudentAndCourseId(studentId: Key, courseId: Key): StudentCourse? =
                 StudentCourseEntity.query {
                     filter {
@@ -103,15 +105,6 @@ data class StudentCourse(
                     }
                     order { table.status.asc() }
                 }.firstOrNull()?.asStudentCourse
-
-        /**
-         * [getAllCoursesByCourseId] returns a list of all courses with [courseId].
-         */
-        fun getAllCoursesByCourseId(courseId: Key): List<StudentCourse> =
-                StudentCourseEntity.query {
-                    filter { table.courseId eq courseId }
-                    order { table.status.asc() }
-                }.map { it.asStudentCourse }.toList()
 
         /**
          * [getAllPastCourseKeys] returns a list of all past courses' keys of a student with [id].

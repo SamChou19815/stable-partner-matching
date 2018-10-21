@@ -32,7 +32,13 @@ public class Ranking {
     private int vectorSize = -1;
     private List<String> orderedWeights = null;
     
-    private MathVector getCourseVector(CourseInfo courseInfo) {
+    /**
+     * Returns a computed course weight map from the raw course information.
+     *
+     * @param courseInfo the raw course information.
+     * @return the computed course weight vector.
+     */
+    private MathVector getCourseWeightVector(CourseInfo courseInfo) {
         Map<String, Double> v = courseInfo.getWeightVectorMap();
         MathVector ans = new MathVector(vectorSize);
         double[] values = new double[vectorSize];
@@ -43,10 +49,8 @@ public class Ranking {
         return ans;
     }
     
-    private void init(StudentCourse course) {
-        CourseInfo info = CourseInfo.Companion.get(course.getCourseId());
-        Map<String, Double> v = info.getWeightVectorMap();
-        orderedWeights = new ArrayList<>(v.keySet());
+    private void init(CourseInfo info) {
+        orderedWeights = new ArrayList<>(info.getWeightVectorMap().keySet());
         Collections.sort(orderedWeights);
         vectorSize = orderedWeights.size();
     }
@@ -58,6 +62,7 @@ public class Ranking {
      * @param skillStr the string that encodes a list of skills.
      * @return a math vector of the skill score sum.
      */
+    @NotNull
     private MathVector computeSkillSetSum(String skillStr) {
         String[] skills = skillStr.split(", ");
         Set<String> skillSet = new HashSet<>(Arrays.asList(skills));
@@ -81,16 +86,21 @@ public class Ranking {
      * @param courseWeight the course wright to consider.
      * @return a math vector of the skill score sum.
      */
+    @NotNull
     private MathVector computeCourseSetSum(Key userKey, List<Key> courseKeySet,
                                            MathVector courseWeight) {
         MathVector coursesSum = new MathVector(vectorSize);
         for (Key courseKey : courseKeySet) {
-            CourseInfo courseInfo = CourseInfo.Companion.get(courseKey);
-            MathVector courseVector = getCourseVector(courseInfo);
-            StudentCourse course = StudentCourse.Companion.getAllCoursesByStudentAndCourseId(
+            CourseInfo courseInfo = CourseInfo.getCached(courseKey);
+            MathVector courseVector = getCourseWeightVector(courseInfo);
+            StudentCourse course = StudentCourse.getAllCoursesByStudentAndCourseId(
                     userKey, courseKey);
-            
-            courseVector.scalarProduct(course.getScore()); // * grade
+            if (course == null) {
+                throw new Error();
+            }
+            Long scoreOpt = course.getScore();
+            double score = scoreOpt == null? 3: scoreOpt;
+            courseVector.scalarProduct(score); // * grade
             courseVector.vectorProduct(courseWeight); // * specified course's weight
             coursesSum.addVector(courseVector);
         }
@@ -131,6 +141,7 @@ public class Ranking {
      * @param courseWeight the weight of the course.
      * @return the computed competence vector.
      */
+    @NotNull
     private MathVector computeCompetenceVector(Key userKey, MathVector courseWeight) {
         StudentPublicInfo studentInfo = StudentPublicInfo.Companion.buildForGeneral(
                 userKey, true);
@@ -150,28 +161,23 @@ public class Ranking {
         return skillSetSum;
     }
     
-    public final List<Key> getRankingForCourse(
-            @NotNull GoogleUser user, @NotNull CourseInfo courseInfo) {
-        StudentCourse studentCourse = StudentCourse.Companion.getAllCoursesByStudentAndCourseId(
-                user.getKeyNotNull(), courseInfo.getKey()
-        );
-        if (studentCourse == null) {
-            throw new Error("Bad Course!");
-        }
+    @NotNull
+    public final List<Key> getRankingForCourse(@NotNull GoogleUser user,
+                                               @NotNull CourseInfo courseInfo) {
         if (orderedWeights == null) {
-            init(studentCourse);
+            init(courseInfo);
         }
-        MathVector courseWeightVector = getCourseVector(courseInfo);
+        MathVector courseWeightVector = getCourseWeightVector(courseInfo);
         // Prepare data for user.
         Key userKey = user.getKeyNotNull();
         MathVector userCompetenceVector = computeCompetenceVector(userKey, courseWeightVector);
         // Compute all partner competence and matching score
-        List<Key> potentialPartnerKeys = GoogleUser.Companion.getAllOtherUserKeys(user);
+        List<Key> potentialPartnerKeys = GoogleUser.getAllOtherUserKeys(user);
         List<Pair<Key, Double>> partnerKeyScorePairList = new ArrayList<>();
         for (Key potentialPartnerKey : potentialPartnerKeys) {
             MathVector partnerCompetenceVector =
                     computeCompetenceVector(potentialPartnerKey, courseWeightVector);
-            GoogleUser partnerUser = GoogleUser.Companion.getByKey(potentialPartnerKey);
+            GoogleUser partnerUser = GoogleUser.getByKey(potentialPartnerKey);
             double s = computePartnerScalarScore(userCompetenceVector, partnerCompetenceVector) +
                     FreeTimeInterval.totalOverlap(user.getFreeTimes(), partnerUser.getFreeTimes());
             partnerKeyScorePairList.add(new Pair<>(potentialPartnerKey, s));
