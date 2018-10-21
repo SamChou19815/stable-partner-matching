@@ -39,7 +39,7 @@ public class Ranking {
     }
     
     public void init(StudentCourse course) {
-        CourseInfo info = CourseInfo.Companion.get(course.getKey());
+        CourseInfo info = CourseInfo.Companion.get(course.getCourseId());
         Gson gson = new Gson();
         WeightVector v = gson.fromJson(info.getWeightVector(), WeightVector.class);
         orderedWeights = new ArrayList<>(v.getWeightVector().keySet());
