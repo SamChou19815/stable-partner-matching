@@ -24,7 +24,20 @@ quality. The user can send invite and form partnership on our platform.
 
 ## How We Built It
 
-`TODO`
+- Cornell Course API - Get Cornell CS course information 
+- Google NLP API - Extract keywords from course descriptions
+- 
+- Kotlin / Google Cloud Platform - Backend (server application and data storage)
+- Firebase Authentication - User identification
+- Angular - Front-end User Interface
+
+## Challenges we ran into
+
+## Accomplishments that we're proud of
+
+## What we learned
+
+## What's next for BigRedMatch
 
 ## Build and Deploy the Project
 
