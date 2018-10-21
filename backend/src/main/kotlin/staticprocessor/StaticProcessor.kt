@@ -11,7 +11,6 @@ import common.StudentClass
 import common.TimeStatus
 import course.CourseInfo
 import course.StudentCourse
-import sun.plugin2.util.PojoUtil.toJson
 import java.io.File
 import java.io.InputStreamReader
 

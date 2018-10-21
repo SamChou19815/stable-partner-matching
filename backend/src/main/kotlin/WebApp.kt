@@ -10,6 +10,7 @@ import init.InitData
 import partner.PartnerInvitation
 import partner.StudentPartnership
 import spark.Spark.path
+import spark.Spark.staticFileLocation
 import staticprocessor.StaticProcessor
 import student.StudentPublicInfo
 import web.badRequest
@@ -18,6 +19,7 @@ import web.initServer
 import web.post
 import web.queryParamsForKey
 import web.toJson
+import kotlin.system.measureTimeMillis
 
 /*
  * ------------------------------------------------------------------------------------------
@@ -125,11 +127,12 @@ private fun initializeUserApiHandlers() {
 private fun initializeAdminApiHandlers() {
     // Filters.before(path = "/*", role = Role.ADMIN) // TODO add back
     get(path = "/init_system") {
-        CourseInfo.deleteAll()
-        GoogleUser.deleteAll()
-        StudentCourse.deleteAll()
-        StaticProcessor.importAllCourses()
-        StaticProcessor.importAllRandomUsers()
+        println(measureTimeMillis { CourseInfo.deleteAll() })
+        println(measureTimeMillis { GoogleUser.deleteAll() })
+        println(measureTimeMillis { StudentCourse.deleteAll() })
+        println(measureTimeMillis { StaticProcessor.importAllCourses() })
+        Thread.sleep(10_000)
+        println(measureTimeMillis { StaticProcessor.importAllRandomUsers() })
     }
 }
 
@@ -137,6 +140,7 @@ private fun initializeAdminApiHandlers() {
  * [initializeApiHandlers] initializes a list of handlers.
  */
 private fun initializeApiHandlers() {
+    staticFileLocation("/static")
     get(path = "/") { "OK" } // Used for health check
     path("/apis", ::initializeUserApiHandlers)
     path("/admin_apis", ::initializeAdminApiHandlers)

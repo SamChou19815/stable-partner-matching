@@ -1,3 +1,14 @@
 steps:
-- name: 'ubuntu'
-  args: ['echo', '"Hello World"']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/backend-container:${_APP_VERSION}', '.']
+  timeout: 600s
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/backend-container:${_APP_VERSION}']
+  timeout: 300s
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: ['set', 'image', 'deployment', 'backend-workload', '*=gcr.io/$PROJECT_ID/backend-container:${_APP_VERSION}']
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=web-cluster'
+substitutions:
+  _APP_VERSION: 1.0.

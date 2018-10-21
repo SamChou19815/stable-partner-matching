@@ -61,7 +61,7 @@ export class SideNavPageComponent implements OnInit, AfterViewInit {
         }
         let title: string;
         if (currentUrl === '/') {
-          title = 'APP NAME';
+          title = 'BigRedMatch';
           this.isHome = true;
         } else {
           title = this.navDataList.getNameByUrl(currentUrl);

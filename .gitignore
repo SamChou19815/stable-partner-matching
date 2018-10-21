@@ -5,6 +5,7 @@
 **/libs/*
 **/dist/*
 *.class
+**/static/*
 
 # Exclude node_modules
 **/node_modules
