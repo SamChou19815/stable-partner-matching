@@ -3,9 +3,12 @@ package course
 import api.cornell.data.classes.Subject
 import com.google.cloud.datastore.Entity
 import com.google.cloud.datastore.Key
+import com.google.gson.reflect.TypeToken
 import typedstore.TypedEntity
 import typedstore.TypedEntityCompanion
 import typedstore.TypedTable
+import web.gson
+import java.lang.reflect.Type
 
 /**
  * [CourseInfo] is the static information about all the courses.
@@ -22,6 +25,12 @@ data class CourseInfo(
         val code: String, val title: String,
         val description: String, val weightVector: String
 ) {
+
+    /**
+     * [weightVectorMap] is the raw weight vector deserialized from text.
+     */
+    val weightVectorMap: Map<String, Double>
+        get() = gson.fromJson(weightVector, weightVectorType);
 
     private object Table : TypedTable<Table>(tableName = "CourseInfo") {
         val subject = enumProperty(name = "subject", clazz = Subject::class.java)
@@ -59,6 +68,11 @@ data class CourseInfo(
     }
 
     companion object {
+
+        /**
+         * [weightVectorType] is the type of the weight vector.
+         */
+        private val weightVectorType: Type = object : TypeToken<Map<String, Double>>() {}.type
 
         /**
          * A list of all simplified course info, cached here.

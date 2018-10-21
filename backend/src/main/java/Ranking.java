@@ -1,14 +1,12 @@
 import auth.GoogleUser;
 import com.google.cloud.datastore.Key;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import course.CourseInfo;
 import course.StudentCourse;
 import freetime.FreeTimeInterval;
 import kotlin.Pair;
+import org.jetbrains.annotations.NotNull;
 import student.StudentPublicInfo;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,33 +29,23 @@ import java.util.stream.Collectors;
  */
 public class Ranking {
     
-    /**
-     * The globally used gson.
-     */
-    private static final Gson gson = new Gson();
-    /**
-     * The globally used type for weight vector.
-     */
-    private static final Type weightVectorType = new TypeToken<Map<String, Double>>() {}.getType();
-    
     private int vectorSize = -1;
     private List<String> orderedWeights = null;
-    private Key userKey;
     
     private MathVector getCourseVector(CourseInfo courseInfo) {
-        Map<String, Double> v = gson.fromJson(courseInfo.getWeightVector(), weightVectorType);
-        MathVector retval = new MathVector(vectorSize);
-        double[] vals = new double[vectorSize];
+        Map<String, Double> v = courseInfo.getWeightVectorMap();
+        MathVector ans = new MathVector(vectorSize);
+        double[] values = new double[vectorSize];
         for (int i = 0; i < vectorSize; i++) {
-            vals[i] = v.get(orderedWeights.get(i));
+            values[i] = v.get(orderedWeights.get(i));
         }
-        retval.updateFromArray(vals);
-        return retval;
+        ans.updateFromArray(values);
+        return ans;
     }
     
     private void init(StudentCourse course) {
         CourseInfo info = CourseInfo.Companion.get(course.getCourseId());
-        Map<String, Double> v = gson.fromJson(info.getWeightVector(), weightVectorType);
+        Map<String, Double> v = info.getWeightVectorMap();
         orderedWeights = new ArrayList<>(v.keySet());
         Collections.sort(orderedWeights);
         vectorSize = orderedWeights.size();
@@ -162,17 +150,22 @@ public class Ranking {
         return skillSetSum;
     }
     
-    public final List<Key> getRankingForCourse(GoogleUser user, StudentCourse course) {
-        if (orderedWeights == null) {
-            init(course);
+    public final List<Key> getRankingForCourse(
+            @NotNull GoogleUser user, @NotNull CourseInfo courseInfo) {
+        StudentCourse studentCourse = StudentCourse.Companion.getAllCoursesByStudentAndCourseId(
+                user.getKeyNotNull(), courseInfo.getKey()
+        );
+        if (studentCourse == null) {
+            throw new Error("Bad Course!");
         }
-        CourseInfo courseInfo = CourseInfo.Companion.get(course.getCourseId());
+        if (orderedWeights == null) {
+            init(studentCourse);
+        }
         MathVector courseWeightVector = getCourseVector(courseInfo);
-        
-        userKey = user.getKeyNotNull();
-        
+        // Prepare data for user.
+        Key userKey = user.getKeyNotNull();
         MathVector userCompetenceVector = computeCompetenceVector(userKey, courseWeightVector);
-        
+        // Compute all partner competence and matching score
         List<Key> potentialPartnerKeys = GoogleUser.Companion.getAllOtherUserKeys(user);
         List<Pair<Key, Double>> partnerKeyScorePairList = new ArrayList<>();
         for (Key potentialPartnerKey : potentialPartnerKeys) {
@@ -183,7 +176,7 @@ public class Ranking {
                     FreeTimeInterval.totalOverlap(user.getFreeTimes(), partnerUser.getFreeTimes());
             partnerKeyScorePairList.add(new Pair<>(potentialPartnerKey, s));
         }
-        // SORTING
+        // Final Sorting
         return partnerKeyScorePairList
                 .stream()
                 .sorted((o1, o2) -> Double.compare(o2.getSecond(), o1.getSecond()))

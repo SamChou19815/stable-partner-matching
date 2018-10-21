@@ -100,15 +100,9 @@ private fun initializeMatchingApiHandlers() {
     get(path = "/course") {
         val startTime = System.currentTimeMillis()
         val courseId = queryParamsForKey(name = "course_id")
-        val studentCourse = StudentCourse.getAllCoursesByStudentAndCourseId(
-                studentId = user.keyNotNull, courseId = courseId
-        )
-        val result = Ranking().getRankingForCourse(user, studentCourse)
-                .map {
-                    StudentPublicInfo.buildForGeneral(
-                            studentId = it, fullDetail = false
-                    )
-                }
+        val courseInfo = CourseInfo[courseId]!!
+        val result = Ranking().getRankingForCourse(user, courseInfo)
+                .map { StudentPublicInfo.buildForGeneral(studentId = it, fullDetail = false) }
         val endTime = System.currentTimeMillis()
         println("Matching Running Time: ${endTime - startTime}.")
         result
