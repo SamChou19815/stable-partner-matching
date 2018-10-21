@@ -31,13 +31,13 @@ student = {
 """
 
 # input for number of students
-num_student = 500
+num_student = 200
 
 # Step 1: Randomize the student's name and email
 # Using data from https://github.com/hadley/data-baby-names
 
 names = pd.read_csv("./baby-names.csv")
-name_list = names['name'].tolist()[0:500]
+name_list = names['name'].tolist()[0:200]
 
 
 def name_randomize():
