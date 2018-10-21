@@ -11,7 +11,7 @@ export class NavDataService {
    * The group for scheduler.
    */
   private readonly appGroup: NavGroup = <NavGroup>{
-    name: 'App', icon: Icon.ofMaterial('android'),
+    name: 'BigRedMatch', icon: Icon.ofMaterial('android'),
     children: [
       { name: 'Profile', icon: Icon.ofMaterial('person'), link: '/profile' },
       { name: 'Courses', icon: Icon.ofMaterial('school'), link: '/courses' },

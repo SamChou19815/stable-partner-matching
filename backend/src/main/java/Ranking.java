@@ -161,7 +161,7 @@ public final class Ranking {
         MathVector pastCoursesSum = computeCourseSetSum(userKey, studentInfo.getPastCourses());
         // Compute Current Courses Sum
         MathVector currCoursesSum = computeCourseSetSum(userKey, studentInfo.getCurrCourses());
-        currCoursesSum.scalarProduct(0.5);
+        currCoursesSum.scalarProduct(0.3);
         // Add all the things together
         skillSetSum.addVector(pastCoursesSum);
         skillSetSum.addVector(currCoursesSum);
