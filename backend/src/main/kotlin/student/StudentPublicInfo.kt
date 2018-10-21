@@ -38,8 +38,8 @@ data class StudentPublicInfo(
         fun buildForGeneral(studentId: Key, fullDetail: Boolean = true): StudentPublicInfo? {
             val user = GoogleUser.getByKey(key = studentId) ?: return null
             return if (fullDetail) {
-                val pastCourses = StudentCourse.getAllPastCourseKeys(id = studentId)
-                val currCourses = StudentCourse.getAllCurrCourseKeys(id = studentId)
+                val pastCourses = StudentCourse.getAllPastCourseKeys(studentId = studentId)
+                val currCourses = StudentCourse.getAllCurrCourseKeys(studentId = studentId)
                 StudentPublicInfo(
                         id = studentId, name = user.name, email = user.email,
                         picture = user.picture, skills = user.skills,

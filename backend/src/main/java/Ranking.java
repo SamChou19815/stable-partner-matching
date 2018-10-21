@@ -34,12 +34,21 @@ public final class Ranking {
     private final GoogleUser user;
     private final MathVector courseWeightVector;
     
+    private final Map<Key, Map<Key, StudentCourse>> studentCourseCache;
+    
+    /**
+     * Create a ranking request.
+     *
+     * @param user the user that requires.
+     * @param courseInfo the course to find partner for.
+     */
     public Ranking(@NotNull GoogleUser user, @NotNull CourseInfo courseInfo) {
         Map<String, Double> rawWeightVector = courseInfo.getWeightVectorMap();
         orderedWeights = new ArrayList<>(rawWeightVector.keySet());
         Collections.sort(orderedWeights);
         vectorSize = orderedWeights.size();
         courseWeightVector = getCourseWeightVector(courseInfo);
+        studentCourseCache = StudentCourse.getAllStudentCourses();
         this.user = user;
     }
     
@@ -96,8 +105,9 @@ public final class Ranking {
         for (Key courseKey : courseKeySet) {
             CourseInfo courseInfo = CourseInfo.getCached(courseKey);
             MathVector courseVector = getCourseWeightVector(courseInfo);
-            StudentCourse course = StudentCourse.getAllCoursesByStudentAndCourseId(
-                    userKey, courseKey);
+            StudentCourse course = studentCourseCache.get(userKey).get(courseKey);
+            /* StudentCourse.getAllCoursesByStudentAndCourseId(
+                    userKey, courseKey); */
             if (course == null) {
                 throw new Error();
             }
@@ -158,6 +168,11 @@ public final class Ranking {
         return skillSetSum;
     }
     
+    /**
+     * Returns the computed ranked student public information.
+     *
+     * @return the computed ranked student public information.
+     */
     @NotNull
     public final List<StudentPublicInfo> getRankingForCourse() {
         // Prepare data for user.

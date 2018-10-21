@@ -3,6 +3,7 @@ package course
 import com.google.cloud.datastore.Entity
 import com.google.cloud.datastore.Key
 import common.TimeStatus
+import course.StudentCourse.Table.studentId
 import typedstore.TypedEntity
 import typedstore.TypedEntityCompanion
 import typedstore.TypedTable
@@ -82,6 +83,21 @@ data class StudentCourse(
     companion object {
 
         /**
+         * [getAllStudentCourses] returns a map of all student courses with student id and course
+         * id as keys..
+         */
+        @JvmStatic
+        fun getAllStudentCourses(): Map<Key, Map<Key, StudentCourse>> =
+                StudentCourseEntity.all()
+                        .map { it.asStudentCourse }
+                        .groupBy { it.studentId }
+                        .map { (studentId, courses) ->
+                            studentId to courses.groupBy { c -> c.courseId }
+                                    .mapValues { (_, lst) -> lst.first() }
+                        }
+                        .toMap()
+
+        /**
          * [getAllCoursesByStudentId] returns a list of all courses belongs to a student given
          * his [id].
          */
@@ -107,24 +123,25 @@ data class StudentCourse(
                 }.firstOrNull()?.asStudentCourse
 
         /**
-         * [getAllPastCourseKeys] returns a list of all past courses' keys of a student with [id].
+         * [getAllPastCourseKeys] returns a list of all past courses' keys of a student with
+         * [studentId].
          */
-        fun getAllPastCourseKeys(id: Key): List<Key> =
+        fun getAllPastCourseKeys(studentId: Key): List<Key> =
                 StudentCourseEntity.query {
                     filter {
-                        table.studentId eq id
+                        table.studentId eq studentId
                         table.status eq TimeStatus.PAST
                     }
                 }.map { it.courseId }.toList()
 
         /**
          * [getAllCurrCourseKeys] returns a list of all current courses' keys of a student
-         * with [id].
+         * with [studentId].
          */
-        fun getAllCurrCourseKeys(id: Key): List<Key> =
+        fun getAllCurrCourseKeys(studentId: Key): List<Key> =
                 StudentCourseEntity.query {
                     filter {
-                        table.studentId eq id
+                        table.studentId eq studentId
                         table.status eq TimeStatus.CURRENT
                     }
                 }.map { it.courseId }.toList()
