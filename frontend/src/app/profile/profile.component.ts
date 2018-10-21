@@ -66,8 +66,9 @@ export class ProfileComponent implements OnInit {
     asyncRun(async () => {
       const ref = this.loadingService.open();
       const profile = <StudentProfile>{ ...this.profile, freeTimes: this.filterFreeTimes() };
-      await this.networkService.update(profile);
-      this.dataService.initData.profile = this.profile;
+      const newProfile = await this.networkService.update(profile);
+      this.profile = newProfile;
+      this.dataService.initData.profile = newProfile;
       ref.close();
     });
   }

@@ -16,7 +16,6 @@ export class NavDataService {
       { name: 'Profile', icon: Icon.ofMaterial('person'), link: '/profile' },
       { name: 'Courses', icon: Icon.ofMaterial('school'), link: '/courses' },
       { name: 'Partners', icon: Icon.ofMaterial('group'), link: '/partners' }
-      // { name: 'Matching', icon: Icon.ofMaterial('person_add'), link: '/matching' }
     ]
   };
   /**

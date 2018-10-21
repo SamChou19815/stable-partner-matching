@@ -13,14 +13,9 @@ export class ProfileNetworkService extends AuthenticatedNetworkService {
     super(http, '/apis/profile');
   }
 
-  async update(studentProfile: StudentProfile): Promise<void> {
+  async update(studentProfile: StudentProfile): Promise<StudentProfile> {
     this.firebaseAuthToken = await this.googleUserService.afterSignedIn();
-    const okText = await this.postDataForText('/update', studentProfile);
-    if (okText === 'OK') {
-      return;
-    } else {
-      throw new Error();
-    }
+    return this.postData<StudentProfile>('/update', studentProfile);
   }
 
   async loadPublic(studentId: string): Promise<StudentPublicInfo> {

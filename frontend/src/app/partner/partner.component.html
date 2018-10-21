@@ -5,7 +5,8 @@
       <button mat-button color="primary" (click)="acceptInvitation(inv)">Accept</button>
       <button mat-button color="primary" (click)="rejectInvitation(inv)">Reject</button>
     </app-student-public-info>
-    <div *ngIf="pastPartners.length === 0 && currentPartners.length === 0 && futurePartners.length === 0">
+    <div class="title-text"
+         *ngIf="pastPartners.length === 0 && currentPartners.length === 0 && futurePartners.length === 0">
       You don't have any partners. Try to invite some.
     </div>
     <div class="title-text" *ngIf="pastPartners.length > 0">Past Partners</div>

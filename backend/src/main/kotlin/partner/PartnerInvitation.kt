@@ -79,7 +79,9 @@ data class PartnerInvitation(
                 }.map { entity ->
                     val inv = entity.asPartnerInvitation
                     inv.copy(
-                            inviterInfo = StudentPublicInfo.buildForGeneral(studentId = inv.invitedId)
+                            inviterInfo = StudentPublicInfo.buildForGeneral(
+                                    studentId = inv.inviterId
+                            )
                     )
                 }.toList()
 

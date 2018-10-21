@@ -49,7 +49,6 @@ private fun initializeProfileApiHandlers() {
     post(path = "/update") {
         val updatedUser = user.updateWith(anotherUser = toJson())
         updatedUser.upsert()
-        "OK"
     }
 }
 
