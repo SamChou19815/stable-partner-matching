@@ -34,6 +34,7 @@ data class StudentPublicInfo(
          * [buildForGeneral] returns a built [StudentPublicInfo] for general purpose.
          * We also allow you to disable [fullDetail].
          */
+        @JvmStatic
         fun buildForGeneral(studentId: Key, fullDetail: Boolean = true): StudentPublicInfo? {
             val user = GoogleUser.getByKey(key = studentId) ?: return null
             return if (fullDetail) {

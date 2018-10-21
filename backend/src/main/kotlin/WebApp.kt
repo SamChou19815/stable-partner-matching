@@ -101,8 +101,7 @@ private fun initializeMatchingApiHandlers() {
         val startTime = System.currentTimeMillis()
         val courseId = queryParamsForKey(name = "course_id")
         val courseInfo = CourseInfo[courseId]!!
-        val result = Ranking().getRankingForCourse(user, courseInfo)
-                .map { StudentPublicInfo.buildForGeneral(studentId = it, fullDetail = false) }
+        val result = Ranking(user, courseInfo).rankingForCourse
         val endTime = System.currentTimeMillis()
         println("Matching Running Time: ${endTime - startTime}.")
         result
