@@ -24,20 +24,20 @@ student = {
     "pastCourses": [{"courseName":"CS 1110", "grade": 10}, {"courseName":"CS 2110", "grade": 12}],
     "currentCourses": [{"courseName":"CS 3110", "grade": -1}, {"courseName":"CS 2800", "grade": -1}],
     "futureCourses": [{"courseName":"CS 3410", "grade": -1}, {"courseName":"CS 4740", "grade": -1}],
-    "email": adk9@cornell.edu,
-    "picture": http://profilepicturesdp.com/wp-content/uploads/2018/06/default-user-profile-picture-7.png,
+    "email": adk9@cornell.edu, 
+    "picture": http://profilepicturesdp.com/wp-content/uploads/2018/06/default-user-profile-picture-7.png, 
     "uid": random-user-1
 }
 """
 
 # input for number of students
-num_student = 200
+num_student = 80
 
 # Step 1: Randomize the student's name and email
 # Using data from https://github.com/hadley/data-baby-names
 
 names = pd.read_csv("./baby-names.csv")
-name_list = names['name'].tolist()[0:200]
+name_list = names['name'].tolist()[0:1000]
 
 
 def name_randomize():
@@ -496,7 +496,7 @@ def make_n_students(n):
                                                      student_decision_list[random_student_type])
         student_info = make_one_student(student_class_dict, graduation_year_list[random_student_type], i)
         student_list.append(student_info)
-    student_json = json.dumps(student_list, sort_keys=True, indent=4, separators=(',', ': '))
+    student_json = json.dumps(student_list)
     return student_json
 
 
