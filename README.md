@@ -26,7 +26,6 @@ quality. The user can send invite and form partnership on our platform.
 
 - Cornell Course API - Get Cornell CS course information 
 - Google NLP API - Extract keywords from course descriptions
-- 
 - Kotlin / Google Cloud Platform - Backend (server application and data storage)
 - Firebase Authentication - User identification
 - Angular - Front-end User Interface
