@@ -107,7 +107,7 @@ private fun initializeMatchingApiHandlers() {
                 user, studentCourse
         ).map {
             StudentPublicInfo.buildForGeneral(
-                    studentId = it.profile.keyNotNull, fullDetail = false
+                    studentId = it, fullDetail = false
             )
         }
         /*
