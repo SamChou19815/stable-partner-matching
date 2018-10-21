@@ -26,11 +26,20 @@ quality. The user can send invite and form partnership on our platform.
 
 - Cornell Course API - Get Cornell CS course information
 - Google NLP API - Extract keywords from course descriptions
+- NLTK - Preprocessing the keywords for our weighting algorithm
 - Kotlin / Google Cloud Platform - Backend (server application and data storage)
 - Firebase Authentication - User identification
 - Angular - Front-end User Interface
 
 ## Challenges we ran into
+
+The weighting of the various factors in the ranking algorithm can only be tested with trial and error, 
+and it takes us much time to figure out relatively good weights.
+
+The initial server deploy is really slow, and we later figured out that it is because of expensive 
+database operations involved in our ranking algorithm. We spent much time optimizing our code to 
+reduce the database operations. 
+
 
 ## Accomplishments that we're proud of
 
