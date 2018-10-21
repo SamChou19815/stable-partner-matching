@@ -101,12 +101,6 @@ object StaticProcessor {
      * [importAllRandomUsers] imports all random users.
      */
     fun importAllRandomUsers() {
-        /*
-        javaClass.getResourceAsStream("random-user.json").let {
-            val a: String = Gson().fromJson(InputStreamReader(it), String::class.java)
-            File("random-user.json").writeText(a)
-        }
-        */
         val insertedRandomUsers = javaClass
                 .getResourceAsStream("random-user.json")
                 .let(block = ::InputStreamReader)
