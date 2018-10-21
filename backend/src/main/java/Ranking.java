@@ -1,6 +1,7 @@
 import auth.GoogleUser;
 import com.google.cloud.datastore.Key;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import course.CourseInfo;
 import course.StudentCourse;
 import freetime.FreeTimeInterval;
@@ -41,8 +42,10 @@ public class Ranking {
     public void init(StudentCourse course) {
         CourseInfo info = CourseInfo.Companion.get(course.getCourseId());
         Gson gson = new Gson();
-        WeightVector v = gson.fromJson(info.getWeightVector(), WeightVector.class);
-        orderedWeights = new ArrayList<>(v.getWeightVector().keySet());
+        Map<String, Double> v = gson.fromJson(
+                info.getWeightVector(), new TypeToken<Map<String, Double>>(){}.getType()
+        );
+        orderedWeights = new ArrayList<>(v.keySet());
         Collections.sort(orderedWeights);
         vectorSize = orderedWeights.size();
     }
@@ -120,7 +123,7 @@ public class Ranking {
             init(course);
         }
         
-        CourseInfo courseInfo = CourseInfo.Companion.get(course.getKey());
+        CourseInfo courseInfo = CourseInfo.Companion.get(course.getCourseId());
         MathVector courseW = getCourseVector(courseInfo);
         
         Key userKey = user.getKey();
