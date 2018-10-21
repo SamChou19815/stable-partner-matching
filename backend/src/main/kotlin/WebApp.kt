@@ -9,6 +9,7 @@ import course.StudentCourse
 import init.InitData
 import partner.PartnerInvitation
 import partner.StudentPartnership
+import spark.Spark.notFound
 import spark.Spark.path
 import spark.Spark.staticFileLocation
 import staticprocessor.StaticProcessor
@@ -19,6 +20,8 @@ import web.initServer
 import web.post
 import web.queryParamsForKey
 import web.toJson
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import kotlin.system.measureTimeMillis
 
 /*
@@ -125,14 +128,17 @@ private fun initializeUserApiHandlers() {
  * [initializeAdminApiHandlers] initializes a list of admin API handlers.
  */
 private fun initializeAdminApiHandlers() {
-    // Filters.before(path = "/*", role = Role.ADMIN) // TODO add back
     get(path = "/init_system") {
+        println("Init System")
         println(measureTimeMillis { CourseInfo.deleteAll() })
         println(measureTimeMillis { GoogleUser.deleteAll() })
         println(measureTimeMillis { StudentCourse.deleteAll() })
         println(measureTimeMillis { StaticProcessor.importAllCourses() })
-        Thread.sleep(10_000)
         println(measureTimeMillis { StaticProcessor.importAllRandomUsers() })
+    }
+    get(path = "/init_system_std_courses") {
+        println("Init System Student Courses")
+        println(measureTimeMillis { StaticProcessor.importAllRandomUserCourses() })
     }
 }
 
@@ -141,6 +147,14 @@ private fun initializeAdminApiHandlers() {
  */
 private fun initializeApiHandlers() {
     staticFileLocation("/static")
+    notFound { _, resp ->
+        resp.status(200)
+        StaticProcessor::class.java.getResourceAsStream("/static/index.html")
+                .let(block = ::InputStreamReader)
+                .let(block = ::BufferedReader)
+                .lineSequence()
+                .joinToString(separator = "\n")
+    }
     get(path = "/") { "OK" } // Used for health check
     path("/apis", ::initializeUserApiHandlers)
     path("/admin_apis", ::initializeAdminApiHandlers)

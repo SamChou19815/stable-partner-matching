@@ -24,7 +24,7 @@ import { AngularFireModule } from '@angular/fire';
   imports: [
     BrowserModule.withServerTransition({ appId: 'stable-pm' }), NavModule, BrowserAnimationsModule,
     AngularFireModule.initializeApp(environment.firebase), AngularFireAuthModule, NgxJsonLdModule,
-    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
+    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: false }),
     AppRoutingModule,
     SharedModule
   ],

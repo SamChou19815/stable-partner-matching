@@ -6,6 +6,16 @@
  * --------------------------------------------------------------------------------
  */
 
+buildscript {
+    repositories {
+        jcenter() // Bintray's repository - a fast Maven Central mirror & more
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.cloud.tools:appengine-gradle-plugin:+'
+    }
+}
+
 plugins {
     // 3rd-parties
     id 'org.jetbrains.kotlin.jvm' version '1.2.71'
@@ -14,6 +24,8 @@ plugins {
 
 group = 'hackathon'
 version = '0.0.1'
+
+apply plugin: 'com.google.cloud.tools.appengine'
 
 /*
  * --------------------------------------------------------------------------------
@@ -147,4 +159,22 @@ task updateDatastoreIndices {
             commandLine 'sh', '-c', "gcloud datastore create-indexes $indexFile"
         }
     }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+appengine {
+
+    stage {
+        artifact = "build/libs/website-0.1-all.jar"
+    }
+
+    deploy {
+        projectId = 'brh-fa18'
+        stopPreviousVersion = true
+        promote = true
+        version = 4
+    }
+
 }

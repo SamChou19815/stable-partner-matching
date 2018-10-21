@@ -1,5 +1,9 @@
 package auth
 
+import auth.GoogleUser.Table.email
+import auth.GoogleUser.Table.name
+import auth.GoogleUser.Table.picture
+import auth.GoogleUser.Table.uid
 import com.google.cloud.datastore.Entity
 import com.google.cloud.datastore.Key
 import common.StudentClass
@@ -179,6 +183,25 @@ data class GoogleUser(
         @JvmStatic
         fun getAllOtherUserKeys(user: GoogleUser): List<Key> =
                 UserEntity.allKeys().filter { it != user.keyNotNull }.toList()
+
+        /**
+         * [addAll] adds all [users].
+         */
+        @JvmStatic
+        fun addAll(users: List<GoogleUser>) {
+            UserEntity.batchInsert(source = users) { user ->
+                table.uid gets user.uid
+                table.name gets user.name
+                table.email gets user.email
+                table.picture gets user.picture
+                table.studentClass gets user.studentClass
+                table.graduationYear gets user.graduationYear
+                table.skills gets "break things"
+                table.introduction gets "I write bugs."
+                table.experience gets "I broke the codebase in my last intern and got fired."
+                table.freeTimes gets ""
+            }
+        }
 
         /**
          * [deleteAll] deletes all users.

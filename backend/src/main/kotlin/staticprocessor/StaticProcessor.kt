@@ -11,7 +11,6 @@ import common.StudentClass
 import common.TimeStatus
 import course.CourseInfo
 import course.StudentCourse
-import java.io.File
 import java.io.InputStreamReader
 
 /**
@@ -91,7 +90,7 @@ object StaticProcessor {
             return GoogleUser(
                     uid = uid, name = name, email = email, picture = picture,
                     studentClass = clazz, graduationYear = graduationYear
-            ).upsert()
+            )
         }
 
     }
@@ -100,7 +99,7 @@ object StaticProcessor {
      * [importAllRandomUsers] imports all random users.
      */
     fun importAllRandomUsers() {
-        val insertedRandomUsers = javaClass
+        val randomUsers = javaClass
                 .getResourceAsStream("random-user.json")
                 .let(block = ::InputStreamReader)
                 .let { reader ->
@@ -109,13 +108,42 @@ object StaticProcessor {
                     )
                     rawRandomUsers
                 }
-                .map { it to it.toGoogleUser() }
+                .map { it.toGoogleUser() }
+        randomUsers.let { GoogleUser.addAll(it) }
+        /*
+        Thread.sleep(3_000)
         for ((raw, google) in insertedRandomUsers) {
             val studentId = google.keyNotNull
             val coursesWithTime = arrayListOf<Pair<RandomUserCourse, TimeStatus>>()
             raw.pastCourses.forEach { coursesWithTime.add(it to TimeStatus.PAST) }
             raw.currentCourses.forEach { coursesWithTime.add(it to TimeStatus.CURRENT) }
             raw.futureCourses.forEach { coursesWithTime.add(it to TimeStatus.FUTURE) }
+            StudentCourse.batchImport(source = coursesWithTime) { (course, time) ->
+                course.toStudentCourse(studentId = studentId, timeStatus = time)
+            }
+        }
+        */
+    }
+
+    /**
+     * [importAllRandomUserCourses] imports all random users courses.
+     */
+    fun importAllRandomUserCourses() {
+        val randomUsers = javaClass
+                .getResourceAsStream("random-user.json")
+                .let(block = ::InputStreamReader)
+                .let { reader ->
+                    val rawRandomUsers: List<RandomUser> = Gson().fromJson(
+                            reader, object : TypeToken<List<RandomUser>>() {}.type
+                    )
+                    rawRandomUsers
+                }
+        for (rawUser in randomUsers) {
+            val studentId = GoogleUser.getByUid(rawUser.uid)!!.keyNotNull
+            val coursesWithTime = arrayListOf<Pair<RandomUserCourse, TimeStatus>>()
+            rawUser.pastCourses.forEach { coursesWithTime.add(it to TimeStatus.PAST) }
+            rawUser.currentCourses.forEach { coursesWithTime.add(it to TimeStatus.CURRENT) }
+            rawUser.futureCourses.forEach { coursesWithTime.add(it to TimeStatus.FUTURE) }
             StudentCourse.batchImport(source = coursesWithTime) { (course, time) ->
                 course.toStudentCourse(studentId = studentId, timeStatus = time)
             }
