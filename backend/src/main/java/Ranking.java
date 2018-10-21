@@ -85,30 +85,14 @@ public class Ranking {
     }
     
     /**
-     * Compute the scalar score between user and a potential that indicates the goodness of
-     * matching.
+     * Compute the score vector for courses for a given user.
      * The function is pure.
      *
-     * @param userCompetenceVector the competence vector of the user that wants to find the partner.
-     * @param partnerCompetenceVector the competence vector of the potential partner.
-     * @return the scalar matching goodness score.
+     * @param userKey the key of the user of interest.
+     * @param courseKeySet the course key set to do the computation on.
+     * @param courseWeight the course wright to consider.
+     * @return a math vector of the skill score sum.
      */
-    private double computePartnerScalarScore(
-            MathVector userCompetenceVector, MathVector partnerCompetenceVector
-    ) {
-        MathVector s1 = userCompetenceVector.duplicate();
-        MathVector s2 = partnerCompetenceVector.duplicate();
-        // Formula: exp(-abs(s1 + s2 * -1)) = exp(-abs(s1 - s2))
-        s2.scalarProduct(-1.0); // To produce -s2.
-        s1.addVector(s2);
-        s1.abs();
-        s1.scalarProduct(-1.0);
-        s1.exp();
-        // Formula: (penalizing vector * s1) .* s2
-        s1.vectorProduct(userCompetenceVector);
-        return s1.dotProduct(partnerCompetenceVector);
-    }
-    
     private MathVector computeCourseSetSum(Key userKey, List<Key> courseKeySet,
                                            MathVector courseWeight) {
         MathVector coursesSum = new MathVector(vectorSize);
@@ -123,6 +107,31 @@ public class Ranking {
             coursesSum.addVector(courseVector);
         }
         return coursesSum;
+    }
+    
+    /**
+     * Compute the scalar score between user and a potential that indicates the goodness of
+     * matching.
+     * The function is pure.
+     *
+     * @param userCompetenceVector the competence vector of the user that wants to find the partner.
+     * @param partnerCompetenceVector the competence vector of the potential partner.
+     * @return the scalar matching goodness score.
+     */
+    private double computePartnerScalarScore(
+            MathVector userCompetenceVector, MathVector partnerCompetenceVector
+    ) {
+        MathVector s1 = userCompetenceVector.copy();
+        MathVector s2 = partnerCompetenceVector.copy();
+        // Formula: exp(-abs(s1 + s2 * -1)) = exp(-abs(s1 - s2))
+        s2.scalarProduct(-1.0); // To produce -s2.
+        s1.addVector(s2);
+        s1.abs();
+        s1.scalarProduct(-1.0);
+        s1.exp();
+        // Formula: (penalizing vector * s1) .* s2
+        s1.vectorProduct(userCompetenceVector);
+        return s1.dotProduct(partnerCompetenceVector);
     }
     
     /**
