@@ -17,7 +17,7 @@ export class StudentPublicInfoComponent implements OnInit {
     skills: '',
     introduction: '',
     experience: '',
-    freeTimes: { key: '', studentId: '', record: [] },
+    freeTimes: [],
     pastCourses: [],
     currCourses: []
   };

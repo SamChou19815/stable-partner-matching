@@ -3,6 +3,7 @@ package auth
 import com.google.cloud.datastore.Entity
 import com.google.cloud.datastore.Key
 import common.StudentClass
+import freetime.FreeTimeInterval
 import typedstore.TypedEntity
 import typedstore.TypedEntityCompanion
 import typedstore.TypedTable
@@ -21,13 +22,15 @@ import typedstore.TypedTable
  * @property skills a list of skills given by the student.
  * @property introduction student's self-intro.
  * @property experience student's self-intro of experience.
+ * @property freeTimes free time record.
  */
 data class GoogleUser(
         val key: Key? = null, @field:Transient val uid: String,
         val name: String, val email: String, val picture: String,
         val studentClass: StudentClass = StudentClass.FRESHMAN,
         val graduationYear: Long = 2022, val skills: String = "break things",
-        val introduction: String = "", val experience: String = ""
+        val introduction: String = "", val experience: String = "",
+        val freeTimes: List<FreeTimeInterval> = emptyList()
 ) {
 
     /**
@@ -43,8 +46,26 @@ data class GoogleUser(
             graduationYear = anotherUser.graduationYear,
             skills = anotherUser.skills,
             introduction = anotherUser.introduction,
-            experience = anotherUser.experience
+            experience = anotherUser.experience,
+            freeTimes = anotherUser.freeTimes
     )
+
+    /**
+     * Convert the free interval list to string.
+     */
+    private fun List<FreeTimeInterval>.toStringForm(): String {
+        val sb = StringBuilder()
+        for (interval in this) {
+            sb.append(interval.start)
+            sb.append(',')
+            sb.append(interval.end)
+            sb.append(';')
+        }
+        if (sb.isNotEmpty()) {
+            sb.setLength(sb.length - 1)
+        }
+        return sb.toString()
+    }
 
     /**
      * [upsert] is used to update the record in the database, either by inserting or updating the
@@ -65,12 +86,16 @@ data class GoogleUser(
                 table.skills gets "break things"
                 table.introduction gets "I write bugs."
                 table.experience gets "I broke the codebase in my last intern and got fired."
+                table.freeTimes gets ""
             } else if (modifyAppInfo) {
                 table.studentClass gets studentClass
                 table.graduationYear gets graduationYear
                 table.skills gets skills
                 table.introduction gets introduction
                 table.experience gets experience
+                table.freeTimes gets FreeTimeInterval
+                        .mergeInterval(freeTimes)
+                        .toStringForm()
             }
         }.asGoogleUser
     }
@@ -90,6 +115,7 @@ data class GoogleUser(
         val skills = longStringProperty(name = "skills")
         val introduction = longStringProperty(name = "introduction")
         val experience = longStringProperty(name = "experience")
+        val freeTimes = longStringProperty(name = "free_times")
     }
 
     /**
@@ -107,12 +133,19 @@ data class GoogleUser(
         val skills: String = Table.skills.delegatedValue
         val introduction: String = Table.introduction.delegatedValue
         val experience: String = Table.experience.delegatedValue
+        val freeTimes: String = Table.freeTimes.delegatedValue
 
         val asGoogleUser: GoogleUser
             get() = GoogleUser(
                     key = key, uid = uid, name = name, email = email, picture = picture,
                     studentClass = studentClass, graduationYear = graduationYear,
-                    skills = skills, introduction = introduction, experience = experience
+                    skills = skills, introduction = introduction, experience = experience,
+                    freeTimes = freeTimes.trim()
+                            .takeIf { it.isNotEmpty() }
+                            ?.split(";")?.map { pStr ->
+                                val p = pStr.split(",")
+                                FreeTimeInterval(p[0].toInt(), p[1].toInt())
+                            } ?: emptyList()
             )
 
         companion object : TypedEntityCompanion<Table, UserEntity>(table = Table) {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthenticatedNetworkService } from '../shared/authenticated-network-service';
 import { HttpClient } from '@angular/common/http';
-import { StudentProfile } from '../shared/data';
+import { StudentProfile, StudentPublicInfo } from '../shared/data';
 import { GoogleUserService } from '../shared/google-user.service';
 
 @Injectable({
@@ -23,5 +23,9 @@ export class ProfileNetworkService extends AuthenticatedNetworkService {
     }
   }
 
+  async loadPublic(studentId: string): Promise<StudentPublicInfo> {
+    this.firebaseAuthToken = await this.googleUserService.afterSignedIn();
+    return this.getData<StudentPublicInfo>(`/load_public?student_id=${studentId}`);
+  }
 
 }

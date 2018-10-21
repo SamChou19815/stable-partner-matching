@@ -14,7 +14,7 @@ public final class FreeTimeInterval {
     /**
      * Start and end time.
      */
-    final int start, end;
+    public final int start, end;
     
     /**
      * Constructor for GSON.
@@ -29,7 +29,7 @@ public final class FreeTimeInterval {
      * @param start start time.
      * @param end end time.
      */
-    FreeTimeInterval(int start, int end) {
+    public FreeTimeInterval(int start, int end) {
         this.start = start;
         this.end = end;
     }
@@ -41,7 +41,7 @@ public final class FreeTimeInterval {
      * @return intervals that doesn't overlap
      */
     @NotNull
-    static List<FreeTimeInterval> mergeInterval(@NotNull List<FreeTimeInterval> intervals) {
+    public static List<FreeTimeInterval> mergeInterval(@NotNull List<FreeTimeInterval> intervals) {
         // then compare the first
         if (intervals.size() <= 1) {
             return intervals;

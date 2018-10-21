@@ -28,6 +28,32 @@
         <button mat-button color="primary" (click)="saveChanges()">Save Changes</button>
       </mat-card-actions>
     </mat-card>
+    <mat-card>
+      <mat-card-title>Editing your Free Times</mat-card-title>
+      <mat-card-content>
+        <div class="interval-box" *ngFor="let interval of profile.freeTimes">
+          <button mat-button color="primary" (click)="removeInterval(interval)">Remove This Interval</button>
+          <mat-form-field>
+            <mat-select placeholder="Start Time" [required]="true" [(ngModel)]="interval.start">
+              <mat-option *ngFor="let i of allIntervals" [value]="i">
+                {{getIntervalName(i)}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select placeholder="End Time" [required]="true" [(ngModel)]="interval.end">
+              <mat-option *ngFor="let i of allIntervals" [value]="i">
+                {{getIntervalName(i)}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary" (click)="addNew()">Add new intervals</button>
+        <button mat-button color="primary" (click)="saveChanges()">Save Changes</button>
+      </mat-card-actions>
+    </mat-card>
   </div>
 </ng-container>
 <app-project-card [data]="appIntro" [signInEnabled]="true" *ngIf="!isUserLoggedIn"></app-project-card>

@@ -5,7 +5,14 @@ import { LoadingOverlayService } from '../shared/overlay/loading-overlay.service
 import { GoogleUserService } from '../shared/google-user.service';
 import { appCardData, ProjectCardData } from '../shared/project-card-data';
 import { GlobalDataService } from '../shared/global-data.service';
-import { dummyInitData, StudentClass, StudentProfile } from '../shared/data';
+import {
+  allTimeIntervals,
+  dummyInitData,
+  FreeTimeInterval,
+  StudentClass,
+  StudentProfile,
+  timeIntervalIdToStr
+} from '../shared/data';
 import { ProfileNetworkService } from './profile-network.service';
 
 @Component({
@@ -15,6 +22,7 @@ import { ProfileNetworkService } from './profile-network.service';
 })
 export class ProfileComponent implements OnInit {
 
+  readonly allIntervals: number[] = allTimeIntervals;
   readonly possibleStudentClasses: StudentClass[] = ['FRESHMAN', 'SOPHOMORE', 'JUNIOR', 'SENIOR'];
 
   readonly appIntro: ProjectCardData = appCardData;
@@ -57,10 +65,29 @@ export class ProfileComponent implements OnInit {
   saveChanges() {
     asyncRun(async () => {
       const ref = this.loadingService.open();
-      await this.networkService.update(this.profile);
+      const profile = <StudentProfile>{ ...this.profile, freeTimes: this.filterFreeTimes() };
+      await this.networkService.update(profile);
       this.dataService.initData.profile = this.profile;
       ref.close();
     });
+  }
+
+  // noinspection JSMethodCanBeStatic
+  getIntervalName(interval: number): string {
+    return timeIntervalIdToStr(interval);
+  }
+
+  addNew() {
+    this.profile.freeTimes.push(<FreeTimeInterval>{ start: 0, end: 1 });
+  }
+
+  private filterFreeTimes(): FreeTimeInterval[] {
+    return this.profile.freeTimes.filter(interval => interval.start < interval.end);
+  }
+
+  removeInterval(interval: FreeTimeInterval) {
+    this.profile.freeTimes = this.profile.freeTimes
+      .filter(i => i.start !== interval.start || i.end !== interval.end);
   }
 
 }

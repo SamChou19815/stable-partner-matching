@@ -13,10 +13,6 @@ const routes: Routes = [
     loadChildren: './profile/profile.module#ProfileModule'
   },
   {
-    path: 'free-time',
-    loadChildren: './free-time/free-time.module#FreeTimeModule'
-  },
-  {
     path: 'courses',
     loadChildren: './course/course.module#CourseModule'
   },

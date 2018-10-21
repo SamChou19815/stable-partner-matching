@@ -11,6 +11,8 @@ import common.StudentClass
 import common.TimeStatus
 import course.CourseInfo
 import course.StudentCourse
+import sun.plugin2.util.PojoUtil.toJson
+import java.io.File
 import java.io.InputStreamReader
 
 /**
@@ -59,7 +61,7 @@ object StaticProcessor {
                 11L -> 0.1
                 else -> 0.0
             }
-            val isTa = Math.random() > isTaProb
+            val isTa = Math.random() < isTaProb
             return StudentCourse(
                     studentId = studentId, courseId = courseInfo.key!!,
                     score = grade.takeIf { it >= 0 }, status = timeStatus, isTa = isTa
@@ -99,6 +101,12 @@ object StaticProcessor {
      * [importAllRandomUsers] imports all random users.
      */
     fun importAllRandomUsers() {
+        /*
+        javaClass.getResourceAsStream("random-user.json").let {
+            val a: String = Gson().fromJson(InputStreamReader(it), String::class.java)
+            File("random-user.json").writeText(a)
+        }
+        */
         val insertedRandomUsers = javaClass
                 .getResourceAsStream("random-user.json")
                 .let(block = ::InputStreamReader)
