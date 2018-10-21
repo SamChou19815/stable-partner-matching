@@ -17,13 +17,11 @@ import java.lang.reflect.Type
  * @property subject subject of the course. e.g. "CS"
  * @property code code of the course. e.g. "2112"
  * @property title title of the course. e.g. "Algo"
- * @property description the description of the the course. e.g. Introduction to bla.
  * @property weightVector the string form of the hashtable based vector.
  */
 data class CourseInfo(
         val key: Key? = null, val subject: Subject = Subject.CS,
-        val code: String, val title: String,
-        val description: String, val weightVector: String
+        val code: String, val title: String, val weightVector: String
 ) {
 
     /**
@@ -36,7 +34,6 @@ data class CourseInfo(
         val subject = enumProperty(name = "subject", clazz = Subject::class.java)
         val code = stringProperty(name = "code")
         val title = stringProperty(name = "title")
-        val description = longStringProperty(name = "description")
         val weightVector = longStringProperty(name = "weight_vector")
     }
 
@@ -44,13 +41,12 @@ data class CourseInfo(
         val subject: Subject = Table.subject.delegatedValue
         val code: String = Table.code.delegatedValue
         val title: String = Table.title.delegatedValue
-        val description: String = Table.description.delegatedValue
         val weightVector: String = Table.weightVector.delegatedValue
 
         val asCourseInfo: CourseInfo
             get() = CourseInfo(
                     key = key, subject = subject, code = code, title = title,
-                    description = description, weightVector = weightVector
+                    weightVector = weightVector
             )
 
         val asSimplifiedCourseInfo: SimplifiedCourseInfo
@@ -145,7 +141,6 @@ data class CourseInfo(
                 table.subject gets courseInfo.subject
                 table.code gets courseInfo.code
                 table.title gets courseInfo.title
-                table.description gets courseInfo.description
                 table.weightVector gets courseInfo.weightVector
             }
         }

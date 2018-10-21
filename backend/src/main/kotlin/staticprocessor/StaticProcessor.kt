@@ -31,7 +31,6 @@ object StaticProcessor {
                     subject = Subject.valueOf(obj["subject"].asString),
                     code = obj["code"].asString,
                     title = obj["title"].asString,
-                    description = obj["description"]?.asString ?: "",
                     weightVector = gsonSimpleConverter.toJson(weightVectorJson)
             )
         }).create()
