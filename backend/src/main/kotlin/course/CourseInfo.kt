@@ -64,7 +64,10 @@ data class CourseInfo(
          * A list of all simplified course info, cached here.
          */
         private val allSimplifiedCourseInfo: List<SimplifiedCourseInfo> =
-                CourseInfoEntity.all().map { it.asSimplifiedCourseInfo }.toList()
+                CourseInfoEntity.all()
+                        .map { it.asSimplifiedCourseInfo }
+                        .sortedBy { it.code }
+                        .toList()
 
         /**
          * [get] returns an optional course information given the id of the course.

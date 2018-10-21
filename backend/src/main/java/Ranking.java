@@ -6,15 +6,16 @@ import course.CourseInfo;
 import course.StudentCourse;
 import freetime.FreeTimeInterval;
 import init.InitData;
+import kotlin.Pair;
 import student.StudentPublicInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class Ranking {
@@ -22,19 +23,16 @@ public class Ranking {
     int vectorSize = -1;
     public List<String> orderedWeights = null;
     
-    
     MathVector getCourseVector(CourseInfo courseInfo) {
         Gson gson = new Gson();
-        WeightVector v = gson.fromJson(courseInfo.getWeightVector(), WeightVector.class);
-        Map<String, Double> hm = v.getWeightVector();
-        
+        Map<String, Double> v = gson.fromJson(
+                courseInfo.getWeightVector(), new TypeToken<Map<String, Double>>() {}.getType()
+        );
         MathVector retval = new MathVector(vectorSize);
         double[] vals = new double[vectorSize];
-        
         for (int i = 0; i < vectorSize; i++) {
-            vals[i] = hm.get(orderedWeights.get(i));
+            vals[i] = v.get(orderedWeights.get(i));
         }
-        
         retval.fillFromArr(vals);
         return retval;
     }
@@ -43,7 +41,7 @@ public class Ranking {
         CourseInfo info = CourseInfo.Companion.get(course.getCourseId());
         Gson gson = new Gson();
         Map<String, Double> v = gson.fromJson(
-                info.getWeightVector(), new TypeToken<Map<String, Double>>(){}.getType()
+                info.getWeightVector(), new TypeToken<Map<String, Double>>() {}.getType()
         );
         orderedWeights = new ArrayList<>(v.keySet());
         Collections.sort(orderedWeights);
@@ -73,7 +71,7 @@ public class Ranking {
         s2.scalarProduct(-1.0);
         s1.addVector(s2);
         s1.abs();
-        s1.exp();
+        // s1.exp();
         
         s1.vectorProduct(userV);
         return s1.dotProduct(partnerV);
@@ -118,7 +116,7 @@ public class Ranking {
         
     }
     
-    public final List<InitData> getRankingForCourse(List<InitData> data, GoogleUser user, StudentCourse course) {
+    public final List<Key> getRankingForCourse(List<InitData> data, GoogleUser user, StudentCourse course) {
         if (orderedWeights == null) {
             init(course);
         }
@@ -134,18 +132,27 @@ public class Ranking {
         List<Double> scores = new ArrayList<Double>();
         
         List<Key> possPartners = GoogleUser.Companion.getAllOtherUserKeys(user);
-        
+        List<Pair<Key, Double>> partnerKeyScorePairList = new ArrayList<>();
         for (Key k : possPartners) {
             MathVector partnerScore = compute_s_score(k, courseW);
             GoogleUser partnerUser = GoogleUser.Companion.getByKey(k);
             double s = computePartnerSscore(userScore, partnerScore) +
                     FreeTimeInterval.totalOverlap(user.getFreeTimes(), partnerUser.getFreeTimes());
+            /*
             partners.add(k);
             scores.add(s);
+            */
+            partnerKeyScorePairList.add(new Pair<>(k, s));
         }
         // SORTING
+        /*
         partners.sort(Comparator.comparing(s -> scores.get(partners.indexOf(s))));
         data.sort(Comparator.comparing(s -> -partners.indexOf(s.getProfile().getKey())));
-        return data;
+        */
+        return partnerKeyScorePairList
+                .stream()
+                .sorted((o1, o2) -> Double.compare(o2.getSecond(), o1.getSecond()))
+                .map(Pair::getFirst)
+                .collect(Collectors.toList());
     }
 }
