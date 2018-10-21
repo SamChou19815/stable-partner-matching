@@ -3,8 +3,7 @@ package student
 import auth.GoogleUser
 import com.google.cloud.datastore.Key
 import course.StudentCourse
-import freetime.StudentFreeTimeRecord
-import partner.StudentRatingAccumulator
+import freetime.FreeTimeInterval
 
 /**
  * [StudentPublicInfo] is the information that can be publicly displayed for the student.
@@ -24,7 +23,7 @@ import partner.StudentRatingAccumulator
 data class StudentPublicInfo(
         val id: Key, val name: String, val email: String, val picture: String,
         val skills: String, val introduction: String, val experience: String,
-        val freeTimes: StudentFreeTimeRecord,
+        val freeTimes: List<FreeTimeInterval>,
         val pastCourses: List<Key>, val currCourses: List<Key>,
         val grade: Double = 3.0
 ) {
@@ -42,7 +41,7 @@ data class StudentPublicInfo(
                     id = studentId, name = user.name, email = user.email,
                     picture = user.picture, skills = user.skills,
                     introduction = user.introduction, experience = user.experience,
-                    freeTimes = StudentFreeTimeRecord.getByStudentId(studentId = studentId),
+                    freeTimes = user.freeTimes,
                     pastCourses = pastCourses, currCourses = currCourses
             )
         }

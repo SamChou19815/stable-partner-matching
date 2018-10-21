@@ -4,7 +4,6 @@ import auth.GoogleUser
 import course.CourseInfo
 import course.SimplifiedCourseInfo
 import course.StudentCourse
-import freetime.StudentFreeTimeRecord
 import partner.PartnerInvitation
 import partner.StudentPartnership
 
@@ -14,7 +13,6 @@ import partner.StudentPartnership
 data class InitData(
         val allCourses: List<SimplifiedCourseInfo>,
         val profile: GoogleUser,
-        val freeTimes: StudentFreeTimeRecord,
         val courses: List<StudentCourse>,
         val partners: List<StudentPartnership>,
         val partnerInvitations: List<PartnerInvitation>
@@ -30,7 +28,6 @@ data class InitData(
             return InitData(
                     allCourses = CourseInfo.getAllSimplified(),
                     profile = user,
-                    freeTimes = StudentFreeTimeRecord.getByStudentId(studentId = key),
                     courses = StudentCourse.getAllCoursesByStudentId(id = key),
                     partners = StudentPartnership.getAllPartnerships(studentId = key),
                     partnerInvitations = PartnerInvitation.getAllInvitations(invitedId = key)
@@ -38,6 +35,5 @@ data class InitData(
         }
 
     }
-
 
 }

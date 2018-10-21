@@ -6,7 +6,6 @@ import auth.SecurityFilters
 import auth.SecurityFilters.Companion.user
 import course.CourseInfo
 import course.StudentCourse
-import freetime.StudentFreeTimeRecord
 import init.InitData
 import partner.PartnerInvitation
 import partner.StudentPartnership
@@ -46,16 +45,6 @@ private fun initializeProfileApiHandlers() {
         val updatedUser = user.updateWith(anotherUser = toJson())
         updatedUser.upsert()
         "OK"
-    }
-}
-
-/**
- * [initializeFreeTimeApiHandlers] initializes a list of free time related API handlers.
- */
-private fun initializeFreeTimeApiHandlers() {
-    post(path = "/update") {
-        val record: StudentFreeTimeRecord = toJson()
-        record.upsert()
     }
 }
 
@@ -124,7 +113,6 @@ private fun initializeUserApiHandlers() {
     Filters.before(path = "/*", role = Role.USER)
     get(path = "/load") { InitData.getByUser(user = user) }
     path("/profile", ::initializeProfileApiHandlers)
-    path("/free-time", ::initializeFreeTimeApiHandlers)
     path("/courses", ::initializeCourseApiHandlers)
     path("/partners", ::initializePartnerApiHandlers)
     path("/matching", ::initializeMatchingApiHandlers)
@@ -136,10 +124,12 @@ private fun initializeUserApiHandlers() {
 private fun initializeAdminApiHandlers() {
     // Filters.before(path = "/*", role = Role.ADMIN) // TODO add back
     get(path = "/init_system") {
+
         CourseInfo.deleteAll()
         GoogleUser.deleteAll()
         StudentCourse.deleteAll()
         StaticProcessor.importAllCourses()
+
         StaticProcessor.importAllRandomUsers()
     }
 }

@@ -152,7 +152,13 @@ data class StudentCourse(
         /**
          * [deleteAll] deletes all courses.
          */
-        fun deleteAll(): Unit = StudentCourseEntity.deleteAll()
+        fun deleteAll() {
+            // To overcome the API limitation of 500 operations
+            val keys = StudentCourseEntity.allKeys().toList()
+            for (key in keys) {
+                StudentCourseEntity.delete(key)
+            }
+        }
 
     }
 

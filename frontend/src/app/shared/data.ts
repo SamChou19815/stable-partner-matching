@@ -18,17 +18,12 @@ export interface StudentProfile {
   skills: string;
   introduction: string;
   experience: string;
+  freeTimes: FreeTimeInterval[];
 }
 
 export interface FreeTimeInterval {
   start: number;
   end: number;
-}
-
-export interface StudentFreeTimeRecord {
-  readonly key: string;
-  readonly studentId: string;
-  record: FreeTimeInterval[];
 }
 
 export interface StudentPublicInfo {
@@ -39,7 +34,7 @@ export interface StudentPublicInfo {
   readonly skills: string;
   readonly introduction: string;
   readonly experience: string;
-  readonly freeTimes: StudentFreeTimeRecord;
+  readonly freeTimes: FreeTimeInterval[];
   readonly pastCourses: string[]; // an array of course IDs.
   readonly currCourses: string[]; // an array of course IDs.
   readonly grade?: number; // an optional grade for debugging
@@ -76,7 +71,7 @@ export interface InitData {
   readonly isNotInitialized?: boolean;
   readonly allCourses: SimplifiedCourseInfo[];
   profile: StudentProfile;
-  freeTimes: StudentFreeTimeRecord;
+  freeTimes: FreeTimeInterval[];
   courses: StudentCourse[];
   partners: StudentPartnership[];
   partnerInvitations: PartnerInvitation[];
