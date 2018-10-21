@@ -77,7 +77,7 @@ public class Ranking {
     }
     
     public MathVector compute_s_score(Key userKey, MathVector courseW) {
-        StudentPublicInfo studInfo = StudentPublicInfo.Companion.buildForGeneral(userKey);
+        StudentPublicInfo studInfo = StudentPublicInfo.Companion.buildForGeneral(userKey, true);
         
         String skillStr = studInfo.getSkills();
         MathVector skillSetSum = SkillSetSum(skillStr);

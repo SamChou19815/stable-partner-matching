@@ -16,6 +16,7 @@ import web.badRequest
 import web.get
 import web.initServer
 import web.post
+import web.queryParamsForKey
 import web.toJson
 
 /*
@@ -41,6 +42,10 @@ private object Filters : SecurityFilters(
  * [initializeProfileApiHandlers] initializes a list of profile related API handlers.
  */
 private fun initializeProfileApiHandlers() {
+    get(path = "/load_public") {
+        val studentId = queryParamsForKey(name = "student_id")
+        StudentPublicInfo.buildForGeneral(studentId = studentId)
+    }
     post(path = "/update") {
         val updatedUser = user.updateWith(anotherUser = toJson())
         updatedUser.upsert()
@@ -102,7 +107,7 @@ private fun initializeMatchingApiHandlers() {
                 ?.let { Key.fromUrlSafe(it) } ?: badRequest()
                 */
         val keys = GoogleUser.getAllOtherUserKeys(user = user)
-        keys.map { StudentPublicInfo.buildForGeneral(studentId = it) }
+        keys.map { StudentPublicInfo.buildForGeneral(studentId = it, fullDetail = false) }
     }
 }
 
@@ -124,12 +129,10 @@ private fun initializeUserApiHandlers() {
 private fun initializeAdminApiHandlers() {
     // Filters.before(path = "/*", role = Role.ADMIN) // TODO add back
     get(path = "/init_system") {
-
         CourseInfo.deleteAll()
         GoogleUser.deleteAll()
         StudentCourse.deleteAll()
         StaticProcessor.importAllCourses()
-
         StaticProcessor.importAllRandomUsers()
     }
 }

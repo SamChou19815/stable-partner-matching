@@ -11,6 +11,7 @@ import { MatchingNetworkService } from './matching-network.service';
 import { PartnerInvitation, StudentPublicInfo, TimeStatus } from '../shared/data';
 import { PartnerNetworkService } from '../partner/partner-network.service';
 import { AlertComponent } from '../shared/alert/alert.component';
+import { ProfileNetworkService } from '../profile/profile-network.service';
 
 @Component({
   selector: 'app-matching-course',
@@ -32,6 +33,7 @@ export class MatchingCourseComponent implements OnInit {
   constructor(private dataService: GlobalDataService,
               private googleUserService: GoogleUserService,
               private networkService: MatchingNetworkService,
+              private profileNetworkService: ProfileNetworkService,
               private partnerNetworkService: PartnerNetworkService,
               private loadingService: LoadingOverlayService,
               private route: ActivatedRoute,
@@ -94,6 +96,15 @@ export class MatchingCourseComponent implements OnInit {
       ref.close();
       const message = canInvite ? 'Invitation succeeds.' : 'You cannot invite because you are already partners.';
       this.dialog.open(AlertComponent, { data: message });
+    });
+  }
+
+  loadMoreInfo(student: StudentPublicInfo) {
+    asyncRun(async () => {
+      const ref = this.loadingService.open();
+      const fullProfile = await this.profileNetworkService.loadPublic(student.id);
+      this.partnerList = this.partnerList.map(p => p.id === fullProfile.id ? fullProfile : p);
+      ref.close();
     });
   }
 

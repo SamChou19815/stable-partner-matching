@@ -2,6 +2,7 @@
   <div *ngIf="isInitialized">
     <app-student-public-info *ngFor="let p of partnerList" [s]="p">
       <button mat-button color="primary" (click)="invitePartner(p)">Invite to be partners</button>
+      <button mat-button color="primary" (click)="loadMoreInfo(p)">Load More Information</button>
     </app-student-public-info>
   </div>
 </ng-container>
