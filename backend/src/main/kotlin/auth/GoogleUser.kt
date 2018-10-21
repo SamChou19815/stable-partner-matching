@@ -145,6 +145,11 @@ data class GoogleUser(
                 UserEntity.query { filter { table.email eq email } }.firstOrNull()?.asGoogleUser
 
         /**
+         * [getAllUserKeys] returns a list of all user's keys.
+         */
+        fun getAllUserKeys(): List<Key> = UserEntity.allKeys().toList()
+
+        /**
          * [getAllOtherUserKeys] returns a list of all user's keys except [user].
          */
         fun getAllOtherUserKeys(user: GoogleUser): List<Key> =
@@ -153,7 +158,13 @@ data class GoogleUser(
         /**
          * [deleteAll] deletes all users.
          */
-        fun deleteAll(): Unit = UserEntity.deleteAll()
+        fun deleteAll() {
+            // To overcome the API limitation of 500 operations
+            val keys = UserEntity.allKeys().toList()
+            for (key in keys) {
+                UserEntity.delete(key)
+            }
+        }
 
     }
 
