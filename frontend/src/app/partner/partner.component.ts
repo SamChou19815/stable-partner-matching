@@ -73,6 +73,7 @@ export class PartnerComponent implements OnInit {
 
   private constructPartnershipData(allMyPartners: StudentPartnership[]) {
     this.allMyPartners = allMyPartners;
+    this.dataService.initData.partners = allMyPartners;
     const pastPartners = [];
     const currentPartners = [];
     const futurePartners = [];

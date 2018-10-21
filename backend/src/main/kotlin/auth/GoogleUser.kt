@@ -184,13 +184,7 @@ data class GoogleUser(
          * [deleteAll] deletes all users.
          */
         @JvmStatic
-        fun deleteAll() {
-            // To overcome the API limitation of 500 operations
-            val keys = UserEntity.allKeys().toList()
-            for (key in keys) {
-                UserEntity.delete(key)
-            }
-        }
+        fun deleteAll(): Unit = UserEntity.deleteAll()
 
     }
 

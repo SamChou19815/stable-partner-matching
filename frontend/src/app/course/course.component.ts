@@ -78,6 +78,7 @@ export class CourseComponent implements OnInit {
 
   private constructCourseData(allMyCourses: StudentCourse[]) {
     this.allMyCourses = allMyCourses;
+    this.dataService.initData.courses = allMyCourses;
     const pastCourses = [];
     const currentCourses = [];
     const futureCourses = [];
