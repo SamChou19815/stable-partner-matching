@@ -157,7 +157,7 @@ private fun initializeApiHandlers() {
     }
     get(path = "/") { "OK" } // Used for health check
     path("/apis", ::initializeUserApiHandlers)
-    path("/admin_apis", ::initializeAdminApiHandlers)
+    // path("/admin_apis", ::initializeAdminApiHandlers)
 }
 
 /*
