@@ -91,29 +91,27 @@ private fun initializePartnerApiHandlers() {
  * [initializeMatchingApiHandlers] initializes a list of matching related API handlers.
  */
 private fun initializeMatchingApiHandlers() {
+    /*
     get(path = "/general") {
         val keys = GoogleUser.getAllOtherUserKeys(user = user)
         keys.map { StudentPublicInfo.buildForGeneral(studentId = it) }
     }
+    */
     get(path = "/course") {
+        val startTime = System.currentTimeMillis()
         val courseId = queryParamsForKey(name = "course_id")
         val studentCourse = StudentCourse.getAllCoursesByStudentAndCourseId(
                 studentId = user.keyNotNull, courseId = courseId
         )
-        Ranking().getRankingForCourse(
-                GoogleUser.getAllOtherUserKeys(user = user).map {
-                    InitData.getByUser(user = GoogleUser.getByKey(it)!!)
-                },
-                user, studentCourse
-        ).map {
-            StudentPublicInfo.buildForGeneral(
-                    studentId = it, fullDetail = false
-            )
-        }
-        /*
-        val keys = GoogleUser.getAllOtherUserKeys(user = user)
-        keys.map { StudentPublicInfo.buildForGeneral(studentId = it, fullDetail = false) }
-        */
+        val result = Ranking().getRankingForCourse(user, studentCourse)
+                .map {
+                    StudentPublicInfo.buildForGeneral(
+                            studentId = it, fullDetail = false
+                    )
+                }
+        val endTime = System.currentTimeMillis()
+        println("Matching Running Time: ${endTime - startTime}.")
+        result
     }
 }
 
